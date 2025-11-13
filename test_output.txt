@@ -1,0 +1,1011 @@
+00:00 +0: loading C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart
+00:00 +0: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: ErrorHandlerService Tests Singleton instance returns same object
+00:00 +1: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: ErrorHandlerService Tests Initialize sets up error handlers
+00:00 +2: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: ErrorHandlerService Tests Capture logs error in debug mode
+❌ ERROR: Exception: Test error
+Stack trace:
+#0      main.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart:33:34)
+#1      _ReturnsNormally.typedMatches (package:matcher/src/core_matchers.dart:153:8)
+#2      FeatureMatcher.matches (package:matcher/src/feature_matcher.dart:16:42)
+#3      _expect (package:matcher/src/expect/expect.dart:138:30)
+#4      expect (package:matcher/src/expect/expect.dart:56:3)
+#5      expect (package:flutter_test/src/widget_tester.dart:473:18)
+#6      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart:30:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:242:19)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:240:7)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:282:9)
+<asynchronous suspension>
+
+Reason: Test
+00:00 +3: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: ErrorHandlerService Tests Capture with context data
+❌ ERROR: Exception: Test error with context
+Stack trace:
+#0      main.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart:50:34)
+#1      _ReturnsNormally.typedMatches (package:matcher/src/core_matchers.dart:153:8)
+#2      FeatureMatcher.matches (package:matcher/src/feature_matcher.dart:16:42)
+#3      _expect (package:matcher/src/expect/expect.dart:138:30)
+#4      expect (package:matcher/src/expect/expect.dart:56:3)
+#5      expect (package:flutter_test/src/widget_tester.dart:473:18)
+#6      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart:47:7)
+#7      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:242:19)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:240:7)
+<asynchronous suspension>
+#9      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:282:9)
+<asynchronous suspension>
+
+Reason: Test with context
+00:00 +4: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Create network error
+00:00 +5: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Create database error
+00:00 +6: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Create validation error
+00:00 +7: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Create notification error
+00:00 +8: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Create unknown error with custom message
+00:00 +9: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Unknown error falls back to default message
+00:00 +10: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Error toString contains type and message
+00:00 +11: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests Error with stack trace
+00:00 +12: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: AppError Tests All error types have default messages
+00:00 +13: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: Error Type Coverage Network error type
+00:00 +14: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: Error Type Coverage Database error type
+00:00 +15: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: Error Type Coverage Notification error type
+00:00 +16: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: Error Type Coverage Validation error type
+00:00 +17: C:/Users/moham/StudioProjects/med_assist/test/unit/error_handler_test.dart: Error Type Coverage Unknown error type
+00:00 +18: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Calculates adherence percentage correctly
+00:00 +19: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Handles zero total doses
+00:00 +20: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Perfect adherence shows 100%
+00:00 +21: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Zero adherence shows 0%
+00:00 +22: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Partial adherence calculates correctly
+00:00 +23: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Empty constructor creates zero stats
+00:00 +24: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Adherence percentage never exceeds 100
+00:00 +25: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Adherence percentage is never negative
+00:00 +26: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Handles fractional percentages
+00:00 +27: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Large numbers are handled correctly
+00:00 +28: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: AdherenceStats Model Snoozed doses are counted in total
+00:00 +29: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Creates streak info with valid data
+00:00 +30: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Empty constructor creates zero streaks
+00:00 +31: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Handles null lastTakenDate
+00:00 +32: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Current streak can equal best streak
+00:00 +33: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Best streak is typically >= current streak
+00:00 +34: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: StreakInfo Model Long streak numbers are supported
+00:00 +35: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: MedicationInsight Model Creates insight with valid data
+00:00 +36: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: MedicationInsight Model Handles perfect adherence
+00:00 +37: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: MedicationInsight Model Handles zero adherence
+00:00 +38: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: MedicationInsight Model Handles medication names with special characters
+00:00 +39: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: MedicationInsight Model Handles long medication names
+00:00 +40: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: TrendDataPoint Model Creates trend point with valid data
+00:00 +41: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: TrendDataPoint Model Handles zero percentage
+00:00 +42: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: TrendDataPoint Model Handles 100% percentage
+00:00 +43: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: TrendDataPoint Model Multiple trend points for different dates
+00:00 +44: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Creates hourly data with valid input
+00:00 +45: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Calculates adherence percentage correctly
+00:00 +46: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Handles zero total doses
+00:00 +47: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Handles perfect adherence
+00:00 +48: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Hour values range from 0-23
+00:00 +49: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Creates full day hourly data array
+00:00 +50: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Different doses at different hours
+00:00 +51: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: HourlyAdherenceData Model Handles zero adherence for specific hour
+00:00 +52: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases AdherenceStats with all missed doses
+00:00 +53: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases AdherenceStats with all skipped doses
+00:00 +54: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases AdherenceStats with mixed status doses
+00:00 +55: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases StreakInfo with very long streaks
+00:00 +56: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases MedicationInsight with decimal adherence rates
+00:00 +57: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases TrendDataPoint with past dates
+00:00 +58: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases TrendDataPoint with future dates
+00:00 +59: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases Hourly data for midnight hour
+00:00 +60: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Edge Cases Hourly data for last hour of day
+00:00 +61: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Consistency AdherenceStats percentage matches taken/total ratio
+00:00 +62: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Consistency HourlyAdherenceData percentage matches taken/total ratio
+00:00 +63: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Consistency Multiple AdherenceStats with same data have same percentage
+00:00 +64: C:/Users/moham/StudioProjects/med_assist/test/unit/features/analytics/analytics_provider_test.dart: Data Models Consistency Adherence percentage is consistent across models
+00:01 +65: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Initialization Service initializes correctly
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:01 +66: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Initialization Initialize is idempotent (can call multiple times)
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:01 +67: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Initialization Suggested prompts are available
+Groq service disposed
+00:01 +68: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Empty message returns error
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:01 +69: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Whitespace-only message returns error
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:01 +70: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: test message
+00:01 +70: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Initialization Service initializes correctly
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:01 +71: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+00:01 +71: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Initialization Initialize is idempotent (can call multiple times)
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:01 +72: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+00:01 +72: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Empty message returns error
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:01 +73: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+00:01 +73: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Whitespace-only message returns error
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:01 +74: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+00:01 +74: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: test message
+00:01 +74: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Message Handling Message is trimmed before processing
+Received response from Groq: Hello! This is MedAssist, your medication reminder app. I'm here to help you with any questions or c...
+Groq service disposed
+00:01 +75: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:01 +75: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Valid API key returns successful response
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: test
+00:01 +75: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Initialization Service initializes correctly
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:01 +76: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +76: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Initialization Initialize is idempotent
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:02 +77: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +77: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Initialization Suggested prompts are available after init
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:02 +78: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +78: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Empty message returns error
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:02 +79: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +79: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Whitespace-only message returns error
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:02 +80: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +80: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test message
+00:02 +80: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Valid API key returns successful response
+Received response from Groq: It seems you're testing the MedAssist system. I'm here to help with any medication-related questions...
+Groq service disposed
+00:02 +81: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+00:02 +81: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Successful API call adds to history
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: test message
+00:02 +81: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Message is trimmed before processing
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:02 +82: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +82: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Service handles valid messages
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: Hello
+00:02 +83: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +84: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +85: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +86: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +87: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +88: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +89: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +90: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +91: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +92: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +93: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +94: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +95: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +96: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +97: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +98: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +99: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +100: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +101: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +102: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +102: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Successful API call adds to history
+Received response from Groq: Welcome to MedAssist, your trusted medication reminder and health assistant. I'm here to provide you...
+Groq service disposed
+00:02 +103: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +103: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Response is non-empty and meaningful
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: Hello
+00:02 +103: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Message Handling Service handles valid messages
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:02 +104: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+00:02 +104: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Context Handling Empty context is handled gracefully
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: test
+00:03 +104: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic Service uses valid API keys successfully
+Received response from Groq: Welcome to MedAssist! I'm here to help you with any medication-related questions or concerns.
+
+Is th...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:03 +105: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Response is non-empty and meaningful
+00:03 +105: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API response is helpful and informative
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+00:03 +105: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Context Handling Empty context is handled gracefully
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:03 +106: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Response is non-empty and meaningful
+00:03 +106: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Context Handling Null context is handled gracefully
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: test
+00:03 +106: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Error Handling Response is non-empty and meaningful
+Received response from Groq: Hello! Welcome to MedAssist. How can I assist you today? Are you looking for information on a specif...
+Groq service disposed
+00:03 +107: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API response is helpful and informative
+00:03 +107: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Context is injected and message succeeds
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: What should I know?
+00:03 +107: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Context Handling Null context is handled gracefully
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:03 +108: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API response is helpful and informative
+00:03 +108: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Error Handling Service handles special characters
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: Test with special chars: @#$%^&*()
+Unicode: 你好 مرحبا שלום
+00:03 +108: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API response is helpful and informative
+Received response from Groq: It seems like you're testing the chat function. How can I assist you today? Would you like to know m...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:03 +109: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Context is injected and message succeeds
+00:03 +109: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles side effects question appropriately
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: What are common medication side effects?
+00:03 +109: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Error Handling Service handles special characters
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:03 +110: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Context is injected and message succeeds
+00:03 +110: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Error Handling Service handles emojis
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: Test 😀 💊 🏥 ⚕️
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:03 +111: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Context is injected and message succeeds
+Received response from Groq: As a Metformin 500mg user, here are some key points to consider:
+
+**What is Metformin?**
+Metformin i...
+Groq service disposed
+00:03 +112: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles side effects question appropriately
+00:03 +112: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Empty context is handled gracefully
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: test
+00:03 +112: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles side effects question appropriately
+Received response from Groq: Common medication side effects can vary depending on the type of medication and individual factors s...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:03 +113: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable returns boolean
+00:03 +113: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: What if I forgot to take my medication?
+00:03 +113: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable returns boolean
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+HuggingFace service disposed
+00:03 +114: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Empty context is handled gracefully
+00:03 +114: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable handles errors gracefully
+HuggingFace service disposed
+00:03 +115: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Empty context is handled gracefully
+00:03 +115: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable handles errors gracefully
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+00:03 +115: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Empty context is handled gracefully
+Received response from Groq: It seems like you would like to test the MedAssist medical assistant AI. 
+
+I'm here to provide you w...
+Groq service disposed
+00:03 +115: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable handles errors gracefully
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+00:03 +116: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +116: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable handles errors gracefully
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+00:03 +116: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable returns false when network unavailable
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+00:03 +116: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Null context is handled gracefully
+Groq AI service initialized with model: llama-3.1-8b-instant
+00:03 +116: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Availability Check isAvailable returns false when network unavailable
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+HuggingFace service disposed
+00:03 +117: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +117: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Null context is handled gracefully
+Sending message to Groq: test
+00:03 +117: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Lifecycle Dispose cleans up resources
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+HuggingFace service disposed
+HuggingFace service disposed
+00:03 +118: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +118: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Lifecycle Service can be reinitialized after dispose
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:03 +119: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +119: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Lifecycle Dispose can be called multiple times
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+HuggingFace service disposed
+HuggingFace service disposed
+HuggingFace service disposed
+HuggingFace service disposed
+00:03 +120: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +120: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Singleton Pattern Factory returns same instance
+HuggingFace service disposed
+00:03 +121: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +121: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Singleton Pattern Singleton state persists across instances
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:03 +122: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +122: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Singleton Pattern Dispose affects all instances (singleton)
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+HuggingFace service disposed
+00:03 +123: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+00:03 +123: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Edge Cases Very short message works
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: Hi
+00:04 +123: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles missed dose question appropriately
+Received response from Groq: Don't worry, forgetting a dose occasionally happens to many people. Here's what you can do:
+
+* Take ...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:04 +124: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Null context is handled gracefully
+00:04 +124: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+MultiAI: Statistics reset
+00:04 +124: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Edge Cases Very short message works
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:04 +125: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Null context is handled gracefully
+00:04 +125: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: Tell me about drug interactions
+00:04 +125: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Edge Cases Multiple consecutive whitespaces trimmed
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+Sending message to HuggingFace: test    message    here
+00:04 +125: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Context Handling Null context is handled gracefully
+Received response from Groq: It appears you've entered a test command. I'm ready to assist you with any medical-related questions...
+Groq service disposed
+00:04 +126: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+00:04 +126: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History Clear history resets conversation
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Groq service disposed
+00:04 +127: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+00:04 +127: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History Clear history can be called multiple times
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Groq service disposed
+00:04 +128: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+00:04 +128: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History History length increases with messages
+Groq AI service initialized with model: llama-3.1-8b-instant
+Sending message to Groq: first message
+00:04 +128: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Edge Cases Multiple consecutive whitespaces trimmed
+HuggingFace API Error: This authentication method does not have sufficient permissions to call Inference Providers on behalf of user mohamed-yasser25
+Status Code: 403
+HuggingFace service disposed
+00:04 +129: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+00:04 +129: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/huggingface_service_test.dart: HuggingFaceService Edge Cases Service handles empty trim result appropriately
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+HuggingFace service disposed
+00:04 +130: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+00:04 +130: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History History length increases with messages
+Received response from Groq: Welcome to MedAssist, your personal medication reminder and health assistant. I'm here to help you m...
+Sending message to Groq: second message
+00:04 +130: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Fallback Logic API handles interaction question appropriately
+Received response from Groq: Drug interactions can be a serious concern when taking multiple medications. They occur when two or ...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:04 +131: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History History length increases with messages
+00:04 +131: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Context is passed through to APIs
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+Received response from Groq: It seems you're just testing the system. I'm ready to assist you with any questions or concerns abou...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:05 +132: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History History length increases with messages
+00:05 +132: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Empty context is handled gracefully
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+00:05 +132: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Chat History History length increases with messages
+Received response from Groq: Thank you for letting me know you'd like to learn more about managing medication schedules. Staying ...
+Groq service disposed
+00:05 +133: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Empty context is handled gracefully
+00:05 +133: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Lifecycle Dispose cleans up resources
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+Groq service disposed
+00:05 +134: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Empty context is handled gracefully
+00:05 +134: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Lifecycle Service can be reinitialized after dispose
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:05 +135: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Empty context is handled gracefully
+Received response from Groq: It looks like you're just testing me. That's okay. I'm here to help with any medical-related questio...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:05 +136: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Availability Check isAvailable returns boolean
+00:05 +136: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Null context is handled gracefully
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+00:05 +136: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Availability Check isAvailable returns boolean
+Groq service disposed
+00:05 +137: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Null context is handled gracefully
+00:05 +137: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Availability Check isAvailable handles errors gracefully
+Groq service disposed
+00:05 +138: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Null context is handled gracefully
+00:05 +138: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Singleton Pattern Factory returns same instance
+Groq service disposed
+00:05 +139: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Null context is handled gracefully
+00:05 +139: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/groq_service_test.dart: GroqService Singleton Pattern Singleton state persists across instances
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq service disposed
+00:05 +140: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Null context is handled gracefully
+Received response from Groq: It seems like you're testing the MedAssist system. No problem at all. I'm here to help. Is there a s...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:05 +141: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Context Handling Long context does not cause errors
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+Received response from Groq: It looks like you're just testing the system. No worries, I'm here to help.
+
+To confirm, I have your...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:06 +142: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Usage Statistics Initial stats are zero
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:06 +143: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Usage Statistics Stats increment after requests
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+Received response from Groq: It seems you're testing the MedAssist AI. 
+
+I'm here to help with any medication-related questions o...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:06 +144: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Usage Statistics Last used API is tracked
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+Received response from Groq: It seems like you're testing the system. I'm here to help with any medication-related questions or c...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:06 +145: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Usage Statistics Success rate is calculated correctly
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:06 +146: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Usage Statistics Reset stats clears counters
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test
+Received response from Groq: It seems like you're just testing the MedAssist AI. Don't worry, it's working as expected. How can I...
+MultiAI: ✓ Groq succeeded
+MultiAI: Statistics reset
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +147: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService API Availability Check checkApiAvailability returns map of statuses
+MultiAI: Statistics reset
+MultiAI: Checking API availability...
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +148: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService API Availability Check checkApiAvailability does not throw
+MultiAI: Statistics reset
+MultiAI: Checking API availability...
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +149: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService API Availability Check Availability check returns boolean values
+MultiAI: Statistics reset
+MultiAI: Checking API availability...
+00:07 +149: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService API Availability Check checkApiAvailability does not throw
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+00:07 +149: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService API Availability Check Availability check returns boolean values
+HuggingFace availability check failed: DioException [bad response]: This exception was thrown because the response has a status code of 403 and RequestOptions.validateStatus was configured to throw for this status code.
+The status code of 403 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +150: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService History Management Clear history resets all services
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +151: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService History Management Clear history can be called multiple times
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:07 +152: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService History Management Service works after clearing history
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: first message
+Received response from Groq: Welcome to MedAssist, your trusted medication reminder and health assistant. I'm here to provide you...
+MultiAI: ✓ Groq succeeded
+Groq AI service initialized with model: llama-3.1-8b-instant
+Groq chat history cleared
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+Chat history cleared
+MultiAI: All chat histories cleared
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: second message
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5919, Requested 186. Please try again in 1.05s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5919, Requested 186. Please try again in 1.05s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: second message
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 48.971478869s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 48.971478869s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {model: gemini-2.0-flash-exp, location: global}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 48s}]}}
+MultiAI: ✓ Gemini succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +153: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Lifecycle Dispose cleans up all services
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +154: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Lifecycle Service can be reinitialized after dispose
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +155: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Lifecycle Stats persist after multiple initialize/dispose cycles
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test 1
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5835, Requested 187. Please try again in 220ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5835, Requested 187. Please try again in 220ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test 1
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+Please retry in 48.757830276s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+Please retry in 48.757830276s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {model: gemini-2.0-flash-exp, location: global}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 48s}]}}
+MultiAI: ✓ Gemini succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test 2
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5816, Requested 187. Please try again in 30ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5816, Requested 187. Please try again in 30ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test 2
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+Please retry in 48.566278958s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+Please retry in 48.566278958s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 48s}]}}
+MultiAI: ✓ Gemini succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +156: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Singleton Pattern Factory returns same instance
+MultiAI: Statistics reset
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +157: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Singleton Pattern Singleton state persists across instances
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Statistics reset
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +158: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Handles null message gracefully
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+00:09 +159: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Handles very long messages
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5794, Requested 1184. Please try again in 9.78s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5794, Requested 1184. Please try again in 9.78s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test
+00:09 +160: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Handles special characters in message
+00:10 +161: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Handles emojis in message
+00:10 +162: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Multiple concurrent requests do not crash
+00:10 +162: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Handles very long messages
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 48.325619753s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 48.325619753s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {model: gemini-2.0-flash-exp, location: global}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 48s}]}}
+MultiAI: ✓ Gemini succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: Test with special chars: @#$%^&*()
+        Unicode: 你好 مرحبا שלום
+        Newlines and tabs:
+Received response from Groq: I'm here to help with your medical concerns. Please note that I'll do my best to understand and resp...
+MultiAI: ✓ Groq succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: Test 😀 💊 🏥 ⚕️
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5987, Requested 195. Please try again in 1.82s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5987, Requested 195. Please try again in 1.82s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: Test 😀 💊 🏥 ⚕️
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.544832757s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.544832757s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 47s}]}}
+MultiAI: ✓ Gemini succeeded
+Groq service disposed
+Gemini service disposed
+HuggingFace service disposed
+MultiAI: All services disposed
+MultiAI: Statistics reset
+Groq AI service initialized with model: llama-3.1-8b-instant
+Gemini AI service initialized with model: gemini-2.0-flash-exp
+HuggingFace service initialized with model: mistralai/Mistral-7B-Instruct-v0.2
+MultiAI service initialized with 3 fallback options
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test 1
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test 2
+MultiAI: Trying Groq (primary)...
+Sending message to Groq: test 3
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5967, Requested 203. Please try again in 1.7s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5967, Requested 203. Please try again in 1.7s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test 2
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5967, Requested 203. Please try again in 1.7s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5967, Requested 203. Please try again in 1.7s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test 1
+Groq API Error: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5956, Requested 203. Please try again in 1.589999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+Status Code: 429
+MultiAI: ✗ Groq failed: Rate limit reached for model `llama-3.1-8b-instant` in organization `org_01k9wg87g0fj6v57vhf7tsx84f` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5956, Requested 203. Please try again in 1.589999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+MultiAI: Trying Gemini (fallback #1)...
+Sending message to Gemini: test 3
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.345544586s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.345544586s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {model: gemini-2.0-flash-exp, location: global}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 47s}]}}
+MultiAI: ✓ Gemini succeeded
+00:10 +162: C:/Users/moham/StudioProjects/med_assist/test/unit/services/ai/multi_ai_service_test.dart: MultiAIService Error Resilience Multiple concurrent requests do not crash
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.214005698s.
+Status Code: 429
+Response Data: {error: {code: 429, message: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0
+Please retry in 47.214005698s., status: RESOURCE_EXHAUSTED, details: [{@type: type.googleapis.com/google.rpc.Help, links: [{description: Learn more about Gemini API quotas, url: https://ai.google.dev/gemini-api/docs/rate-limits}]}, {@type: type.googleapis.com/google.rpc.QuotaFailure, violations: [{quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, quotaId: GenerateContentInputTokensPerModelPerMinute-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}, {quotaMetric: generativelanguage.googleapis.com/generate_content_free_tier_requests, quotaId: GenerateRequestsPerMinutePerProjectPerModel-FreeTier, quotaDimensions: {location: global, model: gemini-2.0-flash-exp}}]}, {@type: type.googleapis.com/google.rpc.RetryInfo, retryDelay: 47s}]}}
+MultiAI: ✓ Gemini succeeded
+Gemini API Error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. 
+00:10 +163: All tests passed!
