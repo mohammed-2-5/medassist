@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
-import 'package:med_assist/services/ai/gemini_service.dart';
+import 'package:med_assist/services/ai/multi_ai_service.dart';
 import 'package:med_assist/services/ai/medication_context_service.dart';
 
 /// AI Chatbot Screen for medication assistance
@@ -17,19 +17,20 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
   final TextEditingController _messageController = TextEditingController();
   final List<ChatMessage> _messages = [];
   final ScrollController _scrollController = ScrollController();
-  final GeminiService _geminiService = GeminiService();
+  final MultiAIService _aiService = MultiAIService();
 
   MedicationContextService? _contextService;
   List<String> _quickSuggestions = [];
   bool _isLoadingSuggestions = true;
   bool _isTyping = false;
+  String? _currentAiProvider;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize Gemini service
-    _geminiService.initialize();
+    // Initialize Multi-AI service with intelligent fallback
+    _aiService.initialize();
 
     // Add welcome message after first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -77,7 +78,7 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
-    _geminiService.dispose();
+    _aiService.dispose();
     super.dispose();
   }
 
@@ -126,11 +127,29 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
     setState(() => _isTyping = true);
 
     try {
-      // Get AI response from Gemini
-      final response = await _geminiService.sendMessage(text);
+      // Get medication context for more relevant responses
+      String? medicationContext;
+      if (_contextService != null) {
+        try {
+          medicationContext = await _contextService!.getMedicationContext();
+        } catch (e) {
+          // Context is optional, continue without it
+          medicationContext = null;
+        }
+      }
+
+      // Get AI response with intelligent fallback (Groq → Gemini → HuggingFace)
+      final response = await _aiService.sendMessage(
+        text,
+        medicationContext: medicationContext,
+      );
 
       if (mounted) {
-        setState(() => _isTyping = false);
+        setState(() {
+          _isTyping = false;
+          // Track which AI provider was used
+          _currentAiProvider = _aiService.lastUsedApi;
+        });
         _addBotMessage(response);
       }
     } catch (e) {
@@ -172,11 +191,41 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                   l10n.aiAssistant,
                   style: theme.textTheme.titleMedium,
                 ),
-                Text(
-                  l10n.alwaysHereToHelp,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                Row(
+                  children: [
+                    if (_currentAiProvider != null) ...[
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: _getProviderColor(_currentAiProvider!),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _currentAiProvider!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: _getProviderColor(_currentAiProvider!),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '•',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                    Text(
+                      l10n.alwaysHereToHelp,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -235,9 +284,26 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
 
   void _clearChat() {
     setState(_messages.clear);
-    _geminiService.clearHistory();
+    _aiService.clearHistory();
+    _currentAiProvider = null; // Reset provider indicator
     final l10n = AppLocalizations.of(context)!;
     _addBotMessage(l10n.chatClearedMessage);
+  }
+
+  /// Get color for AI provider indicator
+  Color _getProviderColor(String provider) {
+    switch (provider.toLowerCase()) {
+      case 'groq':
+        return const Color(0xFF8B5CF6); // Purple for Groq
+      case 'gemini':
+        return const Color(0xFF4285F4); // Blue for Gemini
+      case 'huggingface':
+        return const Color(0xFFFFD21E); // Yellow for HuggingFace
+      case 'offline':
+        return Colors.grey; // Grey for offline
+      default:
+        return Colors.teal; // Teal for unknown
+    }
   }
 
   Widget _buildTypingIndicator() {

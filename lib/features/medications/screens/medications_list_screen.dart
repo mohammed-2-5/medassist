@@ -183,9 +183,10 @@ class _MedicationsListScreenState extends ConsumerState<MedicationsListScreen> {
   }
 
   Widget _buildSearchBar(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
-    const lightBlueBg = Color(0xFFE3F2FD);   // خلفية فاتحة
-    const lightBlueBorder = Color(0xFFB3C7DB); // إطار أزرق رمادي لطيف
-    final focusedBorderColor = colorScheme.primary; // لون الإطار عند التركيز
+    // Use theme-based colors that adapt to dark/light mode
+    final searchBarBg = colorScheme.surfaceContainerHighest;
+    final searchBarBorder = colorScheme.outline.withOpacity(0.5);
+    final focusedBorderColor = colorScheme.primary;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -193,23 +194,22 @@ class _MedicationsListScreenState extends ConsumerState<MedicationsListScreen> {
         data: theme.copyWith(
           inputDecorationTheme: theme.inputDecorationTheme.copyWith(
             filled: true,
-            fillColor: lightBlueBg,
+            fillColor: searchBarBg,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: lightBlueBorder),
+              borderSide: BorderSide(color: searchBarBorder),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: lightBlueBorder),
+              borderSide: BorderSide(color: searchBarBorder),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: focusedBorderColor, width: 2),
             ),
-            // لو عايز لون أيقونة البحث/التلميح أغمق شوية:
             prefixIconColor: colorScheme.onSurface.withOpacity(0.75),
-            hintStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+            hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.8)),
           ),
         ),
         child: EnhancedSearchBar(
@@ -297,12 +297,9 @@ class _MedicationsListScreenState extends ConsumerState<MedicationsListScreen> {
                 child: Chip(
                   label: Text(filter.medicineType ?? l10n.type),
                   avatar: const Icon(Icons.medication, size: 18),
-                  backgroundColor: (filter.medicineType != null)
-                      ? const Color(0xFFBBDEFB)  // selected
-                      : const Color(0xFFE3F2FD), // unselected
-                  // backgroundColor: filter.medicineType != null
-                  //     ? colorScheme.primaryContainer
-                  //     : colorScheme.surfaceContainerHighest,
+                  backgroundColor: filter.medicineType != null
+                      ? colorScheme.primaryContainer
+                      : colorScheme.surfaceContainerHighest,
                 ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
@@ -332,24 +329,19 @@ class _MedicationsListScreenState extends ConsumerState<MedicationsListScreen> {
     required Function(bool) onSelected,
     required ColorScheme colorScheme,
     IconData? icon,
-
   }) {
-    const unselectedBg = Color(0xFFE3F2FD); // Light blue 50
-    const selectedBg   = Color(0xFFBBDEFB); // Light blue 100
-    final labelColor   = colorScheme.onSurface;
+    // Use theme colors that adapt to dark/light mode
+    final unselectedBg = colorScheme.surfaceContainerHigh;
+    final selectedBg = colorScheme.primaryContainer;
+    final labelColor = selected ? colorScheme.onPrimaryContainer : colorScheme.onSurface;
 
     return FilterChip(
       label: Text(label, style: TextStyle(color: labelColor)),
       avatar: icon != null ? Icon(icon, size: 18, color: labelColor) : null,
-      // label: Text(label),
-      // avatar: icon != null ? Icon(icon, size: 18) : null,
       selected: selected,
       onSelected: onSelected,
       backgroundColor: unselectedBg,
       selectedColor: selectedBg,
-      //
-      // backgroundColor: colorScheme.surfaceContainerHighest,
-      // selectedColor: colorScheme.primaryContainer,
     );
   }
 

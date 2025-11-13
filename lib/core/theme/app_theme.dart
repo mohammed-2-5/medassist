@@ -507,7 +507,7 @@ class AppTheme {
       // Input decoration (Dark mode optimized)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor:const Color(0xFFE3F2FD),// colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        fillColor: colorScheme.surfaceContainerHighest,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
@@ -537,9 +537,10 @@ class AppTheme {
       ),
 
       chipTheme: ChipThemeData(
-        backgroundColor: const Color(0xFFE3F2FD), // Unselected bg (Light Blue 50)
-        selectedColor: const Color(0xFFBBDEFB),   // Selected bg (Light Blue 100)
+        backgroundColor: colorScheme.surfaceContainerHigh,
+        selectedColor: colorScheme.primaryContainer,
         labelStyle: TextStyle(color: colorScheme.onSurface),
+        secondaryLabelStyle: TextStyle(color: colorScheme.onPrimaryContainer),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
