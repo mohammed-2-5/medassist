@@ -9,7 +9,7 @@ import 'package:med_assist/features/insights/screens/insights_screen.dart';
 import 'package:med_assist/features/medications/screens/medication_detail_screen.dart';
 import 'package:med_assist/features/medications/screens/medication_edit_screen.dart';
 import 'package:med_assist/features/onboarding/screens/enhanced_onboarding_screen.dart';
-import 'package:med_assist/features/onboarding/screens/splash_screen.dart';
+import 'package:med_assist/features/splash/screens/splash_screen.dart';
 import 'package:med_assist/features/reports/screens/reports_screen.dart';
 import 'package:med_assist/features/settings/screens/backup_restore_screen.dart';
 import 'package:med_assist/features/settings/screens/notification_debug_screen.dart';

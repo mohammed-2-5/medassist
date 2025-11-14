@@ -98,6 +98,11 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
   Future<void> markAsTaken(String doseId) async {
     final dose = state.firstWhere((d) => d.id == doseId);
 
+    // Check if already taken
+    if (dose.status == DoseStatus.taken) {
+      return; // Already taken, do nothing
+    }
+
     // Parse time
     final parts = dose.time.split(' ');
     final timeParts = parts[0].split(':');
@@ -110,7 +115,27 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
       final database = ref.read(appDatabaseProvider);
       final repository = ref.read(medicationRepositoryProvider);
 
-      // Record in history
+      // Check if dose was already recorded in database
+      final existingRecord = await database.findDoseRecord(
+        medicationId: int.parse(dose.medicationId),
+        scheduledDate: DateTime.now(),
+        scheduledHour: hour24,
+        scheduledMinute: minute,
+      );
+
+      if (existingRecord != null && existingRecord.status == 'taken') {
+        // Already taken, just update UI
+        state = [
+          for (final d in state)
+            if (d.id == doseId)
+              d.copyWith(status: DoseStatus.taken)
+            else
+              d
+        ];
+        return;
+      }
+
+      // Record in history (only if not already taken)
       await database.recordDoseTaken(
         medicationId: int.parse(dose.medicationId),
         scheduledDate: DateTime.now(),
@@ -294,6 +319,11 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
   Future<void> logMissedDose(String doseId) async {
     final dose = state.firstWhere((d) => d.id == doseId);
 
+    // Check if already taken
+    if (dose.status == DoseStatus.taken) {
+      return; // Already taken, do nothing
+    }
+
     // Parse time
     final parts = dose.time.split(' ');
     final timeParts = parts[0].split(':');
@@ -305,6 +335,26 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
     try {
       final database = ref.read(appDatabaseProvider);
       final repository = ref.read(medicationRepositoryProvider);
+
+      // Check if dose was already recorded in database
+      final existingRecord = await database.findDoseRecord(
+        medicationId: int.parse(dose.medicationId),
+        scheduledDate: DateTime.now(),
+        scheduledHour: hour24,
+        scheduledMinute: minute,
+      );
+
+      if (existingRecord != null && existingRecord.status == 'taken') {
+        // Already taken, just update UI
+        state = [
+          for (final d in state)
+            if (d.id == doseId)
+              d.copyWith(status: DoseStatus.taken)
+            else
+              d
+        ];
+        return;
+      }
 
       // Record in history as taken (with current time as actual time)
       await database.recordDoseTaken(

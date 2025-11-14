@@ -79,6 +79,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       brightness: Brightness.light,
+      fontFamily: 'Manrope',
 
       // ========================================================================
       // TYPOGRAPHY
@@ -97,6 +98,7 @@ class AppTheme {
         surfaceTintColor: colorScheme.primary,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         titleTextStyle: TextStyle(
+          fontFamily: 'Manrope',
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,
@@ -265,6 +267,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(28),
         ),
         titleTextStyle: TextStyle(
+          fontFamily: 'Manrope',
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,
@@ -389,6 +392,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       brightness: Brightness.dark,
+      fontFamily: 'Manrope',
 
       // ========================================================================
       // TYPOGRAPHY (Dark mode optimized)
@@ -407,6 +411,7 @@ class AppTheme {
         surfaceTintColor: colorScheme.primary,
         systemOverlayStyle: SystemUiOverlayStyle.light,
         titleTextStyle: TextStyle(
+          fontFamily: 'Manrope',
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,
@@ -560,6 +565,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(28),
         ),
         titleTextStyle: TextStyle(
+          fontFamily: 'Manrope',
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: colorScheme.onSurface,

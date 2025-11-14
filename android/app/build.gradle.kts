@@ -50,14 +50,17 @@ dependencies {
     // Required for core library desugaring (java.time, etc.)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation("androidx.multidex:multidex:2.0.1")
-    // Latin (الأساسي)
+
+    // Keep only languages you actually need:
+    // Latin (English, Arabic, etc.) - KEEP THIS
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
-    // لغات إضافية (حلّ مشكلتك الحالية)
-    implementation("com.google.mlkit:text-recognition-chinese:16.0.0")
-    implementation("com.google.mlkit:text-recognition-japanese:16.0.0")
-    implementation("com.google.mlkit:text-recognition-korean:16.0.0")
-    implementation("com.google.mlkit:text-recognition-devanagari:16.0.0")
+    // Remove languages you don't need (saves ~60-80 MB!)
+    // Uncomment only if you need these languages:
+    // implementation("com.google.mlkit:text-recognition-chinese:16.0.0")
+    // implementation("com.google.mlkit:text-recognition-japanese:16.0.0")
+    // implementation("com.google.mlkit:text-recognition-korean:16.0.0")
+    // implementation("com.google.mlkit:text-recognition-devanagari:16.0.0")
 }
 flutter {
     source = "../.."

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/widgets/animated_progress_bar.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
 
 /// Beautiful medication card with modern medical design
@@ -56,7 +58,16 @@ class MedicationCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               gradient: medication.isActive
-                  ? null
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        colorScheme.primaryContainer.withOpacity(0.1),
+                        colorScheme.surface,
+                        colorScheme.secondaryContainer.withOpacity(0.05),
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    )
                   : LinearGradient(
                       colors: [
                         colorScheme.surfaceContainerHighest.withOpacity(0.5),
@@ -315,6 +326,8 @@ class MedicationCard extends StatelessWidget {
             ? Colors.orange
             : Colors.red;
 
+    final isLowStock = daysRemaining <= 3;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -327,6 +340,13 @@ class MedicationCard extends StatelessWidget {
                   Icons.inventory_2,
                   size: 16,
                   color: stockColor,
+                )
+                .animate(
+                  onPlay: (controller) => controller.repeat(),
+                )
+                .shimmer(
+                  duration: const Duration(milliseconds: 1500),
+                  color: isLowStock ? stockColor.withOpacity(0.5) : Colors.transparent,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -347,14 +367,21 @@ class MedicationCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: stockPercentage,
-            minHeight: 8,
-            backgroundColor: colorScheme.surfaceContainerHighest,
-            valueColor: AlwaysStoppedAnimation<Color>(stockColor),
+        // Use premium animated progress bar with gradient
+        AnimatedProgressBar(
+          value: stockPercentage,
+          height: 8,
+          borderRadius: 8,
+          gradient: LinearGradient(
+            colors: [
+              stockColor,
+              stockColor.withOpacity(0.7),
+            ],
           ),
+          backgroundColor: colorScheme.surfaceContainerHighest,
+          showGlow: isLowStock,
+          glowColor: stockColor,
+          duration: const Duration(milliseconds: 800),
         ),
       ],
     );

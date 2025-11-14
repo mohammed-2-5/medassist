@@ -451,6 +451,7 @@ class NotificationService {
       importance: Importance.max, // MAX for Samsung devices
       priority: Priority.max, // MAX priority
       // sound: null means use system default notification sound
+      icon: '@drawable/ic_notification', // Custom app icon
       enableLights: true,
       color: Color(0xFF2196F3),
       ledColor: Color(0xFF2196F3),
@@ -540,6 +541,7 @@ class NotificationService {
       channelDescription: 'Notifications for scheduled medication doses',
       importance: Importance.high,
       priority: Priority.high,
+      icon: '@drawable/ic_notification', // Custom app icon
       // sound: null uses system default
     );
 
@@ -601,6 +603,7 @@ class NotificationService {
       'stock_alerts',
       'Stock Alerts',
       channelDescription: 'Notifications for low medication stock',
+      icon: '@drawable/ic_notification', // Custom app icon
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -669,6 +672,7 @@ class NotificationService {
       channelDescription: 'General app notifications',
       importance: Importance.high,
       priority: Priority.high,
+      icon: '@drawable/ic_notification', // Custom app icon
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -711,6 +715,7 @@ class NotificationService {
       channelDescription: 'Test scheduled notification',
       importance: Importance.max,
       priority: Priority.max,
+      icon: '@drawable/ic_notification', // Custom app icon
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -837,6 +842,7 @@ class NotificationService {
       channelDescription: 'Recurring reminders for missed medication doses',
       importance: Importance.max,
       priority: Priority.max,
+      icon: '@drawable/ic_notification', // Custom app icon
       enableLights: true,
       color: Color(0xFFFF5722), // Orange color for recurring reminders
       ledColor: Color(0xFFFF5722),
