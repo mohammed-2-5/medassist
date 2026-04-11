@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/utils/provider_refresh_utils.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
+import 'package:med_assist/features/add_medication/providers/current_step_provider.dart';
 import 'package:med_assist/features/add_medication/providers/medication_form_provider.dart';
 import 'package:med_assist/features/add_medication/screens/steps/step1_type_info.dart';
 import 'package:med_assist/features/add_medication/screens/steps/step2_schedule.dart';
 import 'package:med_assist/features/add_medication/screens/steps/step3_stock.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Add Medication Screen - 3-step wizard
 class AddMedicationScreen extends ConsumerWidget {
@@ -21,7 +25,7 @@ class AddMedicationScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Medicine'),
+        title: Text(AppLocalizations.of(context)!.addMedicineTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => _handleBack(context, ref),
@@ -30,14 +34,14 @@ class AddMedicationScreen extends ConsumerWidget {
           if (currentStep < 2)
             TextButton(
               onPressed: () => _saveDraft(context, ref),
-              child: const Text('Save Draft'),
+              child: Text(AppLocalizations.of(context)!.saveDraft),
             ),
         ],
       ),
       body: Column(
         children: [
           // Progress indicator
-          _buildProgressIndicator(currentStep, theme, colorScheme),
+          _buildProgressIndicator(context, currentStep, theme, colorScheme),
 
           // Step content
           Expanded(
@@ -64,10 +68,12 @@ class AddMedicationScreen extends ConsumerWidget {
   }
 
   Widget _buildProgressIndicator(
+    BuildContext context,
     int currentStep,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
@@ -78,11 +84,11 @@ class AddMedicationScreen extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          _buildStepCircle(0, currentStep, 'Type', colorScheme, theme),
+          _buildStepCircle(0, currentStep, l10n.type, colorScheme, theme),
           _buildConnector(currentStep >= 1, colorScheme),
-          _buildStepCircle(1, currentStep, 'Schedule', colorScheme, theme),
+          _buildStepCircle(1, currentStep, l10n.schedule, colorScheme, theme),
           _buildConnector(currentStep >= 2, colorScheme),
-          _buildStepCircle(2, currentStep, 'Stock', colorScheme, theme),
+          _buildStepCircle(2, currentStep, l10n.stock, colorScheme, theme),
         ],
       ),
     );
@@ -199,7 +205,7 @@ class AddMedicationScreen extends ConsumerWidget {
                 ? colorScheme.primary
                 : colorScheme.surfaceContainerHighest,
             label: Text(
-              currentStep < 2 ? 'Next' : 'Finish',
+              currentStep < 2 ? AppLocalizations.of(context)!.next : AppLocalizations.of(context)!.finish,
               style: TextStyle(
                 color: canProceed
                     ? colorScheme.onPrimary
@@ -236,30 +242,30 @@ class AddMedicationScreen extends ConsumerWidget {
     ref.read(currentStepProvider.notifier).previousStep();
   }
 
-  void _nextStep(
+  Future<void> _nextStep(
     BuildContext context,
     WidgetRef ref,
     int currentStep,
     dynamic formData,
-  ) {
+  ) async {
     if (currentStep < 2) {
       // Move to next step
       ref.read(currentStepProvider.notifier).state = currentStep + 1;
     } else {
       // Finish and save
-      _saveMedication(context, ref);
+      await _saveMedication(context, ref);
     }
   }
 
   Future<void> _saveMedication(BuildContext context, WidgetRef ref) async {
-    // Show loading
-    showDialog(
+    // Show loading (don't await — showDialog future completes on dismiss)
+    unawaited(showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
+      builder: (_) => const Center(
         child: CircularProgressIndicator(),
       ),
-    );
+    ));
 
     // Save medication
     final success =
@@ -267,16 +273,20 @@ class AddMedicationScreen extends ConsumerWidget {
 
     if (context.mounted) {
       Navigator.pop(context); // Close loading
+      final l10n = AppLocalizations.of(context)!;
 
       if (success) {
+        // Clear any saved draft
+        await ref.read(medicationFormProvider.notifier).clearDraft();
+
         // Refresh all medication-related providers
         ProviderRefreshUtils.refreshAllMedicationProviders(ref);
 
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Medicine added successfully!'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text(l10n.medicineAddedSuccess),
+            backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
 
@@ -287,20 +297,22 @@ class AddMedicationScreen extends ConsumerWidget {
       } else {
         // Show error
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to save medicine. Please try again.'),
-            backgroundColor: Colors.red,
+          SnackBar(
+            content: Text(l10n.failedToSaveMedicine),
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
     }
   }
 
-  void _saveDraft(BuildContext context, WidgetRef ref) {
-    // TODO(dev): Save draft to local storage
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Draft saved!')),
-    );
+  Future<void> _saveDraft(BuildContext context, WidgetRef ref) async {
+    await ref.read(medicationFormProvider.notifier).saveDraft();
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.draftSaved)),
+      );
+    }
   }
 
   void _handleBack(BuildContext context, WidgetRef ref) {
@@ -314,14 +326,14 @@ class AddMedicationScreen extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Discard changes?'),
-          content: const Text(
-            'Are you sure you want to leave? Your progress will be lost.',
+          title: Text(AppLocalizations.of(context)!.discardChanges),
+          content: Text(
+            AppLocalizations.of(context)!.discardChangesConfirmation,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -330,7 +342,7 @@ class AddMedicationScreen extends ConsumerWidget {
                 Navigator.pop(context); // Close dialog
                 context.pop(); // Close screen
               },
-              child: const Text('Discard'),
+              child: Text(AppLocalizations.of(context)!.discard),
             ),
           ],
         ),

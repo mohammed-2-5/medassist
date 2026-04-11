@@ -5,7 +5,17 @@
       "Bash(flutter analyze:*)",
       "Bash(cat:*)",
       "Bash(flutter test:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(grep:*)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(dart run:*)",
+      "Bash(cd:*)",
+      "Bash(xargs wc:*)",
+      "Bash(wc -l /c/Users/moham/StudioProjects/med_assist/test/**/*.dart)",
+      "Bash(wc -l /c/Users/moham/StudioProjects/med_assist/lib/features/add_medication/**/*.dart)",
+      "Bash(wc:*)",
+      "Bash(python3:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

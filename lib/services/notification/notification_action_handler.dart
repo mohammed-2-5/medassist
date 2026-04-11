@@ -1,11 +1,15 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/database/repositories/medication_repository.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 
-/// Handles notification action button taps (Take/Snooze/Skip)
-/// Processes actions in background and updates database
+/// Handles notification action button taps (Take/Snooze/Skip).
+///
+/// Runs in the background — creates its own [AppDatabase] instance and
+/// delegates dose operations to [MedicationRepository] for transactional
+/// safety. Uses a single shared database instance to avoid connection leaks.
 class NotificationActionHandler {
   factory NotificationActionHandler() => _instance;
   NotificationActionHandler._internal();
@@ -14,14 +18,19 @@ class NotificationActionHandler {
 
   final NotificationService _notificationService = NotificationService();
 
-  /// Process notification action
+  /// Shared database instance — avoids creating a new connection per action.
+  late final AppDatabase _database = AppDatabase();
+  late final MedicationRepository _repository = MedicationRepository(_database);
+
   @pragma('vm:entry-point')
   static Future<void> handleAction(NotificationResponse response) async {
+    // Ensure Flutter bindings are initialised — this callback may run in a
+    // background isolate where the plugin channel is not yet available.
+    WidgetsFlutterBinding.ensureInitialized();
     final instance = NotificationActionHandler();
     await instance._processAction(response);
   }
 
-  /// Process the notification action
   Future<void> _processAction(NotificationResponse response) async {
     try {
       final actionId = response.actionId;
@@ -29,15 +38,23 @@ class NotificationActionHandler {
 
       if (payload == null || actionId == null) {
         debugPrint('No payload or action ID found');
+        await _showErrorNotification('Could not process medication action');
         return;
       }
 
       final data = json.decode(payload) as Map<String, dynamic>;
-      final medicationId = data['medicationId'] as int;
-      final medicationName = data['medicationName'] as String;
-      final dose = data['dose'] as String;
+      final medicationId = data['medicationId'] as int?;
+      final medicationName = data['medicationName'] as String?;
+      final dose = data['dose'] as String? ?? '';
 
-      debugPrint('Processing action: $actionId for medication: $medicationName');
+      if (medicationId == null || medicationName == null) {
+        debugPrint('Missing required payload fields');
+        await _showErrorNotification('Could not process medication action');
+        return;
+      }
+
+      debugPrint(
+          'Processing action: $actionId for medication: $medicationName');
 
       switch (actionId) {
         case 'take':
@@ -57,52 +74,38 @@ class NotificationActionHandler {
     }
   }
 
-  /// Handle "Take" action
+  /// Handle "Take" action — delegates to repository for transactional safety.
   Future<void> _handleTakeAction(
     int medicationId,
     String medicationName,
     String dose,
   ) async {
     try {
-      final database = AppDatabase();
       final now = DateTime.now();
 
-      // Record dose as taken
-      await database.recordDoseTaken(
+      final result = await _repository.takeDose(
         medicationId: medicationId,
         scheduledDate: now,
         scheduledHour: now.hour,
         scheduledMinute: now.minute,
-        actualTime: now,
       );
 
-      // Update stock
-      final medication = await database.getMedicationById(medicationId);
-      if (medication != null) {
-        final newStock = (medication.stockQuantity - medication.dosePerTime).round();
-        await database.updateMedicationStock(
-          medicationId,
-          newStock >= 0 ? newStock : 0,
-        );
-      }
+      await _notificationService
+          .cancelAllRecurringRemindersForMedication(medicationId);
 
-      // Cancel all recurring reminders for this medication
-      await _notificationService.cancelAllRecurringRemindersForMedication(medicationId);
+      debugPrint('Dose take result: ${result.runtimeType} for $medicationId');
 
-      // Show success notification
       await _showSuccessNotification(
         'Dose Taken',
         '$medicationName ($dose) marked as taken',
       );
-
-      debugPrint('Dose taken for medication $medicationId');
     } catch (e) {
       debugPrint('Error handling take action: $e');
       await _showErrorNotification('Failed to record dose');
     }
   }
 
-  /// Handle "Snooze" action with smart snooze limits
+  /// Handle "Snooze" action with smart snooze limits.
   Future<void> _handleSnoozeAction(
     int medicationId,
     String medicationName,
@@ -110,52 +113,47 @@ class NotificationActionHandler {
     int minutes,
   ) async {
     try {
-      final database = AppDatabase();
       final now = DateTime.now();
 
-      // Reset old snooze history (removes records from previous days)
-      await database.resetOldSnoozeHistory();
+      await _database.resetOldSnoozeHistory();
 
-      // Get medication to check max snoozes
-      final medication = await database.getMedicationById(medicationId);
+      final medication = await _database.getMedicationById(medicationId);
       if (medication == null) {
-        debugPrint('Medication not found');
         await _showErrorNotification('Medication not found');
         return;
       }
 
-      // Check snooze count for today
-      final snoozeHistory = await database.getTodaySnoozeHistory(medicationId);
+      // Enforce snooze limits
+      final snoozeHistory =
+          await _database.getTodaySnoozeHistory(medicationId);
       final currentSnoozeCount = snoozeHistory?.snoozeCount ?? 0;
       final maxSnoozes = medication.maxSnoozesPerDay;
 
-      // Check if limit reached
       if (currentSnoozeCount >= maxSnoozes) {
-        debugPrint('Snooze limit reached for medication $medicationId ($currentSnoozeCount/$maxSnoozes)');
+        debugPrint(
+            'Snooze limit reached for $medicationId ($currentSnoozeCount/$maxSnoozes)');
         await _showErrorNotification(
           'Snooze limit reached ($maxSnoozes/$maxSnoozes). Please take your medication now.',
         );
         return;
       }
 
-      // Increment snooze count
-      await database.incrementSnoozeCount(
+      await _database.incrementSnoozeCount(
         medicationId: medicationId,
         suggestedMinutes: minutes,
       );
 
       final snoozeUntil = now.add(Duration(minutes: minutes));
 
-      // Record dose as snoozed
-      await database.recordDoseSnoozed(
+      await _repository.snoozeDose(
         medicationId: medicationId,
         scheduledDate: now,
         scheduledHour: now.hour,
         scheduledMinute: now.minute,
-        notes: 'Snoozed for $minutes minutes until ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')} (${currentSnoozeCount + 1}/$maxSnoozes)',
+        notes:
+            'Snoozed for $minutes minutes until ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')} (${currentSnoozeCount + 1}/$maxSnoozes)',
       );
 
-      // Schedule snooze notification
       await _notificationService.snoozeNotification(
         medicationId: medicationId,
         medicationName: medicationName,
@@ -163,53 +161,44 @@ class NotificationActionHandler {
         minutes: minutes,
       );
 
-      // Show confirmation with snooze count
       await _showSuccessNotification(
         'Snoozed for $minutes min',
         'Reminder for $medicationName at ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')} (${currentSnoozeCount + 1}/$maxSnoozes snoozes today)',
       );
-
-      debugPrint('Dose snoozed for medication $medicationId for $minutes minutes (${currentSnoozeCount + 1}/$maxSnoozes)');
     } catch (e) {
       debugPrint('Error handling snooze action: $e');
       await _showErrorNotification('Failed to snooze reminder');
     }
   }
 
-  /// Handle "Skip" action
+  /// Handle "Skip" action.
   Future<void> _handleSkipAction(
     int medicationId,
     String medicationName,
   ) async {
     try {
-      final database = AppDatabase();
       final now = DateTime.now();
 
-      // Record dose as skipped
-      await database.recordDoseSkipped(
+      await _repository.skipDose(
         medicationId: medicationId,
         scheduledDate: now,
         scheduledHour: now.hour,
         scheduledMinute: now.minute,
       );
 
-      // Cancel all recurring reminders for this medication
-      await _notificationService.cancelAllRecurringRemindersForMedication(medicationId);
+      await _notificationService
+          .cancelAllRecurringRemindersForMedication(medicationId);
 
-      // Show confirmation
       await _showSuccessNotification(
         'Dose Skipped',
         '$medicationName marked as skipped',
       );
-
-      debugPrint('Dose skipped for medication $medicationId');
     } catch (e) {
       debugPrint('Error handling skip action: $e');
       await _showErrorNotification('Failed to skip dose');
     }
   }
 
-  /// Show success notification
   Future<void> _showSuccessNotification(String title, String message) async {
     const androidDetails = AndroidNotificationDetails(
       'general',
@@ -231,8 +220,7 @@ class NotificationActionHandler {
       iOS: iosDetails,
     );
 
-    final notification = FlutterLocalNotificationsPlugin();
-    await notification.show(
+    await _notificationService.plugin.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
       title,
       message,
@@ -240,7 +228,6 @@ class NotificationActionHandler {
     );
   }
 
-  /// Show error notification
   Future<void> _showErrorNotification(String message) async {
     await _showSuccessNotification('Error', message);
   }

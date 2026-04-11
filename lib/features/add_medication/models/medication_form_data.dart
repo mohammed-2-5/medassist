@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/models/meal_timing.dart';
+import 'package:med_assist/core/utils/repetition_pattern_utils.dart';
 
 /// Medication Form Data Model for Add Medicine Wizard
 
@@ -61,7 +62,7 @@ enum RepetitionPattern {
   /// Get weekday name
   static String getWeekdayName(int day) {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days[day - 1];
+    return days[(day - 1).clamp(0, 6)];
   }
 }
 
@@ -193,13 +194,21 @@ class MedicationFormData {
     );
   }
 
-  /// Calculate when stock will run out
+  /// Calculate when stock will run out, accounting for repetition pattern.
   DateTime? get stockRunOutDate {
     if (stockQuantity <= 0 || timesPerDay <= 0) return null;
 
-    final dailyUsage = dosePerTime * timesPerDay;
-    final daysRemaining = (stockQuantity / dailyUsage).floor();
+    final doseDays = RepetitionPatternUtils.doseDaysPerWeek(
+      pattern: repetitionPattern.name,
+      specificDaysOfWeek: specificDaysOfWeek.join(','),
+    );
+    if (doseDays <= 0) return null;
 
+    final perDoseUsage = dosePerTime * timesPerDay;
+    final avgDailyUsage = perDoseUsage * doseDays / 7;
+    if (avgDailyUsage <= 0) return null;
+
+    final daysRemaining = (stockQuantity / avgDailyUsage).floor();
     return DateTime.now().add(Duration(days: daysRemaining));
   }
 

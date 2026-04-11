@@ -750,17 +750,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String bulkDelete(int count) {
-    return 'حذف جماعي';
+    return 'حذف $count أدوية؟';
   }
 
   @override
   String bulkPause(int count) {
-    return 'إيقاف جماعي';
+    return 'إيقاف $count أدوية مؤقتاً؟';
   }
 
   @override
   String bulkResume(int count) {
-    return 'استئناف جماعي';
+    return 'استئناف $count أدوية؟';
   }
 
   @override
@@ -798,7 +798,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String dose(int number) {
-    return 'جرعة';
+    return 'جرعة $number';
   }
 
   @override
@@ -841,6 +841,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exportData => 'تصدير البيانات';
 
   @override
+  String get customDateRange => 'نطاق تاريخ مخصص';
+
+  @override
+  String get exportPdf => 'تصدير PDF';
+
+  @override
+  String get days => 'أيام';
+
+  @override
   String get week => 'أسبوع';
 
   @override
@@ -866,7 +875,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String daysStreak(int days) {
-    return 'سلسلة الأيام';
+    return '$days أيام';
   }
 
   @override
@@ -1393,7 +1402,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterManually => 'إدخال يدوي';
 
   @override
-  String get errorScanningBarcode => 'حدث خطأ أثناء مسح الباركود';
+  String errorScanningBarcode(String error) {
+    return 'خطأ في مسح الباركود: $error';
+  }
 
   @override
   String get tryAgain => 'حاول مرة أخرى';
@@ -1433,4 +1444,938 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectBackupFile => 'حدد ملف النسخة الاحتياطية';
+
+  @override
+  String get year => 'سنة';
+
+  @override
+  String get adjustStock => 'تعديل المخزون';
+
+  @override
+  String get currentStockLabel => 'المخزون الحالي:';
+
+  @override
+  String get newStockAmount => 'كمية المخزون الجديدة';
+
+  @override
+  String get enterUpdatedStockQuantity => 'أدخل كمية المخزون المحدثة';
+
+  @override
+  String get quickAdjustments => 'تعديلات سريعة:';
+
+  @override
+  String get pleaseEnterValidStock => 'الرجاء إدخال كمية مخزون صالحة';
+
+  @override
+  String stockUpdatedTo(int quantity, String unit) {
+    return 'تم تحديث المخزون إلى $quantity $unit';
+  }
+
+  @override
+  String errorUpdatingStock(String error) {
+    return 'خطأ في تحديث المخزون: $error';
+  }
+
+  @override
+  String get daysRemainingLabel => 'الأيام المتبقية';
+
+  @override
+  String get stockLevelCritical => 'حرج';
+
+  @override
+  String get stockLevelLow => 'منخفض';
+
+  @override
+  String get stockLevelMedium => 'متوسط';
+
+  @override
+  String get stockLevelGood => 'جيد';
+
+  @override
+  String get stockWarningCritical => 'مستوى المخزون حرج! أعد التعبئة فوراً.';
+
+  @override
+  String get stockWarningLow =>
+      'مستوى المخزون منخفض. يُنصح بإعادة التعبئة قريباً.';
+
+  @override
+  String get expiryDateLabel => 'تاريخ الانتهاء';
+
+  @override
+  String get expiryStatusGood => 'جيد';
+
+  @override
+  String get expiryStatusToday => 'ينتهي اليوم';
+
+  @override
+  String get expiryStatusTomorrow => 'ينتهي غداً';
+
+  @override
+  String expiryStatusInDays(int days) {
+    return 'ينتهي خلال $days أيام';
+  }
+
+  @override
+  String get medicationExpiredWarning => 'انتهت صلاحية هذا الدواء! لا تستخدمه.';
+
+  @override
+  String medicationExpiringSoonWarning(int days) {
+    return 'صلاحية هذا الدواء توشك على الانتهاء ($days أيام).';
+  }
+
+  @override
+  String get generatingPdfReport => 'جارٍ إنشاء تقرير PDF...';
+
+  @override
+  String get pdfReportGenerated => 'تم إنشاء تقرير PDF بنجاح!';
+
+  @override
+  String errorGeneratingPdf(String error) {
+    return 'خطأ في إنشاء PDF: $error';
+  }
+
+  @override
+  String get lastBackup => 'آخر نسخة احتياطية';
+
+  @override
+  String get processing => 'جارٍ المعالجة...';
+
+  @override
+  String get backupCreatedSuccessfully => 'تم إنشاء النسخة الاحتياطية بنجاح!';
+
+  @override
+  String failedToCreateBackup(String error) {
+    return 'فشل إنشاء النسخة الاحتياطية: $error';
+  }
+
+  @override
+  String failedToShareBackup(String error) {
+    return 'فشل مشاركة النسخة الاحتياطية: $error';
+  }
+
+  @override
+  String get restoreFromBackupQuestion => 'استعادة من نسخة احتياطية؟';
+
+  @override
+  String get restoreConfirmMessage =>
+      'سيؤدي هذا إلى مسح جميع البيانات الحالية واستبدالها ببيانات من ملف النسخة الاحتياطية.\n\nلا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟';
+
+  @override
+  String get restoreComplete => 'اكتملت الاستعادة!';
+
+  @override
+  String successfullyRestoredItems(int count) {
+    return 'تم استعادة $count عناصر بنجاح:';
+  }
+
+  @override
+  String failedToRestoreBackup(String error) {
+    return 'فشل استعادة النسخة الاحتياطية: $error';
+  }
+
+  @override
+  String get undo => 'تراجع';
+
+  @override
+  String get takenSuccessfully => 'تم التناول بنجاح';
+
+  @override
+  String get missedDoseLabel => 'جرعة فائتة';
+
+  @override
+  String get logNow => 'سجل الآن';
+
+  @override
+  String get snoozedForMinutes => 'تم التأجيل لمدة 15 دقيقة';
+
+  @override
+  String get adherenceTrendChart => 'اتجاه الالتزام خلال 7 أيام';
+
+  @override
+  String get adherenceByMedication => 'الالتزام حسب الدواء';
+
+  @override
+  String get doseStatusDistribution => 'توزيع حالة الجرعات (هذا الشهر)';
+
+  @override
+  String get adherenceHeatmap30Day => 'خريطة الالتزام خلال 30 يوم';
+
+  @override
+  String get timeOfDayAnalysis => 'تحليل حسب وقت اليوم';
+
+  @override
+  String get adherenceRateByHour => 'معدل الالتزام حسب ساعة اليوم';
+
+  @override
+  String get noMedicationDataAvailable => 'لا توجد بيانات أدوية متاحة';
+
+  @override
+  String get noTrendDataAvailable => 'لا توجد بيانات اتجاه بعد';
+
+  @override
+  String get noDoseDataForTimeAnalysis => 'لا توجد بيانات جرعات لتحليل الوقت';
+
+  @override
+  String errorLoadingTrend(String error) {
+    return 'خطأ في تحميل الاتجاه: $error';
+  }
+
+  @override
+  String errorLoadingHeatmap(String error) {
+    return 'خطأ في تحميل الخريطة الحرارية: $error';
+  }
+
+  @override
+  String errorLoadingChart(String error) {
+    return 'خطأ في تحميل الرسم البياني: $error';
+  }
+
+  @override
+  String get lessLabel => 'أقل';
+
+  @override
+  String get moreLabel => 'أكثر';
+
+  @override
+  String get insightsLabel => 'ملاحظات';
+
+  @override
+  String bestTimeInsight(String time, String percent) {
+    return 'أفضل وقت: $time ($percent% التزام)';
+  }
+
+  @override
+  String needsAttentionInsight(String time, String percent) {
+    return 'يحتاج انتباه: $time ($percent% التزام)';
+  }
+
+  @override
+  String get noDoseDataThisMonth => 'لا توجد بيانات جرعات لهذا الشهر';
+
+  @override
+  String get splashGreeting => 'قل مرحباً لـ';
+
+  @override
+  String get splashAiTitle => 'مساعدك الطبي الذكي';
+
+  @override
+  String get poweredByAi => 'مدعوم بالذكاء الاصطناعي';
+
+  @override
+  String dosesLabel(int taken, int total) {
+    return '$taken/$total جرعة';
+  }
+
+  @override
+  String get drugInteractionDetected => 'تم اكتشاف تفاعل دوائي';
+
+  @override
+  String drugInteractionsDetected(int count) {
+    return 'تم اكتشاف $count تفاعلات دوائية';
+  }
+
+  @override
+  String get tapToViewDetails => 'اضغط لعرض التفاصيل';
+
+  @override
+  String get drugInteractions => 'التفاعلات الدوائية';
+
+  @override
+  String get viewMedications => 'عرض الأدوية';
+
+  @override
+  String get viewAnalytics => 'عرض التحليلات';
+
+  @override
+  String insightsCount(int count) {
+    return '$count رؤى';
+  }
+
+  @override
+  String get errorLoadingInsightsMessage => 'خطأ في تحميل الرؤى';
+
+  @override
+  String get noInsightsYetMessage => 'لا توجد رؤى بعد';
+
+  @override
+  String get startTakingMedsForInsights =>
+      'ابدأ بتناول أدويتك لتوليد رؤى صحية مخصصة';
+
+  @override
+  String get wantMoreInsights => 'تريد المزيد من الرؤى؟';
+
+  @override
+  String get viewAnalyticsDescription =>
+      'اعرض لوحة التحليلات التفصيلية للرسوم البيانية والاتجاهات والإحصاءات الشاملة.';
+
+  @override
+  String get chatSuggestion1 => 'كيف أضيف أول دواء لي؟';
+
+  @override
+  String get chatSuggestion2 => 'ماذا يجب أن أعرف عن أدويتي؟';
+
+  @override
+  String get chatSuggestion3 => 'ساعدني في فهم الالتزام بالعلاج';
+
+  @override
+  String onlyDosesLeft(int count) {
+    return 'متبقي $count جرعة فقط';
+  }
+
+  @override
+  String get addMedicineTitle => 'إضافة دواء';
+
+  @override
+  String get saveDraft => 'حفظ المسودة';
+
+  @override
+  String get finish => 'إنهاء';
+
+  @override
+  String get medicineAddedSuccess => 'تمت إضافة الدواء بنجاح!';
+
+  @override
+  String get failedToSaveMedicine =>
+      'فشل في حفظ الدواء. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get draftSaved => 'تم حفظ المسودة!';
+
+  @override
+  String get noData => 'لا توجد بيانات';
+
+  @override
+  String get snoozeReminder => 'تأجيل التذكير';
+
+  @override
+  String get howLongSnooze => 'كم تريد تأجيل التذكير؟';
+
+  @override
+  String get fiveMinutes => '5 دقائق';
+
+  @override
+  String get tenMinutes => '10 دقائق';
+
+  @override
+  String get fifteenMinutes => '15 دقيقة';
+
+  @override
+  String get thirtyMinutes => '30 دقيقة';
+
+  @override
+  String get oneHour => 'ساعة واحدة';
+
+  @override
+  String get selectDateRange => 'اختر نطاق التاريخ';
+
+  @override
+  String get last7Days => 'آخر 7 أيام';
+
+  @override
+  String get last30Days => 'آخر 30 يوم';
+
+  @override
+  String get last3Months => 'آخر 3 أشهر';
+
+  @override
+  String get thisYear => 'هذه السنة';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String daysSelected(int count) {
+    return '$count يوم محدد';
+  }
+
+  @override
+  String get reportsAndExportTitle => 'التقارير والتصدير';
+
+  @override
+  String get exportYourDataTitle => 'صدّر بياناتك';
+
+  @override
+  String get exportYourDataSubtitle =>
+      'أنشئ تقارير وصدّر بيانات أدويتك بتنسيقات مختلفة';
+
+  @override
+  String get csvExports => 'تصدير CSV';
+
+  @override
+  String get pdfReports => 'تقارير PDF';
+
+  @override
+  String get medicationsList => 'قائمة الأدوية';
+
+  @override
+  String get exportAllMedicationsCSV => 'تصدير جميع بيانات الأدوية إلى CSV';
+
+  @override
+  String get doseHistory => 'سجل الجرعات';
+
+  @override
+  String get exportDoseHistoryCSV => 'تصدير سجل الجرعات الكامل إلى CSV';
+
+  @override
+  String get stockHistory => 'سجل المخزون';
+
+  @override
+  String get exportStockHistoryCSV => 'تصدير سجل تغييرات المخزون إلى CSV';
+
+  @override
+  String get medicationsReport => 'تقرير الأدوية';
+
+  @override
+  String get generateMedicationsPDF => 'إنشاء تقرير PDF مفصل لجميع الأدوية';
+
+  @override
+  String get adherenceReport => 'تقرير الالتزام';
+
+  @override
+  String get generateAdherencePDF => 'إنشاء تقرير PDF بإحصائيات الالتزام';
+
+  @override
+  String get exportInfoMessage =>
+      'سيتم حفظ الملفات المصدرة على جهازك ويمكن مشاركتها فوراً';
+
+  @override
+  String get generatingExport => 'جارٍ إنشاء التصدير...';
+
+  @override
+  String exportedSuccessfully(String type) {
+    return 'تم تصدير $type بنجاح!';
+  }
+
+  @override
+  String failedToExport(String error) {
+    return 'فشل التصدير: $error';
+  }
+
+  @override
+  String failedToGeneratePdf(String error) {
+    return 'فشل إنشاء PDF: $error';
+  }
+
+  @override
+  String pdfGeneratedSuccessfully(String type) {
+    return 'تم إنشاء تقرير $type بنجاح!';
+  }
+
+  @override
+  String get systemStatus => 'حالة النظام';
+
+  @override
+  String get notificationPermission => 'إذن الإشعارات';
+
+  @override
+  String get requiredForReminders => 'مطلوب لتذكيرات الأدوية';
+
+  @override
+  String get exactAlarms => 'إذن المنبهات الدقيقة';
+
+  @override
+  String get requiredForPreciseTiming =>
+      'مطلوب لتوقيت التذكيرات الدقيق على أندرويد 12+';
+
+  @override
+  String get databaseStatistics => 'إحصائيات قاعدة البيانات';
+
+  @override
+  String get deviceInformation => 'معلومات الجهاز';
+
+  @override
+  String get pluginVersion => 'إصدار الإضافة';
+
+  @override
+  String get testingAndActions => 'الاختبار والإجراءات';
+
+  @override
+  String get sendTestNotificationTitle => 'إرسال إشعار تجريبي';
+
+  @override
+  String get testIfNotificationsWork => 'اختبر ما إذا كانت الإشعارات تعمل';
+
+  @override
+  String get scheduleTest1Min => 'جدولة اختبار (دقيقة)';
+
+  @override
+  String get scheduleTestDescription => 'جدولة إشعار تجريبي بعد دقيقة من الآن';
+
+  @override
+  String get requestPermissionsTitle => 'طلب الأذونات';
+
+  @override
+  String get requestPermissionsDescription => 'طلب جميع الأذونات المطلوبة';
+
+  @override
+  String get troubleshooting => 'استكشاف الأخطاء';
+
+  @override
+  String get notificationsNotAppearing => 'الإشعارات لا تظهر؟';
+
+  @override
+  String get notificationsNotAppearingTips =>
+      '• تحقق من الأذونات أعلاه\n• عطّل تحسين البطارية\n• فعّل المنبهات الدقيقة (أندرويد 12+)\n• اختبر بـ \"إرسال إشعار تجريبي\"';
+
+  @override
+  String get appCrashing => 'التطبيق يتعطل؟';
+
+  @override
+  String get appCrashingTips =>
+      '• امسح بيانات التطبيق وأعد التشغيل\n• تأكد من منح جميع الأذونات\n• تحقق من إعدادات المنطقة الزمنية';
+
+  @override
+  String get advancedDiagnostics => 'تشخيصات متقدمة';
+
+  @override
+  String get ok_status => 'جيد';
+
+  @override
+  String get needed_status => 'مطلوب';
+
+  @override
+  String get medicinePhotoTitle => 'صورة الدواء';
+
+  @override
+  String get medicinePhotoSubtitle => 'اختياري - يساعد في التعرف على دوائك';
+
+  @override
+  String get camera => 'الكاميرا';
+
+  @override
+  String get gallery => 'المعرض';
+
+  @override
+  String get changePhoto => 'تغيير الصورة';
+
+  @override
+  String get removePhoto => 'إزالة';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+
+  @override
+  String get dismiss => 'إغلاق';
+
+  @override
+  String get scanName => 'مسح الاسم';
+
+  @override
+  String get scanMedicationLabel => 'مسح بطاقة الدواء';
+
+  @override
+  String get autoFillFromPhoto => 'ملء التفاصيل تلقائياً من الصورة';
+
+  @override
+  String get medicineNameHint => 'مثال: أسبرين، باراسيتامول';
+
+  @override
+  String get photoCapturedSuccess => 'تم التقاط الصورة بنجاح!';
+
+  @override
+  String get photoSelectedSuccess => 'تم اختيار الصورة بنجاح!';
+
+  @override
+  String get photoRemovedSuccess => 'تمت إزالة الصورة';
+
+  @override
+  String get lookingUpMedication => 'جارٍ البحث عن الدواء...';
+
+  @override
+  String get scannedCodeLabel => 'الكود الممسوح';
+
+  @override
+  String failedToCapturePhoto(String error) {
+    return 'فشل التقاط الصورة: $error';
+  }
+
+  @override
+  String failedToPickPhoto(String error) {
+    return 'فشل اختيار الصورة: $error';
+  }
+
+  @override
+  String scannedMedication(String name) {
+    return 'تم المسح: $name';
+  }
+
+  @override
+  String medicationFound(String name) {
+    return 'تم العثور على الدواء: $name';
+  }
+
+  @override
+  String scannedCodeEnterManually(String code) {
+    return 'الكود الممسوح: $code\nالرجاء إدخال التفاصيل يدوياً';
+  }
+
+  @override
+  String get whenAndHowOftenToTake => 'متى وكم مرة تتناول هذا الدواء';
+
+  @override
+  String get howManyTimesPerDay => 'كم مرة في اليوم؟';
+
+  @override
+  String get selectTimesPerDayDesc => 'حدد عدد مرات تناول هذا الدواء يومياً';
+
+  @override
+  String get timeSingular => 'مرة';
+
+  @override
+  String get timePlural => 'مرات';
+
+  @override
+  String get amount => 'الكمية';
+
+  @override
+  String get unit => 'الوحدة';
+
+  @override
+  String get treatmentDuration => 'مدة العلاج';
+
+  @override
+  String get startingLabel => 'البداية';
+
+  @override
+  String treatmentEndsOn(String date) {
+    return 'ينتهي العلاج في $date';
+  }
+
+  @override
+  String get reminderTimesTitle => 'أوقات التذكير';
+
+  @override
+  String get selectTimesForReminders => 'حدد مرات اليوم لضبط أوقات التذكير';
+
+  @override
+  String get scheduleSummary => 'ملخص الجدول';
+
+  @override
+  String get completeTheForm => 'أكمل النموذج';
+
+  @override
+  String get eachDose => 'كل جرعة';
+
+  @override
+  String get starts => 'يبدأ';
+
+  @override
+  String get repetitionPatternTitle => 'نمط التكرار';
+
+  @override
+  String get whenToTakeMedication => 'متى يجب تناول هذا الدواء؟';
+
+  @override
+  String activeOnDays(String days) {
+    return 'نشط في: $days';
+  }
+
+  @override
+  String get selectDaysOfWeek => 'حدد أيام الأسبوع';
+
+  @override
+  String get everyDay => 'كل يوم';
+
+  @override
+  String get everyOtherDay => 'كل يومين';
+
+  @override
+  String get mondayToFriday => 'الإثنين إلى الجمعة';
+
+  @override
+  String get saturdayAndSunday => 'السبت والأحد';
+
+  @override
+  String get noDaysSelected => 'لم يتم تحديد أيام';
+
+  @override
+  String get recurringReminders => 'تذكيرات متكررة';
+
+  @override
+  String get followUpRemindersForMissed =>
+      'احصل على تذكيرات متابعة للجرعات الفائتة';
+
+  @override
+  String get reminderIntervalTitle => 'فترة التذكير';
+
+  @override
+  String missedDoseReminderInfo(int minutes) {
+    return 'إذا فاتتك جرعة، ستحصل على تذكير كل $minutes دقيقة (حتى 4 مرات)';
+  }
+
+  @override
+  String get trackMedicineSupply =>
+      'تتبع كمية دوائك واحصل على تنبيهات انخفاض المخزون';
+
+  @override
+  String howManyDoYouHave(String unit) {
+    return 'كم $unit لديك؟';
+  }
+
+  @override
+  String get quantityLabel => 'الكمية';
+
+  @override
+  String get inStock => 'في المخزون';
+
+  @override
+  String get stockTimeline => 'جدول المخزون الزمني';
+
+  @override
+  String get dailyUsageLabel => 'الاستهلاك اليومي';
+
+  @override
+  String get stockLastsFor => 'يكفي المخزون لـ';
+
+  @override
+  String get stockRunsOut => 'ينفد المخزون في';
+
+  @override
+  String get stockLevelLabel => 'مستوى المخزون';
+
+  @override
+  String get lowStockReminder => 'تذكير انخفاض المخزون';
+
+  @override
+  String get getNotifiedBeforeRunOut => 'احصل على إشعار قبل نفاد دوائك';
+
+  @override
+  String get remindMeDaysBefore => 'ذكرني قبل هذا العدد من الأيام:';
+
+  @override
+  String get expiryDateOptional => 'تاريخ الانتهاء (اختياري)';
+
+  @override
+  String get trackWhenExpires => 'تتبع متى ينتهي دوائك';
+
+  @override
+  String get tapToSetExpiryDate => 'اضغط لتعيين تاريخ الانتهاء';
+
+  @override
+  String get remindMeBeforeExpiry => 'ذكرني قبل انتهاء الصلاحية:';
+
+  @override
+  String get readyToSave => 'جاهز للحفظ!';
+
+  @override
+  String get completeAllSteps => 'أكمل جميع الخطوات للمتابعة';
+
+  @override
+  String get medicineInfoComplete => 'معلومات دوائك مكتملة وجاهزة للحفظ';
+
+  @override
+  String get fillRequiredFields =>
+      'يرجى ملء جميع الحقول المطلوبة في الخطوات السابقة';
+
+  @override
+  String get medicineTypeAndDetails => 'نوع الدواء والتفاصيل';
+
+  @override
+  String get scheduleConfigured => 'تم ضبط الجدول';
+
+  @override
+  String get stockInformation => 'معلومات المخزون';
+
+  @override
+  String xTimesPerDay(int count) {
+    return '${count}x في اليوم';
+  }
+
+  @override
+  String get takeAll => 'تناول الكل';
+
+  @override
+  String get swipeRightToTake => 'اسحب يميناً للأخذ';
+
+  @override
+  String get swipeLeftToSkip => 'اسحب يساراً للتخطي';
+
+  @override
+  String get snoozed => 'تم التأجيل';
+
+  @override
+  String get scheduled => 'المجدول';
+
+  @override
+  String get takenAt => 'تناول في';
+
+  @override
+  String get onTime => 'في الوقت المحدد';
+
+  @override
+  String minEarly(int minutes) {
+    return 'قبل $minutes دقيقة';
+  }
+
+  @override
+  String minLate(int minutes) {
+    return 'بعد $minutes دقيقة';
+  }
+
+  @override
+  String hoursMinLate(int hours, int minutes) {
+    return 'بعد $hoursس $minutesد';
+  }
+
+  @override
+  String get startStreak => 'ابدأ سلسلتك اليوم!';
+
+  @override
+  String keepItUpStreak(int remaining) {
+    return 'استمر! $remaining أيام أخرى لأسبوع!';
+  }
+
+  @override
+  String amazingStreak(int remaining) {
+    return 'رائع! $remaining أيام أخرى لشهر!';
+  }
+
+  @override
+  String incredibleStreak(int remaining) {
+    return 'مذهل! $remaining يومًا آخر لـ 100 يوم!';
+  }
+
+  @override
+  String get streakChampion => 'أنت بطل الالتزام بالدواء!';
+
+  @override
+  String get excellentAdherenceExclaim => 'التزام ممتاز! 🎉';
+
+  @override
+  String get goodProgress => 'تقدم جيد!';
+
+  @override
+  String get keepItUp => 'استمر!';
+
+  @override
+  String get letsCatchUp => 'هيا نتدارك';
+
+  @override
+  String get startYourDay => 'ابدأ يومك';
+
+  @override
+  String get excellentAdherenceMessage =>
+      'التزام ممتاز! استمر على هذا النهج الرائع!';
+
+  @override
+  String get goodAdherenceMessage => 'التزام جيد. حاول تحسين الاتساق.';
+
+  @override
+  String get fairAdherenceMessage =>
+      'التزام مقبول. فكر في ضبط المزيد من التذكيرات.';
+
+  @override
+  String get lowAdherenceMessage =>
+      'التزام منخفض. يرجى محاولة تناول الأدوية بانتظام.';
+
+  @override
+  String get veryLowAdherenceMessage =>
+      'التزام منخفض جدًا. تحدث مع مقدم الرعاية الصحية.';
+
+  @override
+  String get overallAdherence => 'الالتزام الإجمالي';
+
+  @override
+  String get adherence => 'الالتزام';
+
+  @override
+  String get medicationPerformance => 'أداء الأدوية';
+
+  @override
+  String get weeklyAdherenceInsightTitle => 'الالتزام الأسبوعي';
+
+  @override
+  String weeklyAdherenceInsightDesc(int percent, int taken, int total) {
+    return 'تناولت $percent٪ من جرعاتك هذا الأسبوع ($taken/$total)';
+  }
+
+  @override
+  String get improvingTrendTitle => 'اتجاه تحسن 📈';
+
+  @override
+  String get decliningTrendTitle => 'اتجاه تراجع 📉';
+
+  @override
+  String improvingTrendDesc(int change) {
+    return 'تحسنت بنسبة $change٪ مقارنة بالأسبوع الماضي. تقدم رائع!';
+  }
+
+  @override
+  String decliningTrendDesc(int change) {
+    return 'تراجعت بنسبة $change٪ مقارنة بالأسبوع الماضي. هيا نعود للمسار الصحيح!';
+  }
+
+  @override
+  String get topMedicationTitle => 'أفضل دواء';
+
+  @override
+  String topMedicationDesc(String name, int percent) {
+    return 'دواء $name لديه نسبة التزام $percent٪ - أكثر أدويتك انتظامًا!';
+  }
+
+  @override
+  String streakDayTitle(int streak) {
+    return 'سلسلة $streak يوم! 🔥';
+  }
+
+  @override
+  String get streakAmazingDesc => 'رائع! لقد كنت منتظمًا لأكثر من أسبوع!';
+
+  @override
+  String get streakConsistencyDesc => 'استمر! الانتظام هو مفتاح صحة أفضل.';
+
+  @override
+  String get bestTimeTitle => 'أفضل وقت ⏰';
+
+  @override
+  String bestTimeDesc(String period, int percent) {
+    return 'أكثر أوقاتك انتظامًا هو $period بنسبة $percent٪';
+  }
+
+  @override
+  String get excellentAdherenceInsightTitle => 'التزام ممتاز! 🌟';
+
+  @override
+  String excellentAdherenceInsightDesc(int percent) {
+    return 'رائع! تناولت $percent٪ من جرعاتك هذا الأسبوع. استمر على هذا النهج الرائع!';
+  }
+
+  @override
+  String get needsImprovementTitle => 'يحتاج تحسين';
+
+  @override
+  String needsImprovementInsightDesc(int percent) {
+    return 'كان التزامك هذا الأسبوع $percent٪. حاول ضبط المزيد من التذكيرات أو تعديل جدولك للتحسين.';
+  }
+
+  @override
+  String get summary => 'ملخص';
+
+  @override
+  String get medication => 'الدواء';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String generatedOn(String date) {
+    return 'تم الإنشاء في: $date';
+  }
+
+  @override
+  String get adherenceStatistics => 'إحصائيات الالتزام';
+
+  @override
+  String get recentDoseHistory => 'سجل الجرعات الأخير';
+
+  @override
+  String reportPeriod(String start, String end) {
+    return 'فترة التقرير: $start - $end';
+  }
+
+  @override
+  String get medAssistAnalyticsReport => 'تقرير تحليلات MedAssist';
 }

@@ -16,13 +16,18 @@ part 'app_database.g.dart';
   SnoozeHistoryTable,
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+
+  /// Returns the single shared database instance.
+  factory AppDatabase() => _instance;
+
+  AppDatabase._internal() : super(_openConnection());
 
   /// Constructor for testing with in-memory database
   AppDatabase.forTesting(super.executor);
+  static final AppDatabase _instance = AppDatabase._internal();
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -71,6 +76,22 @@ class AppDatabase extends _$AppDatabase {
           // Create snooze history table
           await m.createTable(snoozeHistoryTable);
         }
+
+        // Migrate from version 6 to 7 (add performance indexes)
+        if (from <= 6 && to >= 7) {
+          await customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_dose_history_med_date '
+            'ON dose_history (medication_id, scheduled_date)',
+          );
+          await customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_stock_history_med '
+            'ON stock_history (medication_id)',
+          );
+          await customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_snooze_history_med '
+            'ON snooze_history (medication_id)',
+          );
+        }
       },
     );
   }
@@ -101,13 +122,18 @@ class AppDatabase extends _$AppDatabase {
     return (select(medications)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
-  /// Get medications for today
+  /// Get medications for today (started and not yet past their duration)
   Future<List<Medication>> getTodaysMedications() async {
     final now = DateTime.now();
-    return (select(medications)
+    final today = DateTime(now.year, now.month, now.day);
+    final allActive = await (select(medications)
           ..where((tbl) => tbl.isActive.equals(true))
           ..where((tbl) => tbl.startDate.isSmallerOrEqualValue(now)))
         .get();
+    return allActive.where((med) {
+      final endDate = med.startDate.add(Duration(days: med.durationDays));
+      return !today.isAfter(endDate);
+    }).toList();
   }
 
   /// Insert a new medication
@@ -204,8 +230,9 @@ class AppDatabase extends _$AppDatabase {
 
   /// Search medications by name
   Future<List<Medication>> searchMedications(String query) async {
+    final sanitized = query.replaceAll('%', '').replaceAll('_', ' ');
     return (select(medications)
-          ..where((tbl) => tbl.medicineName.like('%$query%'))
+          ..where((tbl) => tbl.medicineName.like('%$sanitized%'))
           ..where((tbl) => tbl.isActive.equals(true)))
         .get();
   }
@@ -307,6 +334,21 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
+  /// Get dose history for a date range (inclusive)
+  Future<List<DoseHistoryData>> getDoseHistoryBetween(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final start = DateTime(startDate.year, startDate.month, startDate.day);
+    final end = DateTime(endDate.year, endDate.month, endDate.day)
+        .add(const Duration(days: 1));
+
+    return (select(doseHistory)
+          ..where((tbl) => tbl.scheduledDate.isBiggerOrEqualValue(start))
+          ..where((tbl) => tbl.scheduledDate.isSmallerThanValue(end)))
+        .get();
+  }
+
   /// Check if dose was already recorded
   Future<DoseHistoryData?> findDoseRecord({
     required int medicationId,
@@ -326,14 +368,14 @@ class AppDatabase extends _$AppDatabase {
         .getSingleOrNull();
   }
 
-  /// Get adherence statistics for a date range
+  /// Get adherence statistics for a date range (startDate inclusive, endDate exclusive)
   Future<Map<String, int>> getAdherenceStats(
     DateTime startDate,
     DateTime endDate,
   ) async {
     final records = await (select(doseHistory)
           ..where((tbl) => tbl.scheduledDate.isBiggerOrEqualValue(startDate))
-          ..where((tbl) => tbl.scheduledDate.isSmallerOrEqualValue(endDate)))
+          ..where((tbl) => tbl.scheduledDate.isSmallerThanValue(endDate)))
         .get();
 
     final stats = <String, int>{
@@ -535,34 +577,36 @@ class AppDatabase extends _$AppDatabase {
     required int medicationId,
     required int suggestedMinutes,
   }) async {
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
+    await transaction(() async {
+      final today = DateTime.now();
+      final todayDate = DateTime(today.year, today.month, today.day);
 
-    final existing = await getTodaySnoozeHistory(medicationId);
+      final existing = await getTodaySnoozeHistory(medicationId);
 
-    if (existing != null) {
-      // Update existing record
-      await (update(snoozeHistoryTable)
-            ..where((tbl) => tbl.id.equals(existing.id)))
-          .write(
-        SnoozeHistoryTableCompanion(
-          snoozeCount: Value(existing.snoozeCount + 1),
-          lastSnoozeTime: Value(DateTime.now()),
-          suggestedMinutes: Value(suggestedMinutes),
-        ),
-      );
-    } else {
-      // Create new record for today
-      await into(snoozeHistoryTable).insert(
-        SnoozeHistoryTableCompanion.insert(
-          medicationId: medicationId,
-          snoozeDate: todayDate,
-          snoozeCount: const Value(1),
-          lastSnoozeTime: DateTime.now(),
-          suggestedMinutes: Value(suggestedMinutes),
-        ),
-      );
-    }
+      if (existing != null) {
+        // Update existing record
+        await (update(snoozeHistoryTable)
+              ..where((tbl) => tbl.id.equals(existing.id)))
+            .write(
+          SnoozeHistoryTableCompanion(
+            snoozeCount: Value(existing.snoozeCount + 1),
+            lastSnoozeTime: Value(DateTime.now()),
+            suggestedMinutes: Value(suggestedMinutes),
+          ),
+        );
+      } else {
+        // Create new record for today
+        await into(snoozeHistoryTable).insert(
+          SnoozeHistoryTableCompanion.insert(
+            medicationId: medicationId,
+            snoozeDate: todayDate,
+            snoozeCount: const Value(1),
+            lastSnoozeTime: DateTime.now(),
+            suggestedMinutes: Value(suggestedMinutes),
+          ),
+        );
+      }
+    });
   }
 
   /// Reset snooze count (call at midnight)
@@ -650,6 +694,30 @@ class AppDatabase extends _$AppDatabase {
       await delete(stockHistory).go();
       await delete(reminderTimes).go();
       await delete(medications).go();
+    });
+  }
+
+  /// Atomically clear all data and restore from backup in a single transaction.
+  /// If any insert fails, the entire operation is rolled back.
+  Future<void> restoreAllData({
+    required List<MedicationsCompanion> meds,
+    required List<DoseHistoryCompanion> doses,
+    required List<SnoozeHistoryTableCompanion> snoozes,
+    required List<StockHistoryCompanion> stocks,
+  }) async {
+    await transaction(() async {
+      // Clear in FK order
+      await delete(snoozeHistoryTable).go();
+      await delete(doseHistory).go();
+      await delete(stockHistory).go();
+      await delete(reminderTimes).go();
+      await delete(medications).go();
+
+      // Insert in FK order (medications first)
+      for (final m in meds) { await into(medications).insert(m); }
+      for (final d in doses) { await into(doseHistory).insert(d); }
+      for (final s in snoozes) { await into(snoozeHistoryTable).insert(s); }
+      for (final s in stocks) { await into(stockHistory).insert(s); }
     });
   }
 

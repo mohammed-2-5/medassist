@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Permission/Health Status Banner
 ///
@@ -137,7 +138,7 @@ class PermissionBanner extends StatelessWidget { // Optional dismiss functionali
                 onPressed: onDismiss,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                tooltip: 'Dismiss',
+                tooltip: AppLocalizations.of(context)!.dismiss,
               ),
             ],
           ],

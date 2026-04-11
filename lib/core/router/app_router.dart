@@ -5,15 +5,17 @@ import 'package:med_assist/core/navigation/main_scaffold.dart';
 import 'package:med_assist/features/add_medication/screens/add_medication_screen.dart';
 import 'package:med_assist/features/analytics/screens/analytics_dashboard_screen.dart';
 import 'package:med_assist/features/diagnostics/screens/diagnostics_screen.dart';
+import 'package:med_assist/features/history/screens/history_screen.dart';
 import 'package:med_assist/features/insights/screens/insights_screen.dart';
 import 'package:med_assist/features/medications/screens/medication_detail_screen.dart';
 import 'package:med_assist/features/medications/screens/medication_edit_screen.dart';
 import 'package:med_assist/features/onboarding/screens/enhanced_onboarding_screen.dart';
-import 'package:med_assist/features/splash/screens/splash_screen.dart';
 import 'package:med_assist/features/reports/screens/reports_screen.dart';
 import 'package:med_assist/features/settings/screens/backup_restore_screen.dart';
 import 'package:med_assist/features/settings/screens/notification_debug_screen.dart';
 import 'package:med_assist/features/settings/screens/settings_screen.dart';
+import 'package:med_assist/features/splash/screens/splash_screen.dart';
+import 'package:med_assist/features/stock/screens/stock_overview_screen.dart';
 
 class AppRouter {
   // Private constructor to prevent instantiation
@@ -50,17 +52,17 @@ class AppRouter {
       GoRoute(
         path: '/history',
         name: 'history',
-        builder: (context, state) => const MainScaffold(initialIndex: 3),
+        builder: (context, state) => const HistoryScreen(),
       ),
       GoRoute(
         path: '/stock',
         name: 'stock',
-        builder: (context, state) => const MainScaffold(initialIndex: 4),
+        builder: (context, state) => const StockOverviewScreen(),
       ),
       GoRoute(
         path: '/chatbot',
         name: 'chatbot',
-        builder: (context, state) => const MainScaffold(initialIndex: 5),
+        builder: (context, state) => const MainScaffold(initialIndex: 3),
       ),
       GoRoute(
         path: '/medication/:id',

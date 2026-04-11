@@ -1,6 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/features/analytics/providers/analytics_models.dart';
+import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
+
+export 'package:med_assist/features/analytics/providers/analytics_models.dart';
 
 /// Helper to convert scheduled date/hour/minute to DateTime
 DateTime _getScheduledDateTime(DoseHistoryData dose) {
@@ -14,7 +18,9 @@ DateTime _getScheduledDateTime(DoseHistoryData dose) {
 }
 
 /// Provider for weekly adherence data (last 7 days)
-final weeklyAdherenceProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final weeklyAdherenceProvider = FutureProvider<Map<String, dynamic>>((
+  ref,
+) async {
   final database = ref.watch(appDatabaseProvider);
 
   final now = DateTime.now();
@@ -37,13 +43,17 @@ final weeklyAdherenceProvider = FutureProvider<Map<String, dynamic>>((ref) async
     final dayDoses = weekHistory.where((DoseHistoryData dose) {
       final doseDate = dose.scheduledDate;
       return doseDate.year == date.year &&
-             doseDate.month == date.month &&
-             doseDate.day == date.day;
+          doseDate.month == date.month &&
+          doseDate.day == date.day;
     });
 
     dailyData[dayKey] = {
-      'taken': dayDoses.where((DoseHistoryData d) => d.status == 'taken').length,
-      'missed': dayDoses.where((DoseHistoryData d) => d.status == 'missed').length,
+      'taken': dayDoses
+          .where((DoseHistoryData d) => d.status == 'taken')
+          .length,
+      'missed': dayDoses
+          .where((DoseHistoryData d) => d.status == 'missed')
+          .length,
       'total': dayDoses.length,
     };
   }
@@ -59,17 +69,27 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
   var streak = 0;
   var checkDate = now;
 
+  // Fetch all history once, then filter in memory
+  final allHistory = await database.getAllDoseHistory();
+
   // Check each day going backwards
   for (var i = 0; i < 365; i++) {
     final startOfDay = DateTime(checkDate.year, checkDate.month, checkDate.day);
-    final endOfDay = DateTime(checkDate.year, checkDate.month, checkDate.day, 23, 59, 59);
+    final endOfDay = DateTime(
+      checkDate.year,
+      checkDate.month,
+      checkDate.day,
+      23,
+      59,
+      59,
+    );
 
-    // Get doses for this day
-    final allHistory = await database.getAllDoseHistory();
     final dayDoses = allHistory.where((DoseHistoryData dose) {
       final scheduledTime = _getScheduledDateTime(dose);
-      return scheduledTime.isAfter(startOfDay.subtract(const Duration(seconds: 1))) &&
-             scheduledTime.isBefore(endOfDay.add(const Duration(seconds: 1)));
+      return scheduledTime.isAfter(
+            startOfDay.subtract(const Duration(seconds: 1)),
+          ) &&
+          scheduledTime.isBefore(endOfDay.add(const Duration(seconds: 1)));
     }).toList();
 
     if (dayDoses.isEmpty) {
@@ -100,9 +120,15 @@ final overallStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final allHistory = await database.getAllDoseHistory();
 
   final totalDoses = allHistory.length;
-  final takenDoses = allHistory.where((DoseHistoryData d) => d.status == 'taken').length;
-  final missedDoses = allHistory.where((DoseHistoryData d) => d.status == 'missed').length;
-  final skippedDoses = allHistory.where((DoseHistoryData d) => d.status == 'skipped').length;
+  final takenDoses = allHistory
+      .where((DoseHistoryData d) => d.status == 'taken')
+      .length;
+  final missedDoses = allHistory
+      .where((DoseHistoryData d) => d.status == 'missed')
+      .length;
+  final skippedDoses = allHistory
+      .where((DoseHistoryData d) => d.status == 'skipped')
+      .length;
 
   final overallAdherence = totalDoses > 0
       ? (takenDoses / totalDoses * 100).round()
@@ -140,27 +166,34 @@ final overallStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 });
 
 /// Provider for monthly trends (last 6 months)
-final monthlyTrendsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final monthlyTrendsProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) async {
   final database = ref.watch(appDatabaseProvider);
 
   final now = DateTime.now();
   final trends = <Map<String, dynamic>>[];
+
+  // Fetch all history once, then filter in memory
+  final allHistory = await database.getAllDoseHistory();
 
   for (var i = 5; i >= 0; i--) {
     final month = DateTime(now.year, now.month - i);
     final monthStart = DateTime(month.year, month.month);
     final monthEnd = DateTime(month.year, month.month + 1, 0, 23, 59, 59);
 
-    // Get doses for this month
-    final allHistory = await database.getAllDoseHistory();
     final monthDoses = allHistory.where((DoseHistoryData dose) {
       final scheduledTime = _getScheduledDateTime(dose);
-      return scheduledTime.isAfter(monthStart.subtract(const Duration(seconds: 1))) &&
-             scheduledTime.isBefore(monthEnd.add(const Duration(seconds: 1)));
+      return scheduledTime.isAfter(
+            monthStart.subtract(const Duration(seconds: 1)),
+          ) &&
+          scheduledTime.isBefore(monthEnd.add(const Duration(seconds: 1)));
     }).toList();
 
     final total = monthDoses.length;
-    final taken = monthDoses.where((DoseHistoryData d) => d.status == 'taken').length;
+    final taken = monthDoses
+        .where((DoseHistoryData d) => d.status == 'taken')
+        .length;
     final adherence = total > 0 ? (taken / total * 100).round() : 0;
 
     trends.add({
@@ -176,7 +209,9 @@ final monthlyTrendsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) a
 });
 
 /// Provider for medication-specific analytics
-final medicationAnalyticsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final medicationAnalyticsProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) async {
   final database = ref.watch(appDatabaseProvider);
 
   final medications = await database.getAllMedications();
@@ -185,41 +220,79 @@ final medicationAnalyticsProvider = FutureProvider<List<Map<String, dynamic>>>((
   final results = <Map<String, dynamic>>[];
 
   for (final med in medications) {
-    final medDoses = allHistory.where((DoseHistoryData d) => d.medicationId == med.id).toList();
+    final medDoses = allHistory
+        .where((DoseHistoryData d) => d.medicationId == med.id)
+        .toList();
 
     if (medDoses.isEmpty) continue;
 
     final total = medDoses.length;
-    final taken = medDoses.where((DoseHistoryData d) => d.status == 'taken').length;
+    final taken = medDoses
+        .where((DoseHistoryData d) => d.status == 'taken')
+        .length;
     final adherence = (taken / total * 100).round();
 
     results.add({
       'medication': med,
       'total': total,
       'taken': taken,
-      'missed': medDoses.where((DoseHistoryData d) => d.status == 'missed').length,
+      'missed': medDoses
+          .where((DoseHistoryData d) => d.status == 'missed')
+          .length,
       'adherence': adherence,
     });
   }
 
   // Sort by adherence (lowest first for attention)
-  results.sort((a, b) => (a['adherence'] as int).compareTo(b['adherence'] as int));
+  results.sort(
+    (a, b) => (a['adherence'] as int).compareTo(b['adherence'] as int),
+  );
 
   return results;
 });
 
 String _getMonthName(int month) {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   return months[month - 1];
 }
 
 String _getMonthShort(int month) {
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   return months[month - 1];
 }
+
+/// 7-day adherence trend — watched by AdherenceLineChart.
+final adherenceTrend7Provider = FutureProvider<List<TrendDataPoint>>((ref) {
+  return ref.watch(analyticsProvider).getAdherenceTrend(7);
+});
+
+/// 30-day adherence trend — watched by CalendarHeatmap.
+final adherenceTrend30Provider = FutureProvider<List<TrendDataPoint>>((ref) {
+  return ref.watch(analyticsProvider).getAdherenceTrend(30);
+});

@@ -23,7 +23,6 @@ class StatsCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AnimatedCard(
-      onTap: () {},
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

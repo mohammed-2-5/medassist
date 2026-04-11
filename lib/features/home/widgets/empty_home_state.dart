@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Empty Home State - First-time user experience
 class EmptyHomeState extends StatelessWidget {
@@ -219,7 +220,7 @@ class _TipsHeader extends StatelessWidget {
           onPressed: onDismiss,
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
-          tooltip: 'Dismiss',
+          tooltip: AppLocalizations.of(context)!.dismiss,
         ),
       ],
     );

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/widgets/enhanced_search_bar.dart';
@@ -7,11 +9,12 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// Premium Search Bar for Medications List
 ///
 /// Features:
-/// - Gradient background (Teal → Light Blue)
-/// - Cyan-themed border and icons
+/// - Gradient background
+/// - Theme-colored border and icons
 /// - Adaptive dark/light mode colors
 /// - Smooth animations
-class MedicationsSearchBar extends ConsumerWidget {
+/// - 500ms debounce on search input
+class MedicationsSearchBar extends ConsumerStatefulWidget {
   const MedicationsSearchBar({
     required this.controller,
     super.key,
@@ -20,7 +23,30 @@ class MedicationsSearchBar extends ConsumerWidget {
   final TextEditingController controller;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MedicationsSearchBar> createState() =>
+      _MedicationsSearchBarState();
+}
+
+class _MedicationsSearchBarState extends ConsumerState<MedicationsSearchBar> {
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      ref
+          .read(medicationFilterProvider.notifier)
+          .updateSearchQuery(value.toLowerCase());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
@@ -48,7 +74,6 @@ class MedicationsSearchBar extends ConsumerWidget {
             color: colorScheme.primary.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
-            spreadRadius: 0,
           ),
         ],
       ),
@@ -61,29 +86,25 @@ class MedicationsSearchBar extends ConsumerWidget {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(
-                color: isDark
-                    ? colorScheme.outline.withOpacity(0.3)
-                    : const Color(0xFF00BCD4).withOpacity(0.3), // Cyan
+                color: colorScheme.outline.withOpacity(0.3),
                 width: 1.5,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(
-                color: isDark
-                    ? colorScheme.outline.withOpacity(0.3)
-                    : const Color(0xFF00BCD4).withOpacity(0.3),
+                color: colorScheme.outline.withOpacity(0.3),
                 width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(
-                color: Color(0xFF00BCD4), // Cyan
+              borderSide: BorderSide(
+                color: colorScheme.primary,
                 width: 2.5,
               ),
             ),
-            prefixIconColor: const Color(0xFF00BCD4),
+            prefixIconColor: colorScheme.primary,
             suffixIconColor: colorScheme.onSurface.withOpacity(0.6),
             hintStyle: TextStyle(
               color: isDark
@@ -96,12 +117,13 @@ class MedicationsSearchBar extends ConsumerWidget {
         ),
         child: EnhancedSearchBar(
           hintText: l10n.searchMedications,
-          controller: controller,
-          onChanged: (value) {
-            ref.read(medicationFilterProvider.notifier).updateSearchQuery(value.toLowerCase());
-          },
+          controller: widget.controller,
+          onChanged: _onSearchChanged,
           onClear: () {
-            ref.read(medicationFilterProvider.notifier).updateSearchQuery('');
+            _debounce?.cancel();
+            ref
+                .read(medicationFilterProvider.notifier)
+                .updateSearchQuery('');
           },
         ),
       ),

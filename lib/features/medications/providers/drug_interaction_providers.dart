@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/services/health/drug_interaction_service.dart';
+import 'package:riverpod/src/providers/future_provider.dart';
 
 /// Provider for DrugInteractionService
 final drugInteractionServiceProvider = Provider<DrugInteractionService>((ref) {
@@ -28,7 +29,7 @@ final interactionCountsProvider =
 });
 
 /// Provider for checking a new medication against existing ones
-final checkNewMedicationProvider =
+final FutureProviderFamily<List<InteractionWarning>, String> checkNewMedicationProvider =
     FutureProvider.family<List<InteractionWarning>, String>((ref, medicationName) async {
   final service = ref.watch(drugInteractionServiceProvider);
   return service.checkNewMedication(medicationName);

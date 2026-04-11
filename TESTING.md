@@ -360,9 +360,9 @@ void main() {
 ### Adding Widget Tests
 
 1. Create test file in `test/widget/` directory
-2. Import widget test helpers
-3. Use `testWidgets()` for each test case
-4. Use `pumpWidget()` to render, `pumpAndSettle()` to wait for animations
+2. Import `helpers/widget_test_helpers.dart` to access the shared harness, responsive utilities, and test data factories
+3. Use `pumpAppWidget` for single-device tests or `pumpWidgetAcrossDevices` for responsive sweeps
+4. Wrap golden tests with `expectResponsiveGolden` to capture multiple breakpoints in one go
 
 **Template**:
 ```dart
@@ -370,17 +370,46 @@ import 'package:flutter_test/flutter_test.dart';
 import 'helpers/widget_test_helpers.dart';
 
 void main() {
-  testWidgets('Widget should display correctly', (tester) async {
-    // Arrange & Act
-    await tester.pumpWidget(
-      createTestApp(YourWidget()),
+  testWidgets('Stock overview renders across breakpoints', (tester) async {
+    await pumpWidgetAcrossDevices(
+      tester,
+      (_) => const StockOverviewScreen(),
+      overrides: [
+        medicationsStockProvider.overrideWith((ref) async => [
+              TestDataFactory.medicationStock(
+                stockLevel: StockLevel.critical,
+                currentStock: 4,
+              ),
+            ]),
+        stockStatisticsProvider.overrideWith((ref) async => {
+              'total': 1,
+              'critical': 1,
+              'low': 0,
+              'medium': 0,
+              'good': 0,
+            }),
+      ],
     );
-    await tester.pumpAndSettle();
 
-    // Assert
-    expect(find.text('Expected Text'), findsOneWidget);
+    expect(find.text('Stock Overview'), findsWidgets);
   });
 }
+```
+
+#### Responsive Golden Tests
+
+Use the built-in `expectResponsiveGolden` helper to generate multi-device goldens with one call:
+
+```dart
+testGoldens('Analytics dashboard golden', (tester) async {
+  await expectResponsiveGolden(
+    tester,
+    goldenName: 'analytics_dashboard',
+    widgetBuilder: (_) => buildTestAppShell(
+      child: const AnalyticsDashboardScreen(),
+    ),
+  );
+});
 ```
 
 ### Adding E2E Tests

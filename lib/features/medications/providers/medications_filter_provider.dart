@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/utils/stock_utils.dart';
 
 /// Sort options for medications list
 enum MedicationSortOption {
@@ -11,6 +12,9 @@ enum MedicationSortOption {
   stockLow,
   stockHigh,
 }
+
+/// Sentinel to distinguish "not provided" from "explicitly null"
+const _sentinel = Object();
 
 /// Filter options for medications list
 class MedicationFilter {
@@ -31,17 +35,23 @@ class MedicationFilter {
   final bool showExpired;
 
   MedicationFilter copyWith({
-    String? searchQuery,
-    String? medicineType,
-    bool? isActive,
+    Object? searchQuery = _sentinel,
+    Object? medicineType = _sentinel,
+    Object? isActive = _sentinel,
     bool? showLowStock,
     bool? showExpiring,
     bool? showExpired,
   }) {
     return MedicationFilter(
-      searchQuery: searchQuery ?? this.searchQuery,
-      medicineType: medicineType ?? this.medicineType,
-      isActive: isActive ?? this.isActive,
+      searchQuery: identical(searchQuery, _sentinel)
+          ? this.searchQuery
+          : searchQuery as String?,
+      medicineType: identical(medicineType, _sentinel)
+          ? this.medicineType
+          : medicineType as String?,
+      isActive: identical(isActive, _sentinel)
+          ? this.isActive
+          : isActive as bool?,
       showLowStock: showLowStock ?? this.showLowStock,
       showExpiring: showExpiring ?? this.showExpiring,
       showExpired: showExpired ?? this.showExpired,
@@ -131,11 +141,8 @@ final filteredMedicationsProvider = FutureProvider<List<Medication>>((ref) async
 
     // Low stock filter
     if (filter.showLowStock) {
-      final dailyUsage = med.timesPerDay * med.dosePerTime;
-      if (dailyUsage > 0) {
-        final daysRemaining = med.stockQuantity / dailyUsage;
-        if (daysRemaining >= med.reminderDaysBeforeRunOut) return false;
-      }
+      final days = StockUtils.daysRemaining(med);
+      if (days < 0 || days >= med.reminderDaysBeforeRunOut) return false;
     }
 
     // Expiring filter
@@ -170,22 +177,17 @@ final filteredMedicationsProvider = FutureProvider<List<Medication>>((ref) async
       case MedicationSortOption.dateOldest:
         return a.createdAt.compareTo(b.createdAt);
       case MedicationSortOption.stockLow:
-        // Calculate days remaining for sorting
-        final aDaysRemaining = a.timesPerDay * a.dosePerTime > 0
-            ? a.stockQuantity / (a.timesPerDay * a.dosePerTime)
-            : 999.0;
-        final bDaysRemaining = b.timesPerDay * b.dosePerTime > 0
-            ? b.stockQuantity / (b.timesPerDay * b.dosePerTime)
-            : 999.0;
-        return aDaysRemaining.compareTo(bDaysRemaining);
+        final aDays = StockUtils.daysRemaining(a);
+        final bDays = StockUtils.daysRemaining(b);
+        final aVal = aDays < 0 ? 999.0 : aDays.toDouble();
+        final bVal = bDays < 0 ? 999.0 : bDays.toDouble();
+        return aVal.compareTo(bVal);
       case MedicationSortOption.stockHigh:
-        final aDaysRemaining = a.timesPerDay * a.dosePerTime > 0
-            ? a.stockQuantity / (a.timesPerDay * a.dosePerTime)
-            : 999.0;
-        final bDaysRemaining = b.timesPerDay * b.dosePerTime > 0
-            ? b.stockQuantity / (b.timesPerDay * b.dosePerTime)
-            : 999.0;
-        return bDaysRemaining.compareTo(aDaysRemaining);
+        final aDays = StockUtils.daysRemaining(a);
+        final bDays = StockUtils.daysRemaining(b);
+        final aVal = aDays < 0 ? 999.0 : aDays.toDouble();
+        final bVal = bDays < 0 ? 999.0 : bDays.toDouble();
+        return bVal.compareTo(aVal);
     }
   });
 

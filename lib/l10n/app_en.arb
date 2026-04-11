@@ -386,13 +386,22 @@
 
   "analytics": "Analytics",
   "exportData": "Export Data",
+  "customDateRange": "Custom Date Range",
+  "@customDateRange": {
+    "description": "Popup action label for selecting a custom analytics date range"
+  },
+  "exportPdf": "Export PDF",
+  "@exportPdf": {
+    "description": "Popup action label for exporting analytics report as PDF"
+  },
+  "days": "Days",
   "week": "Week",
   "month": "Month",
   "adherenceRate": "Adherence Rate",
   "takenDoses": "Taken",
   "missedDoses": "Missed",
   "skippedDoses": "Skipped",
-  "totalDoses": "Total",
+  "totalDoses": "Total Doses",
   "currentStreak": "Current Streak",
   "bestStreak": "Best Streak",
   "daysStreak": "{days} days",
@@ -690,5 +699,637 @@
   "restoreFromBackup": "Restore from Backup",
   "restoreDescription": "Import data from a backup file. This will replace all current data.",
   "restoreWarning": "Warning: Current data will be erased",
-  "selectBackupFile": "Select Backup File"
+  "selectBackupFile": "Select Backup File",
+
+  "year": "Year",
+  "adjustStock": "Adjust Stock",
+  "currentStockLabel": "Current Stock:",
+  "newStockAmount": "New Stock Amount",
+  "enterUpdatedStockQuantity": "Enter the updated stock quantity",
+  "quickAdjustments": "Quick Adjustments:",
+  "pleaseEnterValidStock": "Please enter a valid stock amount",
+  "stockUpdatedTo": "Stock updated to {quantity} {unit}",
+  "@stockUpdatedTo": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUpdatingStock": "Error updating stock: {error}",
+  "@errorUpdatingStock": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "daysRemainingLabel": "Days Remaining",
+  "stockLevelCritical": "CRITICAL",
+  "stockLevelLow": "LOW",
+  "stockLevelMedium": "MEDIUM",
+  "stockLevelGood": "GOOD",
+  "stockWarningCritical": "Critical stock level! Refill immediately.",
+  "stockWarningLow": "Low stock level. Consider refilling soon.",
+  "expiryDateLabel": "Expiry Date",
+  "expiryStatusGood": "Good",
+  "expiryStatusToday": "Expires today",
+  "expiryStatusTomorrow": "Expires tomorrow",
+  "expiryStatusInDays": "Expires in {days} days",
+  "@expiryStatusInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "medicationExpiredWarning": "This medication has expired! Do not use.",
+  "medicationExpiringSoonWarning": "This medication is expiring soon ({days} days).",
+  "@medicationExpiringSoonWarning": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "generatingPdfReport": "Generating PDF report...",
+  "pdfReportGenerated": "PDF report generated successfully!",
+  "errorGeneratingPdf": "Error generating PDF: {error}",
+  "@errorGeneratingPdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lastBackup": "Last Backup",
+  "processing": "Processing...",
+  "backupCreatedSuccessfully": "Backup created successfully!",
+  "failedToCreateBackup": "Failed to create backup: {error}",
+  "@failedToCreateBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToShareBackup": "Failed to share backup: {error}",
+  "@failedToShareBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFromBackupQuestion": "Restore from Backup?",
+  "restoreConfirmMessage": "This will erase all current data and replace it with data from the backup file.\n\nThis action cannot be undone. Are you sure?",
+  "restoreComplete": "Restore Complete!",
+  "successfullyRestoredItems": "Successfully restored {count} items:",
+  "@successfullyRestoredItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToRestoreBackup": "Failed to restore backup: {error}",
+  "undo": "Undo",
+  "takenSuccessfully": "Taken successfully",
+  "missedDoseLabel": "Missed dose",
+  "logNow": "Log Now",
+  "snoozedForMinutes": "Snoozed for 15 minutes",
+  "@failedToRestoreBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "adherenceTrendChart": "7-Day Adherence Trend",
+  "adherenceByMedication": "Adherence by Medication",
+  "doseStatusDistribution": "Dose Status Distribution (This Month)",
+  "adherenceHeatmap30Day": "30-Day Adherence Heatmap",
+  "timeOfDayAnalysis": "Time-of-Day Analysis",
+  "adherenceRateByHour": "Adherence rate by hour of day",
+  "noMedicationDataAvailable": "No medication data available",
+  "noTrendDataAvailable": "No trend data available yet",
+  "noDoseDataForTimeAnalysis": "No dose data available for time analysis",
+  "errorLoadingTrend": "Error loading trend: {error}",
+  "@errorLoadingTrend": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingHeatmap": "Error loading heatmap: {error}",
+  "@errorLoadingHeatmap": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingChart": "Error loading chart: {error}",
+  "@errorLoadingChart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lessLabel": "Less",
+  "moreLabel": "More",
+  "insightsLabel": "Insights",
+  "bestTimeInsight": "Best time: {time} ({percent}% adherence)",
+  "@bestTimeInsight": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "needsAttentionInsight": "Needs attention: {time} ({percent}% adherence)",
+  "@needsAttentionInsight": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "noDoseDataThisMonth": "No dose data for this month",
+  "splashGreeting": "Say hi to your",
+  "splashAiTitle": "AI Medical Assistant",
+  "poweredByAi": "Powered by AI",
+  "dosesLabel": "{taken}/{total} doses",
+  "@dosesLabel": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "drugInteractionDetected": "Drug Interaction Detected",
+  "drugInteractionsDetected": "{count} Drug Interactions Detected",
+  "@drugInteractionsDetected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapToViewDetails": "Tap to view details",
+  "drugInteractions": "Drug Interactions",
+  "viewMedications": "View Medications",
+
+  "viewAnalytics": "View Analytics",
+  "insightsCount": "{count} insights",
+  "@insightsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingInsightsMessage": "Error loading insights",
+  "noInsightsYetMessage": "No insights yet",
+  "startTakingMedsForInsights": "Start taking your medications to generate personalized health insights",
+  "wantMoreInsights": "Want more insights?",
+  "viewAnalyticsDescription": "View your detailed analytics dashboard for comprehensive charts, trends, and statistics.",
+
+  "chatSuggestion1": "How do I add my first medication?",
+  "chatSuggestion2": "What should I know about my medications?",
+  "chatSuggestion3": "Help me understand adherence",
+
+  "onlyDosesLeft": "Only {count} doses left",
+  "@onlyDosesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "addMedicineTitle": "Add Medicine",
+  "saveDraft": "Save Draft",
+  "finish": "Finish",
+  "medicineAddedSuccess": "Medicine added successfully!",
+  "failedToSaveMedicine": "Failed to save medicine. Please try again.",
+  "draftSaved": "Draft saved!",
+
+  "noData": "No data",
+
+  "snoozeReminder": "Snooze Reminder",
+  "howLongSnooze": "How long would you like to snooze?",
+  "fiveMinutes": "5 minutes",
+  "tenMinutes": "10 minutes",
+  "fifteenMinutes": "15 minutes",
+  "thirtyMinutes": "30 minutes",
+  "oneHour": "1 hour",
+
+  "selectDateRange": "Select Date Range",
+  "last7Days": "Last 7 Days",
+  "last30Days": "Last 30 Days",
+  "last3Months": "Last 3 Months",
+  "thisYear": "This Year",
+  "apply": "Apply",
+  "daysSelected": "{count} days selected",
+  "@daysSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "reportsAndExportTitle": "Reports & Export",
+  "exportYourDataTitle": "Export Your Data",
+  "exportYourDataSubtitle": "Generate reports and export your medication data in various formats",
+  "csvExports": "CSV Exports",
+  "pdfReports": "PDF Reports",
+  "medicationsList": "Medications List",
+  "exportAllMedicationsCSV": "Export all medications data to CSV",
+  "doseHistory": "Dose History",
+  "exportDoseHistoryCSV": "Export complete dose history to CSV",
+  "stockHistory": "Stock History",
+  "exportStockHistoryCSV": "Export stock changes history to CSV",
+  "medicationsReport": "Medications Report",
+  "generateMedicationsPDF": "Generate detailed PDF report of all medications",
+  "adherenceReport": "Adherence Report",
+  "generateAdherencePDF": "Generate PDF report with adherence statistics",
+  "exportInfoMessage": "Exported files will be saved to your device and can be shared immediately",
+  "generatingExport": "Generating export...",
+  "exportedSuccessfully": "{type} exported successfully!",
+  "@exportedSuccessfully": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToExport": "Failed to export: {error}",
+  "@failedToExport": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToGeneratePdf": "Failed to generate PDF: {error}",
+  "@failedToGeneratePdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfGeneratedSuccessfully": "{type} report generated successfully!",
+  "@pdfGeneratedSuccessfully": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+
+  "systemStatus": "System Status",
+  "notificationPermission": "Notification Permission",
+  "requiredForReminders": "Required for medication reminders",
+  "exactAlarms": "Exact Alarms Permission",
+  "requiredForPreciseTiming": "Required for precise reminder timing on Android 12+",
+  "databaseStatistics": "Database Statistics",
+  "deviceInformation": "Device Information",
+  "pluginVersion": "Plugin Version",
+  "testingAndActions": "Testing & Actions",
+  "sendTestNotificationTitle": "Send Test Notification",
+  "testIfNotificationsWork": "Test if notifications are working",
+  "scheduleTest1Min": "Schedule Test (1 min)",
+  "scheduleTestDescription": "Schedule a test notification for 1 minute from now",
+  "requestPermissionsTitle": "Request Permissions",
+  "requestPermissionsDescription": "Request all necessary permissions",
+  "troubleshooting": "Troubleshooting",
+  "notificationsNotAppearing": "Notifications not appearing?",
+  "notificationsNotAppearingTips": "• Check permissions above\n• Disable battery optimization\n• Enable exact alarms (Android 12+)\n• Test with \"Send Test Notification\"",
+  "appCrashing": "App crashing?",
+  "appCrashingTips": "• Clear app data and restart\n• Ensure all permissions are granted\n• Check device timezone settings",
+  "advancedDiagnostics": "Advanced Diagnostics",
+  "ok_status": "OK",
+  "needed_status": "NEEDED",
+
+  "medicinePhotoTitle": "Medicine Photo",
+  "medicinePhotoSubtitle": "Optional - helps identify your medicine",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "changePhoto": "Change Photo",
+  "removePhoto": "Remove",
+  "takePhoto": "Take Photo",
+  "chooseFromGallery": "Choose from Gallery",
+
+  "dismiss": "Dismiss",
+
+  "scanName": "Scan Name",
+  "scanMedicationLabel": "Scan Medication Label",
+  "autoFillFromPhoto": "Auto-fill details from photo",
+  "medicineNameHint": "e.g., Aspirin, Paracetamol",
+  "photoCapturedSuccess": "Photo captured successfully!",
+  "photoSelectedSuccess": "Photo selected successfully!",
+  "photoRemovedSuccess": "Photo removed",
+  "lookingUpMedication": "Looking up medication...",
+  "scannedCodeLabel": "Scanned Code",
+  "failedToCapturePhoto": "Failed to capture photo: {error}",
+  "@failedToCapturePhoto": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToPickPhoto": "Failed to pick photo: {error}",
+  "@failedToPickPhoto": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unknown": "Unknown",
+  "scannedMedication": "Scanned: {name}",
+  "@scannedMedication": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationFound": "Medication found: {name}",
+  "@medicationFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scannedCodeEnterManually": "Scanned code: {code}\nPlease enter details manually",
+  "@scannedCodeEnterManually": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorScanningBarcode": "Error scanning barcode: {error}",
+  "@errorScanningBarcode": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "whenAndHowOftenToTake": "When and how often to take this medicine",
+  "howManyTimesPerDay": "How many times per day?",
+  "selectTimesPerDayDesc": "Select the number of times you need to take this medicine daily",
+  "timeSingular": "time",
+  "timePlural": "times",
+  "amount": "Amount",
+  "unit": "Unit",
+  "treatmentDuration": "Treatment duration",
+  "startingLabel": "Starting",
+  "treatmentEndsOn": "Treatment ends on {date}",
+  "@treatmentEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTimesTitle": "Reminder times",
+  "selectTimesForReminders": "Select times per day to set reminder times",
+  "scheduleSummary": "Schedule summary",
+  "completeTheForm": "Complete the form",
+  "eachDose": "Each dose",
+  "starts": "Starts",
+  "repetitionPatternTitle": "Repetition pattern",
+  "whenToTakeMedication": "When should this medication be taken?",
+  "activeOnDays": "Active on: {days}",
+  "@activeOnDays": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "selectDaysOfWeek": "Select days of the week",
+  "everyDay": "Every day",
+  "everyOtherDay": "Every other day",
+  "mondayToFriday": "Monday to Friday",
+  "saturdayAndSunday": "Saturday and Sunday",
+  "noDaysSelected": "No days selected",
+  "recurringReminders": "Recurring Reminders",
+  "followUpRemindersForMissed": "Get follow-up reminders for missed doses",
+  "reminderIntervalTitle": "Reminder Interval",
+  "missedDoseReminderInfo": "If you miss a dose, you'll get a reminder every {minutes} minutes (up to 4 times)",
+  "@missedDoseReminderInfo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+
+  "trackMedicineSupply": "Track your medicine supply and get low stock alerts",
+  "howManyDoYouHave": "How many {unit}s do you have?",
+  "@howManyDoYouHave": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "quantityLabel": "Quantity",
+  "inStock": "in stock",
+  "stockTimeline": "Stock Timeline",
+  "dailyUsageLabel": "Daily usage",
+  "stockLastsFor": "Stock lasts for",
+  "stockRunsOut": "Stock runs out",
+  "stockLevelLabel": "Stock level",
+  "lowStockReminder": "Low stock reminder",
+  "getNotifiedBeforeRunOut": "Get notified before your medicine runs out",
+  "remindMeDaysBefore": "Remind me this many days before:",
+  "expiryDateOptional": "Expiry date (optional)",
+  "trackWhenExpires": "Track when your medication expires",
+  "tapToSetExpiryDate": "Tap to set expiry date",
+  "remindMeBeforeExpiry": "Remind me before expiry:",
+  "readyToSave": "Ready to save!",
+  "completeAllSteps": "Complete all steps to continue",
+  "medicineInfoComplete": "Your medicine information is complete and ready to be saved",
+  "fillRequiredFields": "Please fill in all required fields in previous steps",
+  "medicineTypeAndDetails": "Medicine type and details",
+  "scheduleConfigured": "Schedule configured",
+  "stockInformation": "Stock information",
+  "xTimesPerDay": "{count}x per day",
+  "@xTimesPerDay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeAll": "Take All",
+  "swipeRightToTake": "Swipe right to take",
+  "swipeLeftToSkip": "Swipe left to skip",
+
+  "snoozed": "Snoozed",
+  "scheduled": "Scheduled",
+  "takenAt": "Taken at",
+  "onTime": "On time",
+  "minEarly": "{minutes} min early",
+  "@minEarly": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "minLate": "{minutes} min late",
+  "@minLate": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "hoursMinLate": "{hours}h {minutes}m late",
+  "@hoursMinLate": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "startStreak": "Start your streak today!",
+  "keepItUpStreak": "Keep it up! {remaining} more days to a week!",
+  "@keepItUpStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "amazingStreak": "Amazing! {remaining} more days to a month!",
+  "@amazingStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "incredibleStreak": "Incredible! {remaining} more days to 100!",
+  "@incredibleStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "streakChampion": "You're a medication adherence champion!",
+  "excellentAdherenceExclaim": "Excellent adherence! 🎉",
+  "goodProgress": "Good progress!",
+  "keepItUp": "Keep it up!",
+  "letsCatchUp": "Let's catch up",
+  "startYourDay": "Start your day",
+  "excellentAdherenceMessage": "Excellent adherence! Keep up the great work!",
+  "goodAdherenceMessage": "Good adherence. Try to improve consistency.",
+  "fairAdherenceMessage": "Fair adherence. Consider setting more reminders.",
+  "lowAdherenceMessage": "Low adherence. Please try to take your medications regularly.",
+  "veryLowAdherenceMessage": "Very low adherence. Talk to your healthcare provider.",
+
+  "overallAdherence": "Overall Adherence",
+  "adherence": "Adherence",
+  "medicationPerformance": "Medication Performance",
+
+  "weeklyAdherenceInsightTitle": "Weekly Adherence",
+  "weeklyAdherenceInsightDesc": "You took {percent}% of your doses this week ({taken}/{total})",
+  "@weeklyAdherenceInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" },
+      "taken": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "improvingTrendTitle": "Improving Trend 📈",
+  "decliningTrendTitle": "Declining Trend 📉",
+  "improvingTrendDesc": "You improved by {change}% compared to last week. Great progress!",
+  "@improvingTrendDesc": {
+    "placeholders": {
+      "change": { "type": "int" }
+    }
+  },
+  "decliningTrendDesc": "You declined by {change}% compared to last week. Let's get back on track!",
+  "@decliningTrendDesc": {
+    "placeholders": {
+      "change": { "type": "int" }
+    }
+  },
+  "topMedicationTitle": "Top Medication",
+  "topMedicationDesc": "{name} has {percent}% adherence - your most consistent medication!",
+  "@topMedicationDesc": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "percent": { "type": "int" }
+    }
+  },
+  "streakDayTitle": "{streak}-Day Streak! 🔥",
+  "@streakDayTitle": {
+    "placeholders": {
+      "streak": { "type": "int" }
+    }
+  },
+  "streakAmazingDesc": "Amazing! You've been consistent for over a week!",
+  "streakConsistencyDesc": "Keep it up! Consistency is key to better health.",
+  "bestTimeTitle": "Best Time ⏰",
+  "bestTimeDesc": "Your most consistent time is {period} with {percent}% adherence",
+  "@bestTimeDesc": {
+    "placeholders": {
+      "period": { "type": "String" },
+      "percent": { "type": "int" }
+    }
+  },
+  "excellentAdherenceInsightTitle": "Excellent Adherence! 🌟",
+  "excellentAdherenceInsightDesc": "Outstanding! You took {percent}% of your doses this week. Keep up the great work!",
+  "@excellentAdherenceInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "needsImprovementTitle": "Needs Improvement",
+  "needsImprovementInsightDesc": "Your adherence this week was {percent}%. Try setting more reminders or adjusting your schedule to improve.",
+  "@needsImprovementInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+
+  "summary": "Summary",
+  "medication": "Medication",
+  "name": "Name",
+  "generatedOn": "Generated on: {date}",
+  "@generatedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "adherenceStatistics": "Adherence Statistics",
+  "recentDoseHistory": "Recent Dose History",
+  "reportPeriod": "Report Period: {start} - {end}",
+  "@reportPeriod": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+  "medAssistAnalyticsReport": "MedAssist Analytics Report"
 }

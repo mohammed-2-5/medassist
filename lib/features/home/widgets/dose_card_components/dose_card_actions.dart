@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:med_assist/services/haptic/haptic_service.dart';
 
 /// Pending status actions
@@ -17,6 +18,7 @@ class PendingActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -31,14 +33,14 @@ class PendingActions extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 3,
             child: FilledButton.icon(
               onPressed: () {
                 HapticService.success();
                 onTake();
               },
               icon: const Icon(Icons.check_circle_outline, size: 20),
-              label: const Text('Take'),
+              label: Text(l10n.taken),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -46,15 +48,22 @@ class PendingActions extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
+            flex: 2,
             child: OutlinedButton.icon(
               onPressed: () {
                 HapticService.light();
                 onSnooze();
               },
-              icon: const Icon(Icons.snooze, size: 18),
-              label: const Text('Snooze'),
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
+                ),
+              ),
+              icon: const Icon(Icons.snooze, size: 18),
+              label: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(l10n.snooze),
               ),
             ),
           ),
@@ -65,7 +74,7 @@ class PendingActions extends StatelessWidget {
               onSkip();
             },
             icon: const Icon(Icons.close, size: 20),
-            tooltip: 'Skip',
+            tooltip: l10n.skip,
             style: IconButton.styleFrom(
               side: BorderSide(color: colorScheme.outline),
             ),
@@ -89,6 +98,7 @@ class TakenStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -104,7 +114,7 @@ class TakenStatus extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Taken successfully',
+              l10n.takenSuccessfully,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSecondaryContainer,
                 fontWeight: FontWeight.w600,
@@ -116,7 +126,7 @@ class TakenStatus extends StatelessWidget {
               HapticService.light();
               onUndo();
             },
-            child: const Text('Undo'),
+            child: Text(l10n.undo),
           ),
         ],
       ),
@@ -137,6 +147,7 @@ class MissedStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -154,7 +165,7 @@ class MissedStatus extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Missed dose',
+              l10n.missedDoseLabel,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.error,
                 fontWeight: FontWeight.w600,
@@ -171,7 +182,7 @@ class MissedStatus extends StatelessWidget {
               side: BorderSide(color: colorScheme.error),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
-            child: const Text('Log Now'),
+            child: Text(l10n.logNow),
           ),
         ],
       ),
@@ -192,6 +203,7 @@ class SkippedStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -211,7 +223,7 @@ class SkippedStatus extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Skipped',
+              l10n.skipped,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w600,
@@ -223,7 +235,7 @@ class SkippedStatus extends StatelessWidget {
               HapticService.light();
               onUndo();
             },
-            child: const Text('Undo'),
+            child: Text(l10n.undo),
           ),
         ],
       ),
@@ -243,6 +255,7 @@ class SnoozedStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -256,7 +269,7 @@ class SnoozedStatus extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Snoozed for 15 minutes',
+              l10n.snoozedForMinutes,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: Colors.amber.shade900,
                 fontWeight: FontWeight.w600,
@@ -268,7 +281,7 @@ class SnoozedStatus extends StatelessWidget {
               HapticService.success();
               onTakeNow();
             },
-            child: const Text('Take Now'),
+            child: Text(l10n.takeNow),
           ),
         ],
       ),

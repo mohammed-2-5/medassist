@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Widget displaying weekly adherence as a bar chart
 class WeeklyAdherenceChart extends StatelessWidget {
@@ -14,6 +15,7 @@ class WeeklyAdherenceChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     // Convert dailyData to sorted list for chart
     final sortedDays = dailyData.keys.toList();
@@ -28,9 +30,9 @@ class WeeklyAdherenceChart extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildLegendItem(context, 'Taken', colorScheme.secondary),
+                _buildLegendItem(context, l10n.taken, colorScheme.secondary),
                 const SizedBox(width: 16),
-                _buildLegendItem(context, 'Missed', colorScheme.error),
+                _buildLegendItem(context, l10n.missed, colorScheme.error),
               ],
             ),
             const SizedBox(height: 24),
@@ -51,7 +53,7 @@ class WeeklyAdherenceChart extends StatelessWidget {
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         final dayKey = sortedDays[group.x];
                         final dayData = dailyData[dayKey]!;
-                        final label = rodIndex == 0 ? 'Taken' : 'Missed';
+                        final label = rodIndex == 0 ? l10n.taken : l10n.missed;
                         final value = rod.toY.toInt();
 
                         return BarTooltipItem(

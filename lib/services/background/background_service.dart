@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/database/repositories/medication_repository.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -15,9 +17,13 @@ const String kHourlyTaskIdentifier = 'hourlyMissedDoseCheckTask';
 /// Must be a top-level function or static method
 @pragma('vm:entry-point')
 void callbackDispatcher() {
+  WidgetsFlutterBinding.ensureInitialized();
   Workmanager().executeTask((task, inputData) async {
     try {
       debugPrint('Background task started: $task');
+
+      // Ensure timezone is initialized before any notification scheduling
+      await NotificationService().initialize();
 
       switch (task) {
         case kDailyTaskIdentifier:
@@ -40,14 +46,16 @@ void callbackDispatcher() {
 /// Handle hourly background task
 /// Runs every hour to check for missed doses
 Future<void> _handleHourlyTask() async {
+  final db = AppDatabase();
   try {
     debugPrint('Hourly task started: checking for missed doses');
-    final db = AppDatabase();
     await _updateMissedDoses(db);
     debugPrint('Hourly task completed successfully');
   } catch (e) {
     debugPrint('Error in hourly task: $e');
     rethrow;
+  } finally {
+    await db.close();
   }
 }
 
@@ -57,9 +65,8 @@ Future<void> _handleHourlyTask() async {
 /// - Check stock levels
 /// - Calculate adherence stats
 Future<void> _handleDailyTask() async {
+  final db = AppDatabase();
   try {
-    // Initialize database
-    final db = AppDatabase();
     final notificationService = NotificationService();
 
     // 1. Update missed doses
@@ -68,13 +75,21 @@ Future<void> _handleDailyTask() async {
     // 2. Check stock levels and schedule notifications
     await _checkStockLevels(db, notificationService);
 
-    // 3. Calculate daily adherence
+    // 3. Check expiry dates and schedule notifications
+    await _checkExpiryDates(db, notificationService);
+
+    // 4. Reschedule pattern-aware reminders for non-daily medications
+    await _reschedulePatternReminders(db, notificationService);
+
+    // 5. Calculate daily adherence
     await _calculateDailyAdherence(db);
 
     debugPrint('Daily task completed successfully');
   } catch (e) {
     debugPrint('Error in daily task: $e');
     rethrow;
+  } finally {
+    await db.close();
   }
 }
 
@@ -118,14 +133,14 @@ Future<void> _updateMissedDoses(AppDatabase db) async {
         // Only process if >2 hours late and scheduled time is in the past
         if (timeDifference.inHours >= 2 && scheduledTime.isBefore(now)) {
           // Check if there's already a history record for this dose
-          final existingRecord = todayHistory.cast<DoseHistoryData?>().firstWhere(
-            (h) =>
-                h != null &&
-                h.medicationId == medication.id &&
-                h.scheduledHour == reminderTime.hour &&
-                h.scheduledMinute == reminderTime.minute,
-            orElse: () => null,
-          );
+          final existingRecord = todayHistory
+              .where(
+                (h) =>
+                    h.medicationId == medication.id &&
+                    h.scheduledHour == reminderTime.hour &&
+                    h.scheduledMinute == reminderTime.minute,
+              )
+              .firstOrNull;
 
           // If no history record exists, mark as missed
           if (existingRecord == null) {
@@ -164,16 +179,16 @@ Future<void> _checkStockLevels(
     final medications = await db.getActiveMedications();
 
     for (final medication in medications) {
-      // Calculate daily usage: timesPerDay * dosePerTime
-      final dailyUsage = medication.timesPerDay * medication.dosePerTime;
+      if (!medication.remindBeforeRunOut) continue;
 
-      // Calculate days remaining
-      final daysRemaining = dailyUsage > 0
-          ? (medication.stockQuantity / dailyUsage).floor()
-          : 999; // Effectively infinite if no daily usage
+      // Use pattern-aware daily usage calculation
+      final dailyUsage = MedicationRepository.effectiveDailyUsage(medication);
+      if (dailyUsage <= 0) continue;
 
-      // Schedule low stock notification if ≤3 days remaining
-      if (daysRemaining > 0 && daysRemaining <= 3) {
+      final daysRemaining = (medication.stockQuantity / dailyUsage).floor();
+      final threshold = medication.reminderDaysBeforeRunOut;
+
+      if (daysRemaining > 0 && daysRemaining <= threshold) {
         await notificationService.scheduleLowStockNotification(medication);
       }
     }
@@ -181,6 +196,62 @@ Future<void> _checkStockLevels(
     debugPrint('Stock levels checked');
   } catch (e) {
     debugPrint('Error checking stock levels: $e');
+  }
+}
+
+/// Check expiry dates and schedule notifications
+Future<void> _checkExpiryDates(
+  AppDatabase db,
+  NotificationService notificationService,
+) async {
+  try {
+    final medications = await db.getActiveMedications();
+
+    for (final medication in medications) {
+      if (medication.expiryDate == null) continue;
+      await notificationService.scheduleExpiryNotification(medication);
+    }
+
+    debugPrint('Expiry dates checked');
+  } catch (e) {
+    debugPrint('Error checking expiry dates: $e');
+  }
+}
+
+/// Reschedule reminders for all active medications.
+/// Called daily to ensure the next 7 dose-days always have notifications.
+/// Also cancels notifications for expired or paused medications.
+Future<void> _reschedulePatternReminders(
+  AppDatabase db,
+  NotificationService notificationService,
+) async {
+  try {
+    final medicationsWithReminders = await db.getMedicationsWithReminders();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    for (final mwr in medicationsWithReminders) {
+      if (mwr.medication.repetitionPattern == 'asNeeded') continue;
+
+      // Check if medication has expired
+      final endDate = mwr.medication.startDate
+          .add(Duration(days: mwr.medication.durationDays));
+      if (today.isAfter(endDate) || !mwr.medication.isActive) {
+        // Cancel notifications for expired or paused medications
+        await notificationService
+            .cancelMedicationReminders(mwr.medication.id);
+        continue;
+      }
+
+      await notificationService.scheduleRemindersForMedication(
+        mwr.medication,
+        mwr.reminderTimes,
+      );
+    }
+
+    debugPrint('Reminders rescheduled');
+  } catch (e) {
+    debugPrint('Error rescheduling reminders: $e');
   }
 }
 
@@ -194,17 +265,10 @@ Future<void> _calculateDailyAdherence(AppDatabase db) async {
       yesterday.month,
       yesterday.day,
     );
-    final endOfYesterday = DateTime(
-      yesterday.year,
-      yesterday.month,
-      yesterday.day,
-      23,
-      59,
-      59,
-    );
+    final startOfToday = startOfYesterday.add(const Duration(days: 1));
 
-    // Get adherence stats for yesterday
-    final stats = await db.getAdherenceStats(startOfYesterday, endOfYesterday);
+    // Get adherence stats for yesterday (exclusive end)
+    final stats = await db.getAdherenceStats(startOfYesterday, startOfToday);
 
     final takenDoses = stats['taken'] ?? 0;
     final skippedDoses = stats['skipped'] ?? 0;

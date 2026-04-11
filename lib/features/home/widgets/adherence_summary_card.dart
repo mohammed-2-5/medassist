@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 import 'package:med_assist/core/widgets/gradient_container.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Adherence Summary Card
 ///
@@ -76,9 +77,10 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
         ? (widget.takenToday / widget.totalToday * 100).round()
         : 0;
 
+    final l10n = AppLocalizations.of(context)!;
     // Determine status color
     final statusColor = _getStatusColor(adherencePercentage, colorScheme);
-    final statusMessage = _getStatusMessage(adherencePercentage);
+    final statusMessage = _getStatusMessage(adherencePercentage, l10n);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
@@ -270,17 +272,17 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
     }
   }
 
-  String _getStatusMessage(int percentage) {
+  String _getStatusMessage(int percentage, AppLocalizations l10n) {
     if (percentage >= 80) {
-      return 'Excellent adherence! 🎉';
+      return l10n.excellentAdherenceExclaim;
     } else if (percentage >= 60) {
-      return 'Good progress!';
+      return l10n.goodProgress;
     } else if (percentage >= 40) {
-      return 'Keep it up!';
+      return l10n.keepItUp;
     } else if (percentage > 0) {
-      return "Let's catch up";
+      return l10n.letsCatchUp;
     } else {
-      return 'Start your day';
+      return l10n.startYourDay;
     }
   }
 }

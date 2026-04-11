@@ -47,6 +47,19 @@ class ChatbotInputArea extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.4),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 12,

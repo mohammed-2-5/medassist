@@ -1,11 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/database/app_database.dart' show DoseHistoryData;
+import 'package:med_assist/core/database/models/dose_result.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/database/repositories/medication_repository.dart' show MedicationRepository;
 import 'package:med_assist/features/home/models/dose_event.dart';
 import 'package:med_assist/features/home/services/dose_event_generator.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 
-// Export database provider for backwards compatibility
+// Re-export for backwards compatibility
 export 'package:med_assist/core/database/providers/database_providers.dart'
     show hasMedicationsProvider;
 
@@ -20,55 +23,43 @@ final todayDosesProvider =
   TodayDosesNotifier.new,
 );
 
-/// Notifier for managing today's doses
+/// Notifier for managing today's doses.
+///
+/// All dose-recording and stock-mutation logic is delegated to
+/// [MedicationRepository] which wraps operations in database transactions.
 class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
+  bool _isRefreshing = false;
+
   @override
   List<DoseEvent> build() {
     _loadTodayDoses();
     return [];
   }
 
-  /// Load today's doses from database
   Future<void> _loadTodayDoses() async {
     try {
-      // Get medications with reminders from database
       final medications =
           await ref.read(medicationsWithRemindersProvider.future);
-
-      // Generate dose events for today
       final generator = ref.read(doseEventGeneratorProvider);
       final doseEvents = generator.generateTodayDoses(medications);
 
-      // Load dose history for today to update statuses
       final database = ref.read(appDatabaseProvider);
       final today = DateTime.now();
       final history = await database.getDoseHistoryForDate(today);
 
-      // Update dose statuses based on history
       final updatedDoses = doseEvents.map((dose) {
-        // Find matching history record
-        final parts = dose.time.split(' ');
-        final timeParts = parts[0].split(':');
-        final hour = int.parse(timeParts[0]);
-        final isPM = parts[1] == 'PM';
-        final hour24 = isPM && hour != 12
-            ? hour + 12
-            : !isPM && hour == 12
-                ? 0
-                : hour;
-        final minute = int.parse(timeParts[1]);
+        final (:hour24, :minute) = _parseDoseTime(dose.time);
 
-        final historyRecord = history.cast<DoseHistoryData?>().firstWhere(
+        final historyRecord = history
+            .where(
               (h) =>
-                  h != null &&
                   h.medicationId.toString() == dose.medicationId &&
                   h.scheduledHour == hour24 &&
                   h.scheduledMinute == minute,
-              orElse: () => null,
-            );
+            )
+            .firstOrNull;
 
         if (historyRecord != null) {
-          // Update status from history
           final status = switch (historyRecord.status) {
             'taken' => DoseStatus.taken,
             'skipped' => DoseStatus.skipped,
@@ -84,119 +75,75 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
 
       state = updatedDoses;
     } catch (e) {
-      // Log error but don't crash
+      debugPrint('Error loading today doses: $e');
       state = [];
     }
   }
 
-  /// Refresh doses from database
   Future<void> refresh() async {
-    await _loadTodayDoses();
+    if (_isRefreshing) return;
+    _isRefreshing = true;
+    try {
+      await _loadTodayDoses();
+    } finally {
+      _isRefreshing = false;
+    }
   }
 
-  /// Mark dose as taken
-  Future<void> markAsTaken(String doseId) async {
-    final dose = state.firstWhere((d) => d.id == doseId);
+  /// Mark dose as taken via repository (transactional, with stock deduction).
+  Future<DoseResult> markAsTaken(String doseId) async {
+    final dose = state.where((d) => d.id == doseId).firstOrNull;
+    if (dose == null) return const DoseOperationFailed('Dose not found');
 
-    // Check if already taken
     if (dose.status == DoseStatus.taken) {
-      return; // Already taken, do nothing
+      return const DoseAlreadyRecorded();
     }
 
-    // Parse time
-    final parts = dose.time.split(' ');
-    final timeParts = parts[0].split(':');
-    final hour = int.parse(timeParts[0]);
-    final isPM = parts[1] == 'PM';
-    final hour24 = isPM && hour != 12 ? hour + 12 : !isPM && hour == 12 ? 0 : hour;
-    final minute = int.parse(timeParts[1]);
+    final (:hour24, :minute) = _parseDoseTime(dose.time);
 
     try {
-      final database = ref.read(appDatabaseProvider);
       final repository = ref.read(medicationRepositoryProvider);
-
-      // Check if dose was already recorded in database
-      final existingRecord = await database.findDoseRecord(
+      final result = await repository.takeDose(
         medicationId: int.parse(dose.medicationId),
         scheduledDate: DateTime.now(),
         scheduledHour: hour24,
         scheduledMinute: minute,
       );
 
-      if (existingRecord != null && existingRecord.status == 'taken') {
-        // Already taken, just update UI
-        state = [
-          for (final d in state)
-            if (d.id == doseId)
-              d.copyWith(status: DoseStatus.taken)
-            else
-              d
-        ];
-        return;
+      if (result is DoseRecorded || result is DoseAlreadyRecorded) {
+        _updateDoseStatus(doseId, DoseStatus.taken);
+      } else {
+        debugPrint('takeDose returned unexpected result: $result');
       }
 
-      // Record in history (only if not already taken)
-      await database.recordDoseTaken(
-        medicationId: int.parse(dose.medicationId),
-        scheduledDate: DateTime.now(),
-        scheduledHour: hour24,
-        scheduledMinute: minute,
-      );
-
-      // Decrease stock
-      final medication = await database.getMedicationById(int.parse(dose.medicationId));
-      if (medication != null) {
-        final newStock = (medication.stockQuantity - medication.dosePerTime).round();
-        await repository.updateStockQuantity(
-          int.parse(dose.medicationId),
-          newStock >= 0 ? newStock : 0,
-        );
-      }
-
-      // Update UI
-      state = [
-        for (final d in state)
-          if (d.id == doseId)
-            d.copyWith(status: DoseStatus.taken)
-          else
-            d
-      ];
-
-      // Refresh to update stock count
-      await refresh();
+      return result;
     } catch (e) {
-      // Handle error
+      debugPrint('Error marking dose as taken: $e');
+      return DoseOperationFailed(e.toString());
     }
   }
 
-  /// Snooze dose with specified duration
+  /// Snooze dose with specified duration.
   Future<void> snoozeDose(String doseId, {int minutes = 15}) async {
-    final dose = state.firstWhere((d) => d.id == doseId);
-
-    // Parse time
-    final parts = dose.time.split(' ');
-    final timeParts = parts[0].split(':');
-    final hour = int.parse(timeParts[0]);
-    final isPM = parts[1] == 'PM';
-    final hour24 = isPM && hour != 12 ? hour + 12 : !isPM && hour == 12 ? 0 : hour;
-    final minute = int.parse(timeParts[1]);
+    final dose = state.where((d) => d.id == doseId).firstOrNull;
+    if (dose == null) return;
+    final (:hour24, :minute) = _parseDoseTime(dose.time);
+    final now = DateTime.now();
+    final snoozeUntil = now.add(Duration(minutes: minutes));
 
     try {
-      final database = ref.read(appDatabaseProvider);
+      final repository = ref.read(medicationRepositoryProvider);
       final notificationService = NotificationService();
-      final now = DateTime.now();
-      final snoozeUntil = now.add(Duration(minutes: minutes));
 
-      // Record in history as snoozed
-      await database.recordDoseSnoozed(
+      await repository.snoozeDose(
         medicationId: int.parse(dose.medicationId),
         scheduledDate: now,
         scheduledHour: hour24,
         scheduledMinute: minute,
-        notes: 'Snoozed for $minutes minutes until ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')}',
+        notes:
+            'Snoozed for $minutes minutes until ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')}',
       );
 
-      // Schedule snooze notification
       await notificationService.snoozeNotification(
         medicationId: int.parse(dose.medicationId),
         medicationName: dose.medicationName,
@@ -204,202 +151,146 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
         minutes: minutes,
       );
 
-      // Update UI
-      state = [
-        for (final d in state)
-          if (d.id == doseId)
-            d.copyWith(status: DoseStatus.snoozed)
-          else
-            d
-      ];
+      _updateDoseStatus(doseId, DoseStatus.snoozed);
     } catch (e) {
-      // Handle error
+      debugPrint('Error snoozing dose: $e');
     }
   }
 
-  /// Skip dose
-  Future<void> skipDose(String doseId) async {
-    final dose = state.firstWhere((d) => d.id == doseId);
-
-    // Parse time
-    final parts = dose.time.split(' ');
-    final timeParts = parts[0].split(':');
-    final hour = int.parse(timeParts[0]);
-    final isPM = parts[1] == 'PM';
-    final hour24 = isPM && hour != 12 ? hour + 12 : !isPM && hour == 12 ? 0 : hour;
-    final minute = int.parse(timeParts[1]);
+  /// Skip dose.
+  Future<DoseResult> skipDose(String doseId) async {
+    final dose = state.where((d) => d.id == doseId).firstOrNull;
+    if (dose == null) return const DoseOperationFailed('Dose not found');
+    final (:hour24, :minute) = _parseDoseTime(dose.time);
 
     try {
-      final database = ref.read(appDatabaseProvider);
-
-      // Record in history as skipped
-      await database.recordDoseSkipped(
+      final repository = ref.read(medicationRepositoryProvider);
+      final result = await repository.skipDose(
         medicationId: int.parse(dose.medicationId),
         scheduledDate: DateTime.now(),
         scheduledHour: hour24,
         scheduledMinute: minute,
       );
 
-      // Update UI
-      state = [
-        for (final d in state)
-          if (d.id == doseId)
-            d.copyWith(status: DoseStatus.skipped)
-          else
-            d
-      ];
+      if (result is DoseRecorded || result is DoseAlreadyRecorded) {
+        _updateDoseStatus(doseId, DoseStatus.skipped);
+      } else {
+        debugPrint('skipDose returned unexpected result: $result');
+      }
+
+      return result;
     } catch (e) {
-      // Handle error
+      debugPrint('Error skipping dose: $e');
+      return DoseOperationFailed(e.toString());
     }
   }
 
-  /// Undo action (revert to pending)
+  /// Undo a dose action (revert to pending, restore stock if was taken).
   Future<void> undoDose(String doseId) async {
-    final dose = state.firstWhere((d) => d.id == doseId);
-
-    // Parse time
-    final parts = dose.time.split(' ');
-    final timeParts = parts[0].split(':');
-    final hour = int.parse(timeParts[0]);
-    final isPM = parts[1] == 'PM';
-    final hour24 = isPM && hour != 12 ? hour + 12 : !isPM && hour == 12 ? 0 : hour;
-    final minute = int.parse(timeParts[1]);
+    final dose = state.where((d) => d.id == doseId).firstOrNull;
+    if (dose == null) return;
+    final (:hour24, :minute) = _parseDoseTime(dose.time);
 
     try {
-      final database = ref.read(appDatabaseProvider);
       final repository = ref.read(medicationRepositoryProvider);
-
-      // Find the existing dose record
-      final existingRecord = await database.findDoseRecord(
+      await repository.undoDose(
         medicationId: int.parse(dose.medicationId),
         scheduledDate: DateTime.now(),
         scheduledHour: hour24,
         scheduledMinute: minute,
       );
 
-      if (existingRecord != null) {
-        // If it was taken, restore the stock
-        if (existingRecord.status == 'taken') {
-          final medication = await database.getMedicationById(int.parse(dose.medicationId));
-          if (medication != null) {
-            final restoredStock = (medication.stockQuantity + medication.dosePerTime).round();
-            await repository.updateStockQuantity(
-              int.parse(dose.medicationId),
-              restoredStock,
-            );
-          }
-        }
-
-        // Delete the dose history record
-        await database.deleteDoseRecord(
-          medicationId: int.parse(dose.medicationId),
-          scheduledDate: DateTime.now(),
-          scheduledHour: hour24,
-          scheduledMinute: minute,
-        );
-      }
-
-      // Update UI
-      state = [
-        for (final d in state)
-          if (d.id == doseId)
-            d.copyWith(status: DoseStatus.pending)
-          else
-            d
-      ];
-
-      // Refresh to update stock count
+      _updateDoseStatus(doseId, DoseStatus.pending);
       await refresh();
     } catch (e) {
-      // Handle error
+      debugPrint('Error undoing dose: $e');
     }
   }
 
-  /// Log missed dose as taken now
-  Future<void> logMissedDose(String doseId) async {
-    final dose = state.firstWhere((d) => d.id == doseId);
+  /// Log a missed dose as taken now.
+  Future<DoseResult> logMissedDose(String doseId) async {
+    return markAsTaken(doseId);
+  }
 
-    // Check if already taken
-    if (dose.status == DoseStatus.taken) {
-      return; // Already taken, do nothing
+  /// Take all pending doses in the given list (e.g., a single timeline section).
+  Future<void> takeAllPending(List<DoseEvent> doses) async {
+    final pending = doses.where((d) => d.status == DoseStatus.pending).toList();
+    for (final dose in pending) {
+      await markAsTaken(dose.id);
     }
+  }
 
-    // Parse time
-    final parts = dose.time.split(' ');
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  void _updateDoseStatus(String doseId, DoseStatus status) {
+    state = [
+      for (final d in state)
+        if (d.id == doseId) d.copyWith(status: status) else d,
+    ];
+  }
+
+  /// Parse a display-formatted time string ("8:00 AM") into 24-hour components.
+  static ({int hour24, int minute}) _parseDoseTime(String time) {
+    final parts = time.split(' ');
     final timeParts = parts[0].split(':');
-    final hour = int.parse(timeParts[0]);
-    final isPM = parts[1] == 'PM';
-    final hour24 = isPM && hour != 12 ? hour + 12 : !isPM && hour == 12 ? 0 : hour;
+    var hour = int.parse(timeParts[0]);
     final minute = int.parse(timeParts[1]);
+    final isPM = parts[1] == 'PM';
 
-    try {
-      final database = ref.read(appDatabaseProvider);
-      final repository = ref.read(medicationRepositoryProvider);
-
-      // Check if dose was already recorded in database
-      final existingRecord = await database.findDoseRecord(
-        medicationId: int.parse(dose.medicationId),
-        scheduledDate: DateTime.now(),
-        scheduledHour: hour24,
-        scheduledMinute: minute,
-      );
-
-      if (existingRecord != null && existingRecord.status == 'taken') {
-        // Already taken, just update UI
-        state = [
-          for (final d in state)
-            if (d.id == doseId)
-              d.copyWith(status: DoseStatus.taken)
-            else
-              d
-        ];
-        return;
-      }
-
-      // Record in history as taken (with current time as actual time)
-      await database.recordDoseTaken(
-        medicationId: int.parse(dose.medicationId),
-        scheduledDate: DateTime.now(),
-        scheduledHour: hour24,
-        scheduledMinute: minute,
-      );
-
-      // Decrease stock
-      final medication = await database.getMedicationById(int.parse(dose.medicationId));
-      if (medication != null) {
-        final newStock = (medication.stockQuantity - medication.dosePerTime).round();
-        await repository.updateStockQuantity(
-          int.parse(dose.medicationId),
-          newStock >= 0 ? newStock : 0,
-        );
-      }
-
-      // Update UI
-      state = [
-        for (final d in state)
-          if (d.id == doseId)
-            d.copyWith(status: DoseStatus.taken)
-          else
-            d
-      ];
-
-      // Refresh to update stock count
-      await refresh();
-    } catch (e) {
-      // Handle error
+    if (isPM && hour != 12) {
+      hour += 12;
+    } else if (!isPM && hour == 12) {
+      hour = 0;
     }
+
+    return (hour24: hour, minute: minute);
   }
 }
 
 /// Provider for adherence summary
-final adherenceSummaryProvider = Provider<AdherenceSummary>((ref) {
+final adherenceSummaryProvider = FutureProvider<AdherenceSummary>((ref) async {
   final doses = ref.watch(todayDosesProvider);
+  final database = ref.watch(appDatabaseProvider);
 
   final takenCount = doses.where((d) => d.status == DoseStatus.taken).length;
   final totalCount = doses.length;
 
-  // TODO(dev): Get actual streak from database
-  const currentStreak = 4;
+  // Calculate actual streak from dose history using a single batch query
+  var currentStreak = 0;
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final yearAgo = today.subtract(const Duration(days: 365));
+  final allHistory = await database.getDoseHistoryBetween(yearAgo, now);
+
+  if (allHistory.isNotEmpty) {
+    // Group by date
+    final dosesByDate = <DateTime, List<DoseHistoryData>>{};
+    for (final dose in allHistory) {
+      final dateKey = DateTime(
+        dose.scheduledDate.year,
+        dose.scheduledDate.month,
+        dose.scheduledDate.day,
+      );
+      dosesByDate.putIfAbsent(dateKey, () => []).add(dose);
+    }
+
+    // Walk backwards from yesterday counting consecutive 100% days
+    var checkDate = today.subtract(const Duration(days: 1));
+    for (var i = 0; i < 365; i++) {
+      final dayDoses = dosesByDate[checkDate];
+      if (dayDoses == null || dayDoses.isEmpty) break;
+      if (!dayDoses.every((h) => h.status == 'taken')) break;
+      currentStreak++;
+      checkDate = checkDate.subtract(const Duration(days: 1));
+    }
+  }
+
+  // Count today if all taken so far
+  if (totalCount > 0 && takenCount == totalCount) {
+    currentStreak++;
+  }
 
   return AdherenceSummary(
     takenToday: takenCount,
@@ -420,13 +311,13 @@ final groupedDosesProvider = Provider<Map<String, List<DoseEvent>>>((ref) {
   };
 
   for (final dose in doses) {
-    final hour = int.tryParse(dose.time.split(':')[0]) ?? 0;
+    final (:hour24, minute: _) = TodayDosesNotifier._parseDoseTime(dose.time);
 
-    if (hour >= 6 && hour < 12) {
+    if (hour24 >= 6 && hour24 < 12) {
       grouped['Morning']!.add(dose);
-    } else if (hour >= 12 && hour < 18) {
+    } else if (hour24 >= 12 && hour24 < 18) {
       grouped['Afternoon']!.add(dose);
-    } else if (hour >= 18 && hour < 23) {
+    } else if (hour24 >= 18 && hour24 < 23) {
       grouped['Evening']!.add(dose);
     } else {
       grouped['Night']!.add(dose);
@@ -446,12 +337,20 @@ final notificationPermissionProvider =
 class NotificationPermissionNotifier extends Notifier<bool> {
   @override
   bool build() {
-    // TODO(dev): Check actual permission status
-    return true;
+    _checkPermission();
+    return true; // Optimistic default; updated async
   }
 
-  /// Update permission status
+  Future<void> _checkPermission() async {
+    final enabled = await NotificationService().areNotificationsEnabled();
+    state = enabled;
+  }
+
   void updatePermission(bool hasPermission) {
     state = hasPermission;
+  }
+
+  Future<void> refreshPermission() async {
+    await _checkPermission();
   }
 }

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/models/snooze_history.dart';
+import 'package:med_assist/features/home/widgets/snooze_suggestion_tile.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Beautiful dialog for smart snooze options
 class SmartSnoozeDialog extends StatelessWidget {
-
   const SmartSnoozeDialog({
-    required this.medicationName, required this.currentSnoozeCount, required this.maxSnoozes, required this.onTakeNow, required this.onSnooze, required this.onSkip, super.key,
+    required this.medicationName,
+    required this.currentSnoozeCount,
+    required this.maxSnoozes,
+    required this.onTakeNow,
+    required this.onSnooze,
+    required this.onSkip,
+    super.key,
     this.nextDoseTime,
   });
+
   final String medicationName;
   final int currentSnoozeCount;
   final int maxSnoozes;
@@ -42,7 +49,6 @@ class SmartSnoozeDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header
             Row(
               children: [
                 Container(
@@ -95,16 +101,13 @@ class SmartSnoozeDialog extends StatelessWidget {
                 .slideX(begin: -0.2, end: 0, curve: Curves.easeOut),
             const SizedBox(height: 24),
 
-            // Snooze suggestions
-            if (isLimitReached) ...[
-              _buildLimitReachedMessage(context, l10n, colorScheme),
-            ] else ...[
-              _buildSuggestions(context, suggestions, theme, colorScheme, l10n),
-            ],
+            if (isLimitReached)
+              _buildLimitReachedMessage(context, l10n, colorScheme)
+            else
+              _buildSuggestions(context, suggestions, l10n),
 
             const SizedBox(height: 24),
 
-            // Action buttons
             Row(
               children: [
                 Expanded(
@@ -166,11 +169,7 @@ class SmartSnoozeDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.info_outline,
-            color: colorScheme.error,
-            size: 24,
-          ),
+          Icon(Icons.info_outline, color: colorScheme.error, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -192,10 +191,11 @@ class SmartSnoozeDialog extends StatelessWidget {
   Widget _buildSuggestions(
     BuildContext context,
     List<SnoozeSuggestion> suggestions,
-    ThemeData theme,
-    ColorScheme colorScheme,
     AppLocalizations l10n,
   ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,140 +207,14 @@ class SmartSnoozeDialog extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        ...suggestions.asMap().entries.map((entry) {
-          final index = entry.key;
-          final suggestion = entry.value;
-
-          return _buildSuggestionTile(
-            context: context,
-            suggestion: suggestion,
-            index: index,
-            theme: theme,
-            colorScheme: colorScheme,
-          ).animate(delay: (100 * index).ms).fadeIn().slideX(
-                begin: -0.1,
-                end: 0,
-                curve: Curves.easeOutCubic,
-              );
-        }),
-      ],
-    );
-  }
-
-  Widget _buildSuggestionTile({
-    required BuildContext context,
-    required SnoozeSuggestion suggestion,
-    required int index,
-    required ThemeData theme,
-    required ColorScheme colorScheme,
-  }) {
-    final isRecommended = suggestion.isRecommended;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: isRecommended
-            ? colorScheme.primaryContainer.withOpacity(0.3)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-            onSnooze(suggestion.minutes);
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isRecommended
-                    ? colorScheme.primary
-                    : colorScheme.outlineVariant,
-                width: isRecommended ? 2 : 1,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: isRecommended
-                        ? colorScheme.primary
-                        : colorScheme.surfaceContainerHighest,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.schedule,
-                    size: 20,
-                    color: isRecommended
-                        ? colorScheme.onPrimary
-                        : colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            suggestion.label,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: isRecommended
-                                  ? FontWeight.bold
-                                  : FontWeight.w500,
-                              color: isRecommended
-                                  ? colorScheme.primary
-                                  : colorScheme.onSurface,
-                            ),
-                          ),
-                          if (isRecommended) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'Recommended',
-                                style: TextStyle(
-                                  color: colorScheme.onPrimary,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        suggestion.reason,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: isRecommended
-                      ? colorScheme.primary
-                      : colorScheme.onSurfaceVariant,
-                ),
-              ],
-            ),
+        ...suggestions.asMap().entries.map(
+          (entry) => SnoozeSuggestionTile(
+            suggestion: entry.value,
+            index: entry.key,
+            onSnooze: onSnooze,
           ),
         ),
-      ),
+      ],
     );
   }
 }

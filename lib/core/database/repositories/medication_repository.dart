@@ -1,50 +1,66 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/database/models/dose_result.dart';
 import 'package:med_assist/core/models/meal_timing.dart';
+import 'package:med_assist/core/utils/repetition_pattern_utils.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 
-/// Repository for medication data operations
+/// Repository for medication data operations.
+///
+/// All dose-recording and stock-mutation logic is centralised here so that
+/// both the UI layer and the background notification handler share a single,
+/// transactional code-path.
 class MedicationRepository {
 
   MedicationRepository(this._database);
   final AppDatabase _database;
   final NotificationService _notificationService = NotificationService();
 
-  /// Get all active medications
+  // ---------------------------------------------------------------------------
+  // Medication CRUD
+  // ---------------------------------------------------------------------------
+
   Future<List<Medication>> getAllMedications() {
     return _database.getAllMedications();
   }
 
-  /// Get a single medication by ID
   Future<Medication?> getMedicationById(int id) {
     return _database.getMedicationById(id);
   }
 
-  /// Get medications for today
   Future<List<Medication>> getTodaysMedications() {
     return _database.getTodaysMedications();
   }
 
-  /// Get medications with their reminder times
   Future<List<MedicationWithReminders>> getMedicationsWithReminders() {
     return _database.getMedicationsWithReminders();
   }
 
-  /// Search medications by name
   Future<List<Medication>> searchMedications(String query) {
     return _database.searchMedications(query);
   }
 
-  /// Get medications that are running low on stock
   Future<List<Medication>> getLowStockMedications() {
     return _database.getLowStockMedications();
   }
 
-  /// Save a new medication from form data
+  Future<int> getMedicationCount() async {
+    final meds = await _database.getAllMedications();
+    return meds.length;
+  }
+
+  Future<bool> hasMedications() async {
+    final count = await getMedicationCount();
+    return count > 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Save / Update / Delete medication
+  // ---------------------------------------------------------------------------
+
   Future<int> saveMedication(MedicationFormData formData) async {
-    // Convert form data to database companion
     final companion = MedicationsCompanion.insert(
       medicineType: formData.medicineType!.name,
       medicineName: formData.medicineName!,
@@ -58,6 +74,9 @@ class MedicationRepository {
       doseUnit: drift.Value(formData.doseUnit),
       durationDays: drift.Value(formData.durationDays),
       startDate: formData.startDate ?? DateTime.now(),
+      repetitionPattern: drift.Value(formData.repetitionPattern.name),
+      specificDaysOfWeek:
+          drift.Value(formData.specificDaysOfWeek.join(',')),
       stockQuantity: drift.Value(formData.stockQuantity),
       remindBeforeRunOut: drift.Value(formData.remindBeforeRunOut),
       reminderDaysBeforeRunOut: drift.Value(formData.reminderDaysBeforeRunOut),
@@ -65,56 +84,41 @@ class MedicationRepository {
       maxSnoozesPerDay: drift.Value(formData.maxSnoozesPerDay),
     );
 
-    // Insert medication
-    final medicationId = await _database.insertMedication(companion);
+    // Use transaction to ensure medication + reminder times are saved atomically
+    final medicationId = await _database.transaction(() async {
+      final id = await _database.insertMedication(companion);
 
-    // Insert reminder times
-    if (formData.reminderTimes.isNotEmpty) {
-      final times = formData.reminderTimes
-          .map((reminderData) => (
-                hour: reminderData.time.hour,
-                minute: reminderData.time.minute,
-                mealTiming: reminderData.mealTiming.value,
-                mealOffsetMinutes: reminderData.mealOffsetMinutes,
-              ))
-          .toList();
-      await _database.insertReminderTimes(medicationId, times);
-    }
-
-    // Schedule notifications for the new medication
-    try {
-      final medication = await _database.getMedicationById(medicationId);
-      if (medication != null) {
-        final reminderTimes = await _database.getReminderTimes(medicationId);
-        await _notificationService.scheduleRemindersForMedication(
-          medication,
-          reminderTimes,
-        );
-        debugPrint('Scheduled notifications for medication $medicationId');
+      if (formData.reminderTimes.isNotEmpty) {
+        final times = formData.reminderTimes
+            .map((r) => (
+                  hour: r.time.hour,
+                  minute: r.time.minute,
+                  mealTiming: r.mealTiming.value,
+                  mealOffsetMinutes: r.mealOffsetMinutes,
+                ))
+            .toList();
+        await _database.insertReminderTimes(id, times);
       }
-    } catch (e) {
-      debugPrint('Error scheduling notifications: $e');
-      // Don't fail the save if notification scheduling fails
-    }
+
+      return id;
+    });
+
+    _scheduleNotifications(medicationId);
 
     return medicationId;
   }
 
-  /// Update an existing medication
   Future<bool> updateMedication(
     int medicationId,
     MedicationFormData formData,
   ) async {
-    // Get existing medication
     final existing = await _database.getMedicationById(medicationId);
     if (existing == null) return false;
 
-    // Create updated medication
     final updated = existing.copyWith(
       medicineType: formData.medicineType!.name,
       medicineName: formData.medicineName,
-      medicinePhotoPath:
-          drift.Value(formData.medicinePhotoPath),
+      medicinePhotoPath: drift.Value(formData.medicinePhotoPath),
       strength: drift.Value(formData.strength),
       unit: drift.Value(formData.unit),
       notes: drift.Value(formData.notes),
@@ -124,87 +128,300 @@ class MedicationRepository {
       doseUnit: formData.doseUnit,
       durationDays: formData.durationDays,
       startDate: formData.startDate ?? DateTime.now(),
+      repetitionPattern: formData.repetitionPattern.name,
+      specificDaysOfWeek: formData.specificDaysOfWeek.join(','),
       stockQuantity: formData.stockQuantity,
       remindBeforeRunOut: formData.remindBeforeRunOut,
       reminderDaysBeforeRunOut: formData.reminderDaysBeforeRunOut,
       customSoundPath: drift.Value(formData.customSoundPath),
       maxSnoozesPerDay: formData.maxSnoozesPerDay,
+      expiryDate: drift.Value(formData.expiryDate),
+      reminderDaysBeforeExpiry: formData.reminderDaysBeforeExpiry,
+      enableRecurringReminders: formData.enableRecurringReminders,
+      recurringReminderInterval: formData.recurringReminderInterval,
       updatedAt: DateTime.now(),
     );
 
-    // Update medication
     final success = await _database.updateMedication(updated);
 
-    // Update reminder times
     if (success) {
       final times = formData.reminderTimes
-          .map((reminderData) => (
-                hour: reminderData.time.hour,
-                minute: reminderData.time.minute,
-                mealTiming: reminderData.mealTiming.value,
-                mealOffsetMinutes: reminderData.mealOffsetMinutes,
+          .map((r) => (
+                hour: r.time.hour,
+                minute: r.time.minute,
+                mealTiming: r.mealTiming.value,
+                mealOffsetMinutes: r.mealOffsetMinutes,
               ))
           .toList();
       await _database.updateReminderTimes(medicationId, times);
-
-      // Reschedule notifications with new times
-      try {
-        final medication = await _database.getMedicationById(medicationId);
-        if (medication != null) {
-          final reminderTimes = await _database.getReminderTimes(medicationId);
-          // Cancel old notifications and schedule new ones
-          await _notificationService.scheduleRemindersForMedication(
-            medication,
-            reminderTimes,
-          );
-          debugPrint('Rescheduled notifications for medication $medicationId');
-        }
-      } catch (e) {
-        debugPrint('Error rescheduling notifications: $e');
-        // Don't fail the update if notification rescheduling fails
-      }
+      _scheduleNotifications(medicationId);
     }
 
     return success;
   }
 
-  /// Delete a medication (soft delete)
   Future<bool> deleteMedication(int id) async {
     final result = await _database.deleteMedication(id);
-
-    // Cancel all notifications for this medication
     if (result > 0) {
       try {
         await _notificationService.cancelMedicationReminders(id);
-        debugPrint('Cancelled notifications for medication $id');
       } catch (e) {
         debugPrint('Error cancelling notifications: $e');
-        // Don't fail the delete if notification cancelling fails
       }
     }
-
     return result > 0;
   }
 
-  /// Permanently delete a medication
   Future<bool> hardDeleteMedication(int id) async {
     final result = await _database.hardDeleteMedication(id);
-
-    // Cancel all notifications for this medication
     if (result > 0) {
       try {
         await _notificationService.cancelMedicationReminders(id);
-        debugPrint('Cancelled notifications for medication $id');
       } catch (e) {
         debugPrint('Error cancelling notifications: $e');
-        // Don't fail the delete if notification cancelling fails
       }
     }
-
     return result > 0;
   }
 
-  /// Convert database medication to form data
+  // ---------------------------------------------------------------------------
+  // Dose operations — centralised, transactional
+  // ---------------------------------------------------------------------------
+
+  /// Record a dose as **taken**, deducting stock inside a single transaction.
+  Future<DoseResult> takeDose({
+    required int medicationId,
+    required DateTime scheduledDate,
+    required int scheduledHour,
+    required int scheduledMinute,
+  }) async {
+    try {
+      return await _database.transaction(() async {
+        // 1. Prevent duplicates
+        final existing = await _database.findDoseRecord(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        if (existing != null && existing.status == 'taken') {
+          return const DoseAlreadyRecorded();
+        }
+
+        final medication = await _database.getMedicationById(medicationId);
+        if (medication == null) return const DoseMedicationNotFound();
+
+        // 2. Remove stale record (e.g. snoozed) for the same slot
+        if (existing != null) {
+          await _database.deleteDoseRecord(
+            medicationId: medicationId,
+            scheduledDate: scheduledDate,
+            scheduledHour: scheduledHour,
+            scheduledMinute: scheduledMinute,
+          );
+        }
+
+        // 3. Insert taken record
+        await _database.recordDoseTaken(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        // 4. Deduct stock with audit log
+        String? stockWarning;
+        final previousStock = medication.stockQuantity;
+
+        if (previousStock > 0) {
+          final newStock =
+              (previousStock - medication.dosePerTime).floor().clamp(0, previousStock);
+          await _updateStockWithLog(
+            medicationId: medicationId,
+            medication: medication,
+            newStock: newStock,
+            changeType: 'usage',
+            notes: 'Dose taken',
+          );
+
+          if (newStock == 0) {
+            stockWarning = '${medication.medicineName} is now out of stock';
+          }
+        } else {
+          stockWarning = '${medication.medicineName} has no stock recorded';
+        }
+
+        return DoseRecorded(stockWarning: stockWarning);
+      });
+    } catch (e) {
+      return DoseOperationFailed(e.toString());
+    }
+  }
+
+  /// Record a dose as **skipped**.
+  Future<DoseResult> skipDose({
+    required int medicationId,
+    required DateTime scheduledDate,
+    required int scheduledHour,
+    required int scheduledMinute,
+  }) async {
+    try {
+      return await _database.transaction(() async {
+        final existing = await _database.findDoseRecord(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        if (existing != null && existing.status == 'skipped') {
+          return const DoseAlreadyRecorded();
+        }
+
+        if (existing != null) {
+          await _database.deleteDoseRecord(
+            medicationId: medicationId,
+            scheduledDate: scheduledDate,
+            scheduledHour: scheduledHour,
+            scheduledMinute: scheduledMinute,
+          );
+        }
+
+        await _database.recordDoseSkipped(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        return const DoseRecorded();
+      });
+    } catch (e) {
+      return DoseOperationFailed(e.toString());
+    }
+  }
+
+  /// Record a dose as **snoozed**.
+  Future<DoseResult> snoozeDose({
+    required int medicationId,
+    required DateTime scheduledDate,
+    required int scheduledHour,
+    required int scheduledMinute,
+    String? notes,
+  }) async {
+    try {
+      return await _database.transaction(() async {
+        final existing = await _database.findDoseRecord(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        if (existing != null) {
+          await _database.deleteDoseRecord(
+            medicationId: medicationId,
+            scheduledDate: scheduledDate,
+            scheduledHour: scheduledHour,
+            scheduledMinute: scheduledMinute,
+          );
+        }
+
+        await _database.recordDoseSnoozed(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+          notes: notes,
+        );
+
+        return const DoseRecorded();
+      });
+    } catch (e) {
+      return DoseOperationFailed(e.toString());
+    }
+  }
+
+  /// Undo a previously recorded dose, restoring stock if it was taken.
+  Future<DoseResult> undoDose({
+    required int medicationId,
+    required DateTime scheduledDate,
+    required int scheduledHour,
+    required int scheduledMinute,
+  }) async {
+    try {
+      return await _database.transaction(() async {
+        final existing = await _database.findDoseRecord(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        if (existing == null) return const DoseRecorded();
+
+        // Restore stock if the dose was taken
+        if (existing.status == 'taken') {
+          final medication =
+              await _database.getMedicationById(medicationId);
+          if (medication != null) {
+            final restoredStock =
+                (medication.stockQuantity + medication.dosePerTime).floor();
+            await _updateStockWithLog(
+              medicationId: medicationId,
+              medication: medication,
+              newStock: restoredStock,
+              changeType: 'adjustment',
+              notes: 'Dose undone — stock restored',
+            );
+          }
+        }
+
+        await _database.deleteDoseRecord(
+          medicationId: medicationId,
+          scheduledDate: scheduledDate,
+          scheduledHour: scheduledHour,
+          scheduledMinute: scheduledMinute,
+        );
+
+        return const DoseRecorded();
+      });
+    } catch (e) {
+      return DoseOperationFailed(e.toString());
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Stock helpers
+  // ---------------------------------------------------------------------------
+
+  Future<bool> updateStockQuantity(int medicationId, int newQuantity) async {
+    final medication = await _database.getMedicationById(medicationId);
+    if (medication == null) return false;
+
+    final updated = medication.copyWith(
+      stockQuantity: newQuantity,
+      updatedAt: DateTime.now(),
+    );
+    return _database.updateMedication(updated);
+  }
+
+  /// Effective average daily usage accounting for the repetition pattern.
+  static double effectiveDailyUsage(Medication medication) {
+    final baseUsage = medication.timesPerDay * medication.dosePerTime;
+    final daysPerWeek = RepetitionPatternUtils.doseDaysPerWeek(
+      pattern: medication.repetitionPattern,
+      specificDaysOfWeek: medication.specificDaysOfWeek,
+    );
+    if (daysPerWeek <= 0) return 0;
+    return baseUsage * daysPerWeek / 7;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Form conversion
+  // ---------------------------------------------------------------------------
+
   Future<MedicationFormData> medicationToFormData(int medicationId) async {
     final medication = await _database.getMedicationById(medicationId);
     if (medication == null) {
@@ -212,6 +429,19 @@ class MedicationRepository {
     }
 
     final reminderTimes = await _database.getReminderTimes(medicationId);
+
+    // Parse repetition pattern
+    final repetitionPattern = RepetitionPattern.values.firstWhere(
+      (p) => p.name == medication.repetitionPattern,
+      orElse: () => RepetitionPattern.daily,
+    );
+
+    final specificDays = medication.specificDaysOfWeek
+        .split(',')
+        .where((d) => d.trim().isNotEmpty)
+        .map((d) => int.tryParse(d.trim()))
+        .whereType<int>()
+        .toList();
 
     return MedicationFormData(
       medicineType: MedicineType.values.firstWhere(
@@ -228,6 +458,8 @@ class MedicationRepository {
       doseUnit: medication.doseUnit,
       durationDays: medication.durationDays,
       startDate: medication.startDate,
+      repetitionPattern: repetitionPattern,
+      specificDaysOfWeek: specificDays,
       reminderTimes: reminderTimes
           .map((rt) => ReminderTimeData(
                 time: TimeOfDay(hour: rt.hour, minute: rt.minute),
@@ -243,44 +475,55 @@ class MedicationRepository {
     );
   }
 
-  /// Get medication count
-  Future<int> getMedicationCount() async {
-    final meds = await _database.getAllMedications();
-    return meds.length;
-  }
+  Future<void> close() => _database.close();
 
-  /// Check if any medications exist
-  Future<bool> hasMedications() async {
-    final count = await getMedicationCount();
-    return count > 0;
-  }
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
 
-  /// Update stock quantity
-  Future<bool> updateStockQuantity(int medicationId, int newQuantity) async {
-    final medication = await _database.getMedicationById(medicationId);
-    if (medication == null) return false;
-
+  Future<void> _updateStockWithLog({
+    required int medicationId,
+    required Medication medication,
+    required int newStock,
+    required String changeType,
+    String? notes,
+  }) async {
     final updated = medication.copyWith(
-      stockQuantity: newQuantity,
+      stockQuantity: newStock,
       updatedAt: DateTime.now(),
     );
-
-    return _database.updateMedication(updated);
+    await _database.updateMedication(updated);
+    await _database.logStockChange(
+      medicationId: medicationId,
+      previousStock: medication.stockQuantity,
+      newStock: newStock,
+      changeType: changeType,
+      notes: notes,
+    );
   }
 
-  /// Record medication taken (decrease stock)
-  Future<bool> recordMedicationTaken(int medicationId, double doseTaken) async {
-    final medication = await _database.getMedicationById(medicationId);
-    if (medication == null) return false;
+  Future<void> _scheduleNotifications(int medicationId) async {
+    try {
+      final medication = await _database.getMedicationById(medicationId);
+      if (medication != null) {
+        final reminderTimes = await _database.getReminderTimes(medicationId);
+        await _notificationService.scheduleRemindersForMedication(
+          medication,
+          reminderTimes,
+        );
 
-    final newQuantity = (medication.stockQuantity - doseTaken).round();
-    if (newQuantity < 0) return false;
+        // Schedule expiry notification if expiry date is set
+        if (medication.expiryDate != null) {
+          await _notificationService.scheduleExpiryNotification(medication);
+        }
 
-    return updateStockQuantity(medicationId, newQuantity);
-  }
-
-  /// Close the database
-  Future<void> close() {
-    return _database.close();
+        // Schedule low stock notification if applicable
+        if (medication.remindBeforeRunOut) {
+          await _notificationService.scheduleLowStockNotification(medication);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error scheduling notifications: $e');
+    }
   }
 }

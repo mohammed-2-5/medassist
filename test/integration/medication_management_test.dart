@@ -286,7 +286,7 @@ void main() {
       await db.updateMedication(med);
 
       med = await db.getMedicationById(medId);
-      expect(med.strength, equals('20'));
+      expect(med?.strength, equals('20'));
 
       await db.deleteMedication(medId);
 

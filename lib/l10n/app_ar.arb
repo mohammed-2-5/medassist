@@ -268,7 +268,14 @@
 
   "times": "مرات",
   "perDay": "في اليوم",
-  "dose": "جرعة",
+  "dose": "جرعة {number}",
+  "@dose": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "perTime": "لكل مرة",
   "totalStock": "إجمالي المخزون",
   "daysRemaining": "الأيام المتبقية",
@@ -314,6 +321,14 @@
   "noDataAvailable": "لا توجد بيانات متاحة",
   "startTrackingToSeeAnalytics": "ابدأ بتتبع أدويتك لرؤية التحليلات",
   "exportData": "تصدير البيانات",
+  "customDateRange": "نطاق تاريخ مخصص",
+  "@customDateRange": {
+    "description": "Popup action label for selecting a custom analytics date range"
+  },
+  "exportPdf": "تصدير PDF",
+  "@exportPdf": {
+    "description": "Popup action label for exporting analytics report as PDF"
+  },
   "exportAsCSV": "تصدير كـ CSV",
   "exportAsPDF": "تصدير كـ PDF",
   "dataExported": "تم تصدير البيانات",
@@ -490,9 +505,30 @@
   "dateAddedOldest": "الأقدم إضافة",
   "stockLowToHigh": "المخزون: من الأقل للأكثر",
   "stockHighToLow": "المخزون: من الأكثر للأقل",
-  "bulkDelete": "حذف جماعي",
-  "bulkPause": "إيقاف جماعي",
-  "bulkResume": "استئناف جماعي",
+  "bulkDelete": "حذف {count} أدوية؟",
+  "@bulkDelete": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPause": "إيقاف {count} أدوية مؤقتاً؟",
+  "@bulkPause": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkResume": "استئناف {count} أدوية؟",
+  "@bulkResume": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "medicationNotFound": "لم يتم العثور على الدواء",
   "perDose": "لكل جرعة",
   "started": "بدأ",
@@ -517,7 +553,14 @@
   "skippedDoses": "الجرعات المتخطاة",
   "totalDoses": "إجمالي الجرعات",
   "bestStreak": "أفضل سلسلة",
-  "daysStreak": "سلسلة الأيام",
+  "daysStreak": "{days} أيام",
+  "@daysStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
 
   "trendsInsights": "الاتجاهات والرؤى",
   "medicationInsights": "رؤى الأدوية",
@@ -631,5 +674,637 @@
   "restoreFromBackup": "استعادة من نسخة احتياطية",
   "restoreDescription": "استيراد البيانات من ملف نسخة احتياطية. سيحل هذا محل جميع البيانات الحالية.",
   "restoreWarning": "تحذير: سيتم مسح البيانات الحالية",
-  "selectBackupFile": "حدد ملف النسخة الاحتياطية"
+  "selectBackupFile": "حدد ملف النسخة الاحتياطية",
+
+  "year": "سنة",
+  "adjustStock": "تعديل المخزون",
+  "currentStockLabel": "المخزون الحالي:",
+  "newStockAmount": "كمية المخزون الجديدة",
+  "enterUpdatedStockQuantity": "أدخل كمية المخزون المحدثة",
+  "quickAdjustments": "تعديلات سريعة:",
+  "pleaseEnterValidStock": "الرجاء إدخال كمية مخزون صالحة",
+  "stockUpdatedTo": "تم تحديث المخزون إلى {quantity} {unit}",
+  "@stockUpdatedTo": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUpdatingStock": "خطأ في تحديث المخزون: {error}",
+  "@errorUpdatingStock": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "daysRemainingLabel": "الأيام المتبقية",
+  "stockLevelCritical": "حرج",
+  "stockLevelLow": "منخفض",
+  "stockLevelMedium": "متوسط",
+  "stockLevelGood": "جيد",
+  "stockWarningCritical": "مستوى المخزون حرج! أعد التعبئة فوراً.",
+  "stockWarningLow": "مستوى المخزون منخفض. يُنصح بإعادة التعبئة قريباً.",
+  "expiryDateLabel": "تاريخ الانتهاء",
+  "expiryStatusGood": "جيد",
+  "expiryStatusToday": "ينتهي اليوم",
+  "expiryStatusTomorrow": "ينتهي غداً",
+  "expiryStatusInDays": "ينتهي خلال {days} أيام",
+  "@expiryStatusInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "medicationExpiredWarning": "انتهت صلاحية هذا الدواء! لا تستخدمه.",
+  "medicationExpiringSoonWarning": "صلاحية هذا الدواء توشك على الانتهاء ({days} أيام).",
+  "@medicationExpiringSoonWarning": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "generatingPdfReport": "جارٍ إنشاء تقرير PDF...",
+  "pdfReportGenerated": "تم إنشاء تقرير PDF بنجاح!",
+  "errorGeneratingPdf": "خطأ في إنشاء PDF: {error}",
+  "@errorGeneratingPdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lastBackup": "آخر نسخة احتياطية",
+  "processing": "جارٍ المعالجة...",
+  "backupCreatedSuccessfully": "تم إنشاء النسخة الاحتياطية بنجاح!",
+  "failedToCreateBackup": "فشل إنشاء النسخة الاحتياطية: {error}",
+  "@failedToCreateBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToShareBackup": "فشل مشاركة النسخة الاحتياطية: {error}",
+  "@failedToShareBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreFromBackupQuestion": "استعادة من نسخة احتياطية؟",
+  "restoreConfirmMessage": "سيؤدي هذا إلى مسح جميع البيانات الحالية واستبدالها ببيانات من ملف النسخة الاحتياطية.\n\nلا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟",
+  "restoreComplete": "اكتملت الاستعادة!",
+  "successfullyRestoredItems": "تم استعادة {count} عناصر بنجاح:",
+  "@successfullyRestoredItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToRestoreBackup": "فشل استعادة النسخة الاحتياطية: {error}",
+  "undo": "تراجع",
+  "takenSuccessfully": "تم التناول بنجاح",
+  "missedDoseLabel": "جرعة فائتة",
+  "logNow": "سجل الآن",
+  "snoozedForMinutes": "تم التأجيل لمدة 15 دقيقة",
+  "@failedToRestoreBackup": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "adherenceTrendChart": "اتجاه الالتزام خلال 7 أيام",
+  "adherenceByMedication": "الالتزام حسب الدواء",
+  "doseStatusDistribution": "توزيع حالة الجرعات (هذا الشهر)",
+  "adherenceHeatmap30Day": "خريطة الالتزام خلال 30 يوم",
+  "timeOfDayAnalysis": "تحليل حسب وقت اليوم",
+  "adherenceRateByHour": "معدل الالتزام حسب ساعة اليوم",
+  "noMedicationDataAvailable": "لا توجد بيانات أدوية متاحة",
+  "noTrendDataAvailable": "لا توجد بيانات اتجاه بعد",
+  "noDoseDataForTimeAnalysis": "لا توجد بيانات جرعات لتحليل الوقت",
+  "errorLoadingTrend": "خطأ في تحميل الاتجاه: {error}",
+  "@errorLoadingTrend": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingHeatmap": "خطأ في تحميل الخريطة الحرارية: {error}",
+  "@errorLoadingHeatmap": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingChart": "خطأ في تحميل الرسم البياني: {error}",
+  "@errorLoadingChart": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "lessLabel": "أقل",
+  "moreLabel": "أكثر",
+  "insightsLabel": "ملاحظات",
+  "bestTimeInsight": "أفضل وقت: {time} ({percent}% التزام)",
+  "@bestTimeInsight": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "needsAttentionInsight": "يحتاج انتباه: {time} ({percent}% التزام)",
+  "@needsAttentionInsight": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "noDoseDataThisMonth": "لا توجد بيانات جرعات لهذا الشهر",
+  "splashGreeting": "قل مرحباً لـ",
+  "splashAiTitle": "مساعدك الطبي الذكي",
+  "poweredByAi": "مدعوم بالذكاء الاصطناعي",
+  "dosesLabel": "{taken}/{total} جرعة",
+  "@dosesLabel": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "drugInteractionDetected": "تم اكتشاف تفاعل دوائي",
+  "drugInteractionsDetected": "تم اكتشاف {count} تفاعلات دوائية",
+  "@drugInteractionsDetected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapToViewDetails": "اضغط لعرض التفاصيل",
+  "drugInteractions": "التفاعلات الدوائية",
+  "viewMedications": "عرض الأدوية",
+
+  "viewAnalytics": "عرض التحليلات",
+  "insightsCount": "{count} رؤى",
+  "@insightsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingInsightsMessage": "خطأ في تحميل الرؤى",
+  "noInsightsYetMessage": "لا توجد رؤى بعد",
+  "startTakingMedsForInsights": "ابدأ بتناول أدويتك لتوليد رؤى صحية مخصصة",
+  "wantMoreInsights": "تريد المزيد من الرؤى؟",
+  "viewAnalyticsDescription": "اعرض لوحة التحليلات التفصيلية للرسوم البيانية والاتجاهات والإحصاءات الشاملة.",
+
+  "chatSuggestion1": "كيف أضيف أول دواء لي؟",
+  "chatSuggestion2": "ماذا يجب أن أعرف عن أدويتي؟",
+  "chatSuggestion3": "ساعدني في فهم الالتزام بالعلاج",
+
+  "onlyDosesLeft": "متبقي {count} جرعة فقط",
+  "@onlyDosesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "addMedicineTitle": "إضافة دواء",
+  "saveDraft": "حفظ المسودة",
+  "finish": "إنهاء",
+  "medicineAddedSuccess": "تمت إضافة الدواء بنجاح!",
+  "failedToSaveMedicine": "فشل في حفظ الدواء. يرجى المحاولة مرة أخرى.",
+  "draftSaved": "تم حفظ المسودة!",
+
+  "noData": "لا توجد بيانات",
+
+  "snoozeReminder": "تأجيل التذكير",
+  "howLongSnooze": "كم تريد تأجيل التذكير؟",
+  "fiveMinutes": "5 دقائق",
+  "tenMinutes": "10 دقائق",
+  "fifteenMinutes": "15 دقيقة",
+  "thirtyMinutes": "30 دقيقة",
+  "oneHour": "ساعة واحدة",
+
+  "selectDateRange": "اختر نطاق التاريخ",
+  "last7Days": "آخر 7 أيام",
+  "last30Days": "آخر 30 يوم",
+  "last3Months": "آخر 3 أشهر",
+  "thisYear": "هذه السنة",
+  "apply": "تطبيق",
+  "daysSelected": "{count} يوم محدد",
+  "@daysSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "reportsAndExportTitle": "التقارير والتصدير",
+  "exportYourDataTitle": "صدّر بياناتك",
+  "exportYourDataSubtitle": "أنشئ تقارير وصدّر بيانات أدويتك بتنسيقات مختلفة",
+  "csvExports": "تصدير CSV",
+  "pdfReports": "تقارير PDF",
+  "medicationsList": "قائمة الأدوية",
+  "exportAllMedicationsCSV": "تصدير جميع بيانات الأدوية إلى CSV",
+  "doseHistory": "سجل الجرعات",
+  "exportDoseHistoryCSV": "تصدير سجل الجرعات الكامل إلى CSV",
+  "stockHistory": "سجل المخزون",
+  "exportStockHistoryCSV": "تصدير سجل تغييرات المخزون إلى CSV",
+  "medicationsReport": "تقرير الأدوية",
+  "generateMedicationsPDF": "إنشاء تقرير PDF مفصل لجميع الأدوية",
+  "adherenceReport": "تقرير الالتزام",
+  "generateAdherencePDF": "إنشاء تقرير PDF بإحصائيات الالتزام",
+  "exportInfoMessage": "سيتم حفظ الملفات المصدرة على جهازك ويمكن مشاركتها فوراً",
+  "generatingExport": "جارٍ إنشاء التصدير...",
+  "exportedSuccessfully": "تم تصدير {type} بنجاح!",
+  "@exportedSuccessfully": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToExport": "فشل التصدير: {error}",
+  "@failedToExport": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToGeneratePdf": "فشل إنشاء PDF: {error}",
+  "@failedToGeneratePdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfGeneratedSuccessfully": "تم إنشاء تقرير {type} بنجاح!",
+  "@pdfGeneratedSuccessfully": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+
+  "systemStatus": "حالة النظام",
+  "notificationPermission": "إذن الإشعارات",
+  "requiredForReminders": "مطلوب لتذكيرات الأدوية",
+  "exactAlarms": "إذن المنبهات الدقيقة",
+  "requiredForPreciseTiming": "مطلوب لتوقيت التذكيرات الدقيق على أندرويد 12+",
+  "databaseStatistics": "إحصائيات قاعدة البيانات",
+  "deviceInformation": "معلومات الجهاز",
+  "pluginVersion": "إصدار الإضافة",
+  "testingAndActions": "الاختبار والإجراءات",
+  "sendTestNotificationTitle": "إرسال إشعار تجريبي",
+  "testIfNotificationsWork": "اختبر ما إذا كانت الإشعارات تعمل",
+  "scheduleTest1Min": "جدولة اختبار (دقيقة)",
+  "scheduleTestDescription": "جدولة إشعار تجريبي بعد دقيقة من الآن",
+  "requestPermissionsTitle": "طلب الأذونات",
+  "requestPermissionsDescription": "طلب جميع الأذونات المطلوبة",
+  "troubleshooting": "استكشاف الأخطاء",
+  "notificationsNotAppearing": "الإشعارات لا تظهر؟",
+  "notificationsNotAppearingTips": "• تحقق من الأذونات أعلاه\n• عطّل تحسين البطارية\n• فعّل المنبهات الدقيقة (أندرويد 12+)\n• اختبر بـ \"إرسال إشعار تجريبي\"",
+  "appCrashing": "التطبيق يتعطل؟",
+  "appCrashingTips": "• امسح بيانات التطبيق وأعد التشغيل\n• تأكد من منح جميع الأذونات\n• تحقق من إعدادات المنطقة الزمنية",
+  "advancedDiagnostics": "تشخيصات متقدمة",
+  "ok_status": "جيد",
+  "needed_status": "مطلوب",
+
+  "medicinePhotoTitle": "صورة الدواء",
+  "medicinePhotoSubtitle": "اختياري - يساعد في التعرف على دوائك",
+  "camera": "الكاميرا",
+  "gallery": "المعرض",
+  "changePhoto": "تغيير الصورة",
+  "removePhoto": "إزالة",
+  "takePhoto": "التقاط صورة",
+  "chooseFromGallery": "اختيار من المعرض",
+
+  "dismiss": "إغلاق",
+
+  "scanName": "مسح الاسم",
+  "scanMedicationLabel": "مسح بطاقة الدواء",
+  "autoFillFromPhoto": "ملء التفاصيل تلقائياً من الصورة",
+  "medicineNameHint": "مثال: أسبرين، باراسيتامول",
+  "photoCapturedSuccess": "تم التقاط الصورة بنجاح!",
+  "photoSelectedSuccess": "تم اختيار الصورة بنجاح!",
+  "photoRemovedSuccess": "تمت إزالة الصورة",
+  "lookingUpMedication": "جارٍ البحث عن الدواء...",
+  "scannedCodeLabel": "الكود الممسوح",
+  "failedToCapturePhoto": "فشل التقاط الصورة: {error}",
+  "@failedToCapturePhoto": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToPickPhoto": "فشل اختيار الصورة: {error}",
+  "@failedToPickPhoto": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unknown": "غير معروف",
+  "scannedMedication": "تم المسح: {name}",
+  "@scannedMedication": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationFound": "تم العثور على الدواء: {name}",
+  "@medicationFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scannedCodeEnterManually": "الكود الممسوح: {code}\nالرجاء إدخال التفاصيل يدوياً",
+  "@scannedCodeEnterManually": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errorScanningBarcode": "خطأ في مسح الباركود: {error}",
+  "@errorScanningBarcode": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "whenAndHowOftenToTake": "متى وكم مرة تتناول هذا الدواء",
+  "howManyTimesPerDay": "كم مرة في اليوم؟",
+  "selectTimesPerDayDesc": "حدد عدد مرات تناول هذا الدواء يومياً",
+  "timeSingular": "مرة",
+  "timePlural": "مرات",
+  "amount": "الكمية",
+  "unit": "الوحدة",
+  "treatmentDuration": "مدة العلاج",
+  "startingLabel": "البداية",
+  "treatmentEndsOn": "ينتهي العلاج في {date}",
+  "@treatmentEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTimesTitle": "أوقات التذكير",
+  "selectTimesForReminders": "حدد مرات اليوم لضبط أوقات التذكير",
+  "scheduleSummary": "ملخص الجدول",
+  "completeTheForm": "أكمل النموذج",
+  "eachDose": "كل جرعة",
+  "starts": "يبدأ",
+  "repetitionPatternTitle": "نمط التكرار",
+  "whenToTakeMedication": "متى يجب تناول هذا الدواء؟",
+  "activeOnDays": "نشط في: {days}",
+  "@activeOnDays": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "selectDaysOfWeek": "حدد أيام الأسبوع",
+  "everyDay": "كل يوم",
+  "everyOtherDay": "كل يومين",
+  "mondayToFriday": "الإثنين إلى الجمعة",
+  "saturdayAndSunday": "السبت والأحد",
+  "noDaysSelected": "لم يتم تحديد أيام",
+  "recurringReminders": "تذكيرات متكررة",
+  "followUpRemindersForMissed": "احصل على تذكيرات متابعة للجرعات الفائتة",
+  "reminderIntervalTitle": "فترة التذكير",
+  "missedDoseReminderInfo": "إذا فاتتك جرعة، ستحصل على تذكير كل {minutes} دقيقة (حتى 4 مرات)",
+  "@missedDoseReminderInfo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+
+  "trackMedicineSupply": "تتبع كمية دوائك واحصل على تنبيهات انخفاض المخزون",
+  "howManyDoYouHave": "كم {unit} لديك؟",
+  "@howManyDoYouHave": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "quantityLabel": "الكمية",
+  "inStock": "في المخزون",
+  "stockTimeline": "جدول المخزون الزمني",
+  "dailyUsageLabel": "الاستهلاك اليومي",
+  "stockLastsFor": "يكفي المخزون لـ",
+  "stockRunsOut": "ينفد المخزون في",
+  "stockLevelLabel": "مستوى المخزون",
+  "lowStockReminder": "تذكير انخفاض المخزون",
+  "getNotifiedBeforeRunOut": "احصل على إشعار قبل نفاد دوائك",
+  "remindMeDaysBefore": "ذكرني قبل هذا العدد من الأيام:",
+  "expiryDateOptional": "تاريخ الانتهاء (اختياري)",
+  "trackWhenExpires": "تتبع متى ينتهي دوائك",
+  "tapToSetExpiryDate": "اضغط لتعيين تاريخ الانتهاء",
+  "remindMeBeforeExpiry": "ذكرني قبل انتهاء الصلاحية:",
+  "readyToSave": "جاهز للحفظ!",
+  "completeAllSteps": "أكمل جميع الخطوات للمتابعة",
+  "medicineInfoComplete": "معلومات دوائك مكتملة وجاهزة للحفظ",
+  "fillRequiredFields": "يرجى ملء جميع الحقول المطلوبة في الخطوات السابقة",
+  "medicineTypeAndDetails": "نوع الدواء والتفاصيل",
+  "scheduleConfigured": "تم ضبط الجدول",
+  "stockInformation": "معلومات المخزون",
+  "xTimesPerDay": "{count}x في اليوم",
+  "@xTimesPerDay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeAll": "تناول الكل",
+  "swipeRightToTake": "اسحب يميناً للأخذ",
+  "swipeLeftToSkip": "اسحب يساراً للتخطي",
+
+  "snoozed": "تم التأجيل",
+  "scheduled": "المجدول",
+  "takenAt": "تناول في",
+  "onTime": "في الوقت المحدد",
+  "minEarly": "قبل {minutes} دقيقة",
+  "@minEarly": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "minLate": "بعد {minutes} دقيقة",
+  "@minLate": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "hoursMinLate": "بعد {hours}س {minutes}د",
+  "@hoursMinLate": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "startStreak": "ابدأ سلسلتك اليوم!",
+  "keepItUpStreak": "استمر! {remaining} أيام أخرى لأسبوع!",
+  "@keepItUpStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "amazingStreak": "رائع! {remaining} أيام أخرى لشهر!",
+  "@amazingStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "incredibleStreak": "مذهل! {remaining} يومًا آخر لـ 100 يوم!",
+  "@incredibleStreak": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "streakChampion": "أنت بطل الالتزام بالدواء!",
+  "excellentAdherenceExclaim": "التزام ممتاز! 🎉",
+  "goodProgress": "تقدم جيد!",
+  "keepItUp": "استمر!",
+  "letsCatchUp": "هيا نتدارك",
+  "startYourDay": "ابدأ يومك",
+  "excellentAdherenceMessage": "التزام ممتاز! استمر على هذا النهج الرائع!",
+  "goodAdherenceMessage": "التزام جيد. حاول تحسين الاتساق.",
+  "fairAdherenceMessage": "التزام مقبول. فكر في ضبط المزيد من التذكيرات.",
+  "lowAdherenceMessage": "التزام منخفض. يرجى محاولة تناول الأدوية بانتظام.",
+  "veryLowAdherenceMessage": "التزام منخفض جدًا. تحدث مع مقدم الرعاية الصحية.",
+
+  "overallAdherence": "الالتزام الإجمالي",
+  "adherence": "الالتزام",
+  "medicationPerformance": "أداء الأدوية",
+
+  "weeklyAdherenceInsightTitle": "الالتزام الأسبوعي",
+  "weeklyAdherenceInsightDesc": "تناولت {percent}٪ من جرعاتك هذا الأسبوع ({taken}/{total})",
+  "@weeklyAdherenceInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" },
+      "taken": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "improvingTrendTitle": "اتجاه تحسن 📈",
+  "decliningTrendTitle": "اتجاه تراجع 📉",
+  "improvingTrendDesc": "تحسنت بنسبة {change}٪ مقارنة بالأسبوع الماضي. تقدم رائع!",
+  "@improvingTrendDesc": {
+    "placeholders": {
+      "change": { "type": "int" }
+    }
+  },
+  "decliningTrendDesc": "تراجعت بنسبة {change}٪ مقارنة بالأسبوع الماضي. هيا نعود للمسار الصحيح!",
+  "@decliningTrendDesc": {
+    "placeholders": {
+      "change": { "type": "int" }
+    }
+  },
+  "topMedicationTitle": "أفضل دواء",
+  "topMedicationDesc": "دواء {name} لديه نسبة التزام {percent}٪ - أكثر أدويتك انتظامًا!",
+  "@topMedicationDesc": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "percent": { "type": "int" }
+    }
+  },
+  "streakDayTitle": "سلسلة {streak} يوم! 🔥",
+  "@streakDayTitle": {
+    "placeholders": {
+      "streak": { "type": "int" }
+    }
+  },
+  "streakAmazingDesc": "رائع! لقد كنت منتظمًا لأكثر من أسبوع!",
+  "streakConsistencyDesc": "استمر! الانتظام هو مفتاح صحة أفضل.",
+  "bestTimeTitle": "أفضل وقت ⏰",
+  "bestTimeDesc": "أكثر أوقاتك انتظامًا هو {period} بنسبة {percent}٪",
+  "@bestTimeDesc": {
+    "placeholders": {
+      "period": { "type": "String" },
+      "percent": { "type": "int" }
+    }
+  },
+  "excellentAdherenceInsightTitle": "التزام ممتاز! 🌟",
+  "excellentAdherenceInsightDesc": "رائع! تناولت {percent}٪ من جرعاتك هذا الأسبوع. استمر على هذا النهج الرائع!",
+  "@excellentAdherenceInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "needsImprovementTitle": "يحتاج تحسين",
+  "needsImprovementInsightDesc": "كان التزامك هذا الأسبوع {percent}٪. حاول ضبط المزيد من التذكيرات أو تعديل جدولك للتحسين.",
+  "@needsImprovementInsightDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+
+  "summary": "ملخص",
+  "medication": "الدواء",
+  "name": "الاسم",
+  "generatedOn": "تم الإنشاء في: {date}",
+  "@generatedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "adherenceStatistics": "إحصائيات الالتزام",
+  "recentDoseHistory": "سجل الجرعات الأخير",
+  "reportPeriod": "فترة التقرير: {start} - {end}",
+  "@reportPeriod": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+  "medAssistAnalyticsReport": "تقرير تحليلات MedAssist"
 }

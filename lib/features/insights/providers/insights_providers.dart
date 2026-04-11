@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/utils/streak_utils.dart';
+import 'package:med_assist/core/utils/time_period_utils.dart';
 import 'package:med_assist/features/insights/models/health_insight.dart';
 
 /// Provider for adherence insights
@@ -107,31 +109,7 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
 
     // Calculate current streak
     if (allHistory.isNotEmpty) {
-      var streak = 0;
-      var currentDate = DateTime.now();
-      final sortedHistory = allHistory.toList()
-        ..sort((a, b) => b.scheduledDate.compareTo(a.scheduledDate));
-
-      for (var i = 0; i < 30 && i < sortedHistory.length; i++) {
-        final dose = sortedHistory[i];
-        final doseDate = DateTime(
-          dose.scheduledDate.year,
-          dose.scheduledDate.month,
-          dose.scheduledDate.day,
-        );
-        final checkDate = DateTime(
-          currentDate.year,
-          currentDate.month,
-          currentDate.day,
-        );
-
-        if (doseDate == checkDate && dose.status == 'taken') {
-          streak++;
-          currentDate = currentDate.subtract(const Duration(days: 1));
-        } else if (doseDate.isBefore(checkDate)) {
-          break;
-        }
-      }
+      final streak = StreakUtils.currentStreak(allHistory);
 
       if (streak > 0) {
         insights.add(HealthInsight(
@@ -150,39 +128,21 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
     // Find best time of day
     if (allHistory.isNotEmpty) {
       final timeGroups = {
-        'Morning (6 AM - 12 PM)': 0,
-        'Afternoon (12 PM - 6 PM)': 0,
-        'Evening (6 PM - 10 PM)': 0,
-        'Night (10 PM - 6 AM)': 0,
+        for (final p in TimePeriodUtils.allPeriods) p: 0,
       };
-
       final timeCounts = {
-        'Morning (6 AM - 12 PM)': 0,
-        'Afternoon (12 PM - 6 PM)': 0,
-        'Evening (6 PM - 10 PM)': 0,
-        'Night (10 PM - 6 AM)': 0,
+        for (final p in TimePeriodUtils.allPeriods) p: 0,
       };
 
       for (final dose in allHistory) {
-        final hour = dose.scheduledHour;
-        String period;
-        if (hour >= 6 && hour < 12) {
-          period = 'Morning (6 AM - 12 PM)';
-        } else if (hour >= 12 && hour < 18) {
-          period = 'Afternoon (12 PM - 6 PM)';
-        } else if (hour >= 18 && hour < 22) {
-          period = 'Evening (6 PM - 10 PM)';
-        } else {
-          period = 'Night (10 PM - 6 AM)';
-        }
-
+        final period = TimePeriodUtils.periodForHour(dose.scheduledHour);
         timeCounts[period] = (timeCounts[period] ?? 0) + 1;
         if (dose.status == 'taken') {
           timeGroups[period] = (timeGroups[period] ?? 0) + 1;
         }
       }
 
-      var bestTime = 'Morning (6 AM - 12 PM)';
+      var bestTime = TimePeriodUtils.morning;
       var bestPercent = 0.0;
 
       for (final entry in timeGroups.entries) {
@@ -212,11 +172,22 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
       final lastWeekTotal = lastWeekHistory.length;
       final lastWeekPercent = (lastWeekTaken / lastWeekTotal * 100).round();
 
-      if (lastWeekPercent < 70) {
+      if (lastWeekPercent >= 90) {
+        insights.add(HealthInsight(
+          type: HealthInsightType.motivation,
+          title: 'Excellent Adherence! 🌟',
+          description:
+              'Outstanding! You took $lastWeekPercent% of your doses this week. Keep up the great work!',
+          value: lastWeekPercent.toDouble(),
+          sentiment: InsightSentiment.positive,
+          icon: 'star',
+        ));
+      } else if (lastWeekPercent < 70) {
         insights.add(HealthInsight(
           type: HealthInsightType.motivation,
           title: 'Needs Improvement',
-          description: 'Your adherence this week was $lastWeekPercent%. Try setting more reminders or adjusting your schedule to improve.',
+          description:
+              'Your adherence this week was $lastWeekPercent%. Try setting more reminders or adjusting your schedule to improve.',
           value: lastWeekPercent.toDouble(),
           sentiment: InsightSentiment.warning,
           icon: 'lightbulb',

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/features/medications/providers/medications_filter_provider.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
@@ -95,7 +94,7 @@ class MedicationsFilterChips extends ConsumerWidget {
               return _MedicineTypeChip(types: types, filter: filter, colorScheme: colorScheme);
             },
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
         ],
       ),
@@ -122,7 +121,7 @@ class _FilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chipColor = selected ? const Color(0xFF00BCD4) : colorScheme.surfaceContainerHigh;
-    final labelColor = selected ? Colors.white : colorScheme.onSurface;
+    final labelColor = selected ? colorScheme.onPrimary : colorScheme.onSurface;
     final borderColor = selected
         ? const Color(0xFF00BCD4)
         : colorScheme.outline.withOpacity(0.3);
@@ -133,7 +132,7 @@ class _FilterChip extends StatelessWidget {
         boxShadow: selected
             ? [
                 BoxShadow(
-                  color: const Color(0xFF00BCD4).withOpacity(0.3),
+                  color: colorScheme.primary.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -163,10 +162,10 @@ class _FilterChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         labelPadding: const EdgeInsets.symmetric(horizontal: 4),
         elevation: selected ? 2 : 0,
-        shadowColor: const Color(0xFF00BCD4).withOpacity(0.3),
+        shadowColor: colorScheme.primary.withOpacity(0.3),
       ).animate(target: selected ? 1 : 0)
        .scale(
-         begin: const Offset(1.0, 1.0),
+         begin: const Offset(1, 1),
          end: const Offset(1.05, 1.05),
          duration: const Duration(milliseconds: 200),
        ),
@@ -190,8 +189,8 @@ class _MedicineTypeChip extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isSelected = filter.medicineType != null;
-    final chipColor = isSelected ? const Color(0xFF00BCD4) : colorScheme.surfaceContainerHigh;
-    final labelColor = isSelected ? Colors.white : colorScheme.onSurface;
+    final chipColor = isSelected ? colorScheme.primary : colorScheme.surfaceContainerHigh;
+    final labelColor = isSelected ? colorScheme.onPrimary : colorScheme.onSurface;
 
     return Container(
       decoration: BoxDecoration(
@@ -199,14 +198,17 @@ class _MedicineTypeChip extends ConsumerWidget {
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: const Color(0xFF00BCD4).withOpacity(0.3),
+                  color: colorScheme.primary.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ]
             : null,
       ),
-      child: PopupMenuButton<String>(
+      child: PopupMenuButton<String?>(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Chip(
           label: Text(
             filter.medicineType ?? l10n.type,
@@ -224,25 +226,25 @@ class _MedicineTypeChip extends ConsumerWidget {
           backgroundColor: chipColor,
           side: BorderSide(
             color: isSelected
-                ? const Color(0xFF00BCD4)
+                ? colorScheme.primary
                 : colorScheme.outline.withOpacity(0.3),
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           labelPadding: const EdgeInsets.symmetric(horizontal: 4),
           elevation: isSelected ? 2 : 0,
-          shadowColor: const Color(0xFF00BCD4).withOpacity(0.3),
+          shadowColor: colorScheme.primary.withOpacity(0.3),
         ).animate(target: isSelected ? 1 : 0)
          .scale(
-           begin: const Offset(1.0, 1.0),
+           begin: const Offset(1, 1),
            end: const Offset(1.05, 1.05),
            duration: const Duration(milliseconds: 200),
          ),
         itemBuilder: (context) => [
-          PopupMenuItem(
+          PopupMenuItem<String?>(
             child: Text(l10n.allTypes),
           ),
-          ...types.map((type) => PopupMenuItem(
+          ...types.map((type) => PopupMenuItem<String?>(
             value: type,
             child: Text(type),
           )),

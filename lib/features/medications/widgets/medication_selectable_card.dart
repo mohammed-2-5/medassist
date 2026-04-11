@@ -23,6 +23,7 @@ class MedicationSelectableCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Card(
+      margin: const EdgeInsets.all(0),
       elevation: isSelected ? 4 : 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

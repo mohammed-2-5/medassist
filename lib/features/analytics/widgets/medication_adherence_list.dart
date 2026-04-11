@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Widget displaying adherence statistics for each medication
 class MedicationAdherenceList extends StatelessWidget {
@@ -14,6 +15,7 @@ class MedicationAdherenceList extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     if (medicationAnalytics.isEmpty) {
       return Card(
@@ -126,21 +128,21 @@ class MedicationAdherenceList extends StatelessWidget {
                   children: [
                     _buildStatColumn(
                       context,
-                      'Total',
+                      l10n.total,
                       total.toString(),
                       Icons.medication,
                       colorScheme.primary,
                     ),
                     _buildStatColumn(
                       context,
-                      'Taken',
+                      l10n.taken,
                       taken.toString(),
                       Icons.check_circle,
                       colorScheme.secondary,
                     ),
                     _buildStatColumn(
                       context,
-                      'Missed',
+                      l10n.missed,
                       missed.toString(),
                       Icons.cancel,
                       colorScheme.error,

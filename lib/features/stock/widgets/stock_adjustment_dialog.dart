@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/utils/provider_refresh_utils.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Dialog for adjusting medication stock
 class StockAdjustmentDialog extends ConsumerStatefulWidget {
@@ -41,96 +43,99 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      title: const Text('Adjust Stock'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Medication info
-          Text(
-            widget.medication.medicineName,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+      title: Text(l10n.adjustStock),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Medication info
+            Text(
+              widget.medication.medicineName,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Text(
-            widget.medication.medicineType,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+            Text(
+              widget.medication.medicineType,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
-          ),
 
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          // Current stock display
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Current Stock:',
-                  style: theme.textTheme.bodyMedium,
-                ),
-                Text(
-                  '${widget.currentStock} ${widget.medication.doseUnit}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+            // Current stock display
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.currentStockLabel,
+                    style: theme.textTheme.bodyMedium,
                   ),
-                ),
+                  Text(
+                    '${widget.currentStock} ${widget.medication.doseUnit}',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // New stock input
+            TextField(
+              controller: _stockController,
+              decoration: InputDecoration(
+                labelText: l10n.newStockAmount,
+                suffixText: widget.medication.doseUnit,
+                helperText: l10n.enterUpdatedStockQuantity,
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              autofocus: true,
+            ),
+
+            const SizedBox(height: 16),
+
+            // Quick adjustment buttons
+            Text(
+              l10n.quickAdjustments,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildQuickButton('+10'),
+                _buildQuickButton('+30'),
+                _buildQuickButton('+60'),
+                _buildQuickButton('-10'),
               ],
             ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // New stock input
-          TextField(
-            controller: _stockController,
-            decoration: InputDecoration(
-              labelText: 'New Stock Amount',
-              suffixText: widget.medication.doseUnit,
-              border: const OutlineInputBorder(),
-              helperText: 'Enter the updated stock quantity',
-            ),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            autofocus: true,
-          ),
-
-          const SizedBox(height: 16),
-
-          // Quick adjustment buttons
-          Text(
-            'Quick Adjustments:',
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildQuickButton('+10'),
-              _buildQuickButton('+30'),
-              _buildQuickButton('+60'),
-              _buildQuickButton('-10'),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: _isLoading ? null : _saveStock,
@@ -145,7 +150,7 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
                     ),
                   ),
                 )
-              : const Text('Save'),
+              : Text(l10n.save),
         ),
       ],
     );
@@ -170,11 +175,13 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
   Future<void> _saveStock() async {
     final newStock = int.tryParse(_stockController.text);
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (newStock == null || newStock < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid stock amount'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: Text(l10n.pleaseEnterValidStock),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -183,24 +190,19 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
     setState(() => _isLoading = true);
 
     try {
-      final database = ref.read(appDatabaseProvider);
-
-      // Update medication with new stock
-      final updatedMedication = widget.medication.copyWith(
-        stockQuantity: newStock,
-      );
-
-      await database.updateMedication(updatedMedication);
+      final repository = ref.read(medicationRepositoryProvider);
+      await repository.updateStockQuantity(widget.medication.id, newStock);
 
       if (!mounted) return;
 
+      ProviderRefreshUtils.refreshStockProviders(ref);
       Navigator.of(context).pop();
       widget.onAdjusted();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Stock updated to $newStock ${widget.medication.doseUnit}'),
-          backgroundColor: Colors.green,
+          content: Text(l10n.stockUpdatedTo(newStock, widget.medication.doseUnit)),
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       );
     } catch (e) {
@@ -208,8 +210,8 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating stock: $e'),
-          backgroundColor: Colors.red,
+          content: Text(l10n.errorUpdatingStock(e.toString())),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {

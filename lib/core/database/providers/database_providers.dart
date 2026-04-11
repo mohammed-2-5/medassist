@@ -5,12 +5,7 @@ import 'package:riverpod/src/providers/future_provider.dart';
 
 /// Provider for the app database instance
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
-  final database = AppDatabase();
-
-  // Dispose database when provider is disposed
-  ref.onDispose(database.close);
-
-  return database;
+  return AppDatabase();
 });
 
 /// Provider for the medication repository

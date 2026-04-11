@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/errors/app_error.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Global error handler service for the application
 /// Singleton pattern - use ErrorHandlerService() to access
@@ -89,8 +90,8 @@ class ErrorHandlerService {
         duration: duration,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
-          label: 'Dismiss',
-          textColor: Colors.white,
+          label: AppLocalizations.of(context)!.dismiss,
+          textColor: theme.colorScheme.onPrimary,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },

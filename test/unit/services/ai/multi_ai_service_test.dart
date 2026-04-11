@@ -188,7 +188,7 @@ Best streak: 45 days
       final statsAfter = multiAI.getUsageStats();
       final requestsAfter = statsAfter['total_requests'];
 
-      expect(requestsAfter, greaterThan(requestsBefore));
+      expect(requestsAfter as int, greaterThan(requestsBefore as int));
     });
 
     test('Last used API is tracked', () async {

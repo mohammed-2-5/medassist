@@ -113,17 +113,13 @@
             </intent-filter>
         </receiver>
 
-        <!-- WorkManager initialization -->
+        <!-- WorkManager initialization — do NOT remove WorkManagerInitializer;
+             the workmanager plugin's pigeon channel requires auto-init -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
-            tools:node="merge">
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
-                tools:node="remove"/>
-        </provider>
+            tools:node="merge" />
 
     </application>
 

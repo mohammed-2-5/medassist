@@ -39,7 +39,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  double _previousValue = 0.0;
+  double _previousValue = 0;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     );
 
     _animation = Tween<double>(
-      begin: 0.0,
+      begin: 0,
       end: widget.value,
     ).animate(CurvedAnimation(
       parent: _controller,
@@ -192,7 +192,7 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
     );
 
     _animation = Tween<double>(
-      begin: 0.0,
+      begin: 0,
       end: widget.value,
     ).animate(CurvedAnimation(
       parent: _controller,
@@ -246,7 +246,7 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
                 width: widget.size,
                 height: widget.size,
                 child: CircularProgressIndicator(
-                  value: 1.0,
+                  value: 1,
                   strokeWidth: widget.strokeWidth,
                   backgroundColor: widget.backgroundColor ??
                       colorScheme.surfaceContainerHighest,

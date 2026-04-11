@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Medicine photo picker with camera and gallery options
 class MedicinePhotoPicker extends StatelessWidget {
@@ -60,7 +61,7 @@ class MedicinePhotoPicker extends StatelessWidget {
           const SizedBox(height: 16),
 
           Text(
-            'Medicine Photo',
+            AppLocalizations.of(context)!.medicinePhotoTitle,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -69,7 +70,7 @@ class MedicinePhotoPicker extends StatelessWidget {
           const SizedBox(height: 4),
 
           Text(
-            'Optional - helps identify your medicine',
+            AppLocalizations.of(context)!.medicinePhotoSubtitle,
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -87,7 +88,7 @@ class MedicinePhotoPicker extends StatelessWidget {
                 child: FilledButton.icon(
                   onPressed: onTakePhoto,
                   icon: const Icon(Icons.camera_alt, size: 20),
-                  label: const Text('Camera'),
+                  label: Text(AppLocalizations.of(context)!.camera),
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
@@ -101,7 +102,7 @@ class MedicinePhotoPicker extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: onPickFromGallery,
                   icon: const Icon(Icons.photo_library, size: 20),
-                  label: const Text('Gallery'),
+                  label: Text(AppLocalizations.of(context)!.gallery),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
@@ -160,9 +161,9 @@ class MedicinePhotoPicker extends StatelessWidget {
                 TextButton.icon(
                   onPressed: () => _showPhotoOptions(context),
                   icon: const Icon(Icons.edit, size: 18, color: Colors.white),
-                  label: const Text(
-                    'Change Photo',
-                    style: TextStyle(color: Colors.white),
+                  label: Text(
+                    AppLocalizations.of(context)!.changePhoto,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
 
@@ -174,9 +175,9 @@ class MedicinePhotoPicker extends StatelessWidget {
                     onPressed: onRemovePhoto,
                     icon:
                         const Icon(Icons.delete, size: 18, color: Colors.white),
-                    label: const Text(
-                      'Remove',
-                      style: TextStyle(color: Colors.white),
+                    label: Text(
+                      AppLocalizations.of(context)!.removePhoto,
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -221,7 +222,7 @@ class MedicinePhotoPicker extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Take Photo'),
+              title: Text(AppLocalizations.of(context)!.takePhoto),
               onTap: () {
                 Navigator.pop(context);
                 onTakePhoto();
@@ -229,7 +230,7 @@ class MedicinePhotoPicker extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from Gallery'),
+              title: Text(AppLocalizations.of(context)!.chooseFromGallery),
               onTap: () {
                 Navigator.pop(context);
                 onPickFromGallery();

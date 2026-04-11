@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/database/repositories/medication_repository.dart';
 
 /// Model for medication stock information
 class MedicationStock {
@@ -40,8 +41,8 @@ final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) asy
   final stockList = <MedicationStock>[];
 
   for (final medication in medications) {
-    // Calculate daily usage: timesPerDay * dosePerTime
-    final dailyUsage = medication.timesPerDay * medication.dosePerTime;
+    // Calculate effective daily usage accounting for repetition pattern
+    final dailyUsage = MedicationRepository.effectiveDailyUsage(medication);
 
     // Calculate days remaining
     final daysRemaining = dailyUsage > 0
@@ -57,8 +58,14 @@ final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) asy
     var isExpiringSoon = false;
 
     if (medication.expiryDate != null) {
-      final now = DateTime.now();
-      daysUntilExpiry = medication.expiryDate!.difference(now).inDays;
+      // Normalize to midnight to avoid time-of-day truncation
+      final today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      final expiry = DateTime(
+        medication.expiryDate!.year,
+        medication.expiryDate!.month,
+        medication.expiryDate!.day,
+      );
+      daysUntilExpiry = expiry.difference(today).inDays;
 
       if (daysUntilExpiry < 0) {
         isExpired = true;

@@ -1694,6 +1694,24 @@ abstract class AppLocalizations {
   /// **'Export Data'**
   String get exportData;
 
+  /// Popup action label for selecting a custom analytics date range
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Date Range'**
+  String get customDateRange;
+
+  /// Popup action label for exporting analytics report as PDF
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get exportPdf;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
   /// No description provided for @week.
   ///
   /// In en, this message translates to:
@@ -1733,7 +1751,7 @@ abstract class AppLocalizations {
   /// No description provided for @totalDoses.
   ///
   /// In en, this message translates to:
-  /// **'Total'**
+  /// **'Total Doses'**
   String get totalDoses;
 
   /// No description provided for @bestStreak.
@@ -2711,8 +2729,8 @@ abstract class AppLocalizations {
   /// No description provided for @errorScanningBarcode.
   ///
   /// In en, this message translates to:
-  /// **'An error occurred while scanning the barcode'**
-  String get errorScanningBarcode;
+  /// **'Error scanning barcode: {error}'**
+  String errorScanningBarcode(String error);
 
   /// No description provided for @tryAgain.
   ///
@@ -2785,6 +2803,1644 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Backup File'**
   String get selectBackupFile;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @adjustStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Stock'**
+  String get adjustStock;
+
+  /// No description provided for @currentStockLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stock:'**
+  String get currentStockLabel;
+
+  /// No description provided for @newStockAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'New Stock Amount'**
+  String get newStockAmount;
+
+  /// No description provided for @enterUpdatedStockQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the updated stock quantity'**
+  String get enterUpdatedStockQuantity;
+
+  /// No description provided for @quickAdjustments.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Adjustments:'**
+  String get quickAdjustments;
+
+  /// No description provided for @pleaseEnterValidStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid stock amount'**
+  String get pleaseEnterValidStock;
+
+  /// No description provided for @stockUpdatedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock updated to {quantity} {unit}'**
+  String stockUpdatedTo(int quantity, String unit);
+
+  /// No description provided for @errorUpdatingStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating stock: {error}'**
+  String errorUpdatingStock(String error);
+
+  /// No description provided for @daysRemainingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Days Remaining'**
+  String get daysRemainingLabel;
+
+  /// No description provided for @stockLevelCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL'**
+  String get stockLevelCritical;
+
+  /// No description provided for @stockLevelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'LOW'**
+  String get stockLevelLow;
+
+  /// No description provided for @stockLevelMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDIUM'**
+  String get stockLevelMedium;
+
+  /// No description provided for @stockLevelGood.
+  ///
+  /// In en, this message translates to:
+  /// **'GOOD'**
+  String get stockLevelGood;
+
+  /// No description provided for @stockWarningCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical stock level! Refill immediately.'**
+  String get stockWarningCritical;
+
+  /// No description provided for @stockWarningLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low stock level. Consider refilling soon.'**
+  String get stockWarningLow;
+
+  /// No description provided for @expiryDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry Date'**
+  String get expiryDateLabel;
+
+  /// No description provided for @expiryStatusGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get expiryStatusGood;
+
+  /// No description provided for @expiryStatusToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires today'**
+  String get expiryStatusToday;
+
+  /// No description provided for @expiryStatusTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires tomorrow'**
+  String get expiryStatusTomorrow;
+
+  /// No description provided for @expiryStatusInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {days} days'**
+  String expiryStatusInDays(int days);
+
+  /// No description provided for @medicationExpiredWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This medication has expired! Do not use.'**
+  String get medicationExpiredWarning;
+
+  /// No description provided for @medicationExpiringSoonWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This medication is expiring soon ({days} days).'**
+  String medicationExpiringSoonWarning(int days);
+
+  /// No description provided for @generatingPdfReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating PDF report...'**
+  String get generatingPdfReport;
+
+  /// No description provided for @pdfReportGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF report generated successfully!'**
+  String get pdfReportGenerated;
+
+  /// No description provided for @errorGeneratingPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Error generating PDF: {error}'**
+  String errorGeneratingPdf(String error);
+
+  /// No description provided for @lastBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Backup'**
+  String get lastBackup;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @backupCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup created successfully!'**
+  String get backupCreatedSuccessfully;
+
+  /// No description provided for @failedToCreateBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create backup: {error}'**
+  String failedToCreateBackup(String error);
+
+  /// No description provided for @failedToShareBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to share backup: {error}'**
+  String failedToShareBackup(String error);
+
+  /// No description provided for @restoreFromBackupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from Backup?'**
+  String get restoreFromBackupQuestion;
+
+  /// No description provided for @restoreConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will erase all current data and replace it with data from the backup file.\n\nThis action cannot be undone. Are you sure?'**
+  String get restoreConfirmMessage;
+
+  /// No description provided for @restoreComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Complete!'**
+  String get restoreComplete;
+
+  /// No description provided for @successfullyRestoredItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully restored {count} items:'**
+  String successfullyRestoredItems(int count);
+
+  /// No description provided for @failedToRestoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to restore backup: {error}'**
+  String failedToRestoreBackup(String error);
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @takenSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken successfully'**
+  String get takenSuccessfully;
+
+  /// No description provided for @missedDoseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed dose'**
+  String get missedDoseLabel;
+
+  /// No description provided for @logNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Now'**
+  String get logNow;
+
+  /// No description provided for @snoozedForMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed for 15 minutes'**
+  String get snoozedForMinutes;
+
+  /// No description provided for @adherenceTrendChart.
+  ///
+  /// In en, this message translates to:
+  /// **'7-Day Adherence Trend'**
+  String get adherenceTrendChart;
+
+  /// No description provided for @adherenceByMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence by Medication'**
+  String get adherenceByMedication;
+
+  /// No description provided for @doseStatusDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Dose Status Distribution (This Month)'**
+  String get doseStatusDistribution;
+
+  /// No description provided for @adherenceHeatmap30Day.
+  ///
+  /// In en, this message translates to:
+  /// **'30-Day Adherence Heatmap'**
+  String get adherenceHeatmap30Day;
+
+  /// No description provided for @timeOfDayAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Time-of-Day Analysis'**
+  String get timeOfDayAnalysis;
+
+  /// No description provided for @adherenceRateByHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence rate by hour of day'**
+  String get adherenceRateByHour;
+
+  /// No description provided for @noMedicationDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No medication data available'**
+  String get noMedicationDataAvailable;
+
+  /// No description provided for @noTrendDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No trend data available yet'**
+  String get noTrendDataAvailable;
+
+  /// No description provided for @noDoseDataForTimeAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'No dose data available for time analysis'**
+  String get noDoseDataForTimeAnalysis;
+
+  /// No description provided for @errorLoadingTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading trend: {error}'**
+  String errorLoadingTrend(String error);
+
+  /// No description provided for @errorLoadingHeatmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading heatmap: {error}'**
+  String errorLoadingHeatmap(String error);
+
+  /// No description provided for @errorLoadingChart.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading chart: {error}'**
+  String errorLoadingChart(String error);
+
+  /// No description provided for @lessLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get lessLabel;
+
+  /// No description provided for @moreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreLabel;
+
+  /// No description provided for @insightsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insightsLabel;
+
+  /// No description provided for @bestTimeInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Best time: {time} ({percent}% adherence)'**
+  String bestTimeInsight(String time, String percent);
+
+  /// No description provided for @needsAttentionInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention: {time} ({percent}% adherence)'**
+  String needsAttentionInsight(String time, String percent);
+
+  /// No description provided for @noDoseDataThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No dose data for this month'**
+  String get noDoseDataThisMonth;
+
+  /// No description provided for @splashGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hi to your'**
+  String get splashGreeting;
+
+  /// No description provided for @splashAiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Medical Assistant'**
+  String get splashAiTitle;
+
+  /// No description provided for @poweredByAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Powered by AI'**
+  String get poweredByAi;
+
+  /// No description provided for @dosesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken}/{total} doses'**
+  String dosesLabel(int taken, int total);
+
+  /// No description provided for @drugInteractionDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug Interaction Detected'**
+  String get drugInteractionDetected;
+
+  /// No description provided for @drugInteractionsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Drug Interactions Detected'**
+  String drugInteractionsDetected(int count);
+
+  /// No description provided for @tapToViewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view details'**
+  String get tapToViewDetails;
+
+  /// No description provided for @drugInteractions.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug Interactions'**
+  String get drugInteractions;
+
+  /// No description provided for @viewMedications.
+  ///
+  /// In en, this message translates to:
+  /// **'View Medications'**
+  String get viewMedications;
+
+  /// No description provided for @viewAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'View Analytics'**
+  String get viewAnalytics;
+
+  /// No description provided for @insightsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} insights'**
+  String insightsCount(int count);
+
+  /// No description provided for @errorLoadingInsightsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading insights'**
+  String get errorLoadingInsightsMessage;
+
+  /// No description provided for @noInsightsYetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No insights yet'**
+  String get noInsightsYetMessage;
+
+  /// No description provided for @startTakingMedsForInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Start taking your medications to generate personalized health insights'**
+  String get startTakingMedsForInsights;
+
+  /// No description provided for @wantMoreInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Want more insights?'**
+  String get wantMoreInsights;
+
+  /// No description provided for @viewAnalyticsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'View your detailed analytics dashboard for comprehensive charts, trends, and statistics.'**
+  String get viewAnalyticsDescription;
+
+  /// No description provided for @chatSuggestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add my first medication?'**
+  String get chatSuggestion1;
+
+  /// No description provided for @chatSuggestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'What should I know about my medications?'**
+  String get chatSuggestion2;
+
+  /// No description provided for @chatSuggestion3.
+  ///
+  /// In en, this message translates to:
+  /// **'Help me understand adherence'**
+  String get chatSuggestion3;
+
+  /// No description provided for @onlyDosesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {count} doses left'**
+  String onlyDosesLeft(int count);
+
+  /// No description provided for @addMedicineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Medicine'**
+  String get addMedicineTitle;
+
+  /// No description provided for @saveDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Draft'**
+  String get saveDraft;
+
+  /// No description provided for @finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finish;
+
+  /// No description provided for @medicineAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine added successfully!'**
+  String get medicineAddedSuccess;
+
+  /// No description provided for @failedToSaveMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save medicine. Please try again.'**
+  String get failedToSaveMedicine;
+
+  /// No description provided for @draftSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved!'**
+  String get draftSaved;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// No description provided for @snoozeReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze Reminder'**
+  String get snoozeReminder;
+
+  /// No description provided for @howLongSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'How long would you like to snooze?'**
+  String get howLongSnooze;
+
+  /// No description provided for @fiveMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get fiveMinutes;
+
+  /// No description provided for @tenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'10 minutes'**
+  String get tenMinutes;
+
+  /// No description provided for @fifteenMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes'**
+  String get fifteenMinutes;
+
+  /// No description provided for @thirtyMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'30 minutes'**
+  String get thirtyMinutes;
+
+  /// No description provided for @oneHour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get oneHour;
+
+  /// No description provided for @selectDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date Range'**
+  String get selectDateRange;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days'**
+  String get last7Days;
+
+  /// No description provided for @last30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 Days'**
+  String get last30Days;
+
+  /// No description provided for @last3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// No description provided for @thisYear.
+  ///
+  /// In en, this message translates to:
+  /// **'This Year'**
+  String get thisYear;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @daysSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days selected'**
+  String daysSelected(int count);
+
+  /// No description provided for @reportsAndExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports & Export'**
+  String get reportsAndExportTitle;
+
+  /// No description provided for @exportYourDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Your Data'**
+  String get exportYourDataTitle;
+
+  /// No description provided for @exportYourDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate reports and export your medication data in various formats'**
+  String get exportYourDataSubtitle;
+
+  /// No description provided for @csvExports.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV Exports'**
+  String get csvExports;
+
+  /// No description provided for @pdfReports.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Reports'**
+  String get pdfReports;
+
+  /// No description provided for @medicationsList.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications List'**
+  String get medicationsList;
+
+  /// No description provided for @exportAllMedicationsCSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Export all medications data to CSV'**
+  String get exportAllMedicationsCSV;
+
+  /// No description provided for @doseHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Dose History'**
+  String get doseHistory;
+
+  /// No description provided for @exportDoseHistoryCSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Export complete dose history to CSV'**
+  String get exportDoseHistoryCSV;
+
+  /// No description provided for @stockHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock History'**
+  String get stockHistory;
+
+  /// No description provided for @exportStockHistoryCSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Export stock changes history to CSV'**
+  String get exportStockHistoryCSV;
+
+  /// No description provided for @medicationsReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications Report'**
+  String get medicationsReport;
+
+  /// No description provided for @generateMedicationsPDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate detailed PDF report of all medications'**
+  String get generateMedicationsPDF;
+
+  /// No description provided for @adherenceReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence Report'**
+  String get adherenceReport;
+
+  /// No description provided for @generateAdherencePDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate PDF report with adherence statistics'**
+  String get generateAdherencePDF;
+
+  /// No description provided for @exportInfoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported files will be saved to your device and can be shared immediately'**
+  String get exportInfoMessage;
+
+  /// No description provided for @generatingExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating export...'**
+  String get generatingExport;
+
+  /// No description provided for @exportedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} exported successfully!'**
+  String exportedSuccessfully(String type);
+
+  /// No description provided for @failedToExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export: {error}'**
+  String failedToExport(String error);
+
+  /// No description provided for @failedToGeneratePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate PDF: {error}'**
+  String failedToGeneratePdf(String error);
+
+  /// No description provided for @pdfGeneratedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} report generated successfully!'**
+  String pdfGeneratedSuccessfully(String type);
+
+  /// No description provided for @systemStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'System Status'**
+  String get systemStatus;
+
+  /// No description provided for @notificationPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Permission'**
+  String get notificationPermission;
+
+  /// No description provided for @requiredForReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for medication reminders'**
+  String get requiredForReminders;
+
+  /// No description provided for @exactAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact Alarms Permission'**
+  String get exactAlarms;
+
+  /// No description provided for @requiredForPreciseTiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for precise reminder timing on Android 12+'**
+  String get requiredForPreciseTiming;
+
+  /// No description provided for @databaseStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Database Statistics'**
+  String get databaseStatistics;
+
+  /// No description provided for @deviceInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Information'**
+  String get deviceInformation;
+
+  /// No description provided for @pluginVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugin Version'**
+  String get pluginVersion;
+
+  /// No description provided for @testingAndActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing & Actions'**
+  String get testingAndActions;
+
+  /// No description provided for @sendTestNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Test Notification'**
+  String get sendTestNotificationTitle;
+
+  /// No description provided for @testIfNotificationsWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Test if notifications are working'**
+  String get testIfNotificationsWork;
+
+  /// No description provided for @scheduleTest1Min.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Test (1 min)'**
+  String get scheduleTest1Min;
+
+  /// No description provided for @scheduleTestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule a test notification for 1 minute from now'**
+  String get scheduleTestDescription;
+
+  /// No description provided for @requestPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Permissions'**
+  String get requestPermissionsTitle;
+
+  /// No description provided for @requestPermissionsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Request all necessary permissions'**
+  String get requestPermissionsDescription;
+
+  /// No description provided for @troubleshooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get troubleshooting;
+
+  /// No description provided for @notificationsNotAppearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications not appearing?'**
+  String get notificationsNotAppearing;
+
+  /// No description provided for @notificationsNotAppearingTips.
+  ///
+  /// In en, this message translates to:
+  /// **'• Check permissions above\n• Disable battery optimization\n• Enable exact alarms (Android 12+)\n• Test with \"Send Test Notification\"'**
+  String get notificationsNotAppearingTips;
+
+  /// No description provided for @appCrashing.
+  ///
+  /// In en, this message translates to:
+  /// **'App crashing?'**
+  String get appCrashing;
+
+  /// No description provided for @appCrashingTips.
+  ///
+  /// In en, this message translates to:
+  /// **'• Clear app data and restart\n• Ensure all permissions are granted\n• Check device timezone settings'**
+  String get appCrashingTips;
+
+  /// No description provided for @advancedDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Diagnostics'**
+  String get advancedDiagnostics;
+
+  /// No description provided for @ok_status.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok_status;
+
+  /// No description provided for @needed_status.
+  ///
+  /// In en, this message translates to:
+  /// **'NEEDED'**
+  String get needed_status;
+
+  /// No description provided for @medicinePhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine Photo'**
+  String get medicinePhotoTitle;
+
+  /// No description provided for @medicinePhotoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional - helps identify your medicine'**
+  String get medicinePhotoSubtitle;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @changePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Photo'**
+  String get changePhoto;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removePhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @scanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Name'**
+  String get scanName;
+
+  /// No description provided for @scanMedicationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Medication Label'**
+  String get scanMedicationLabel;
+
+  /// No description provided for @autoFillFromPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-fill details from photo'**
+  String get autoFillFromPhoto;
+
+  /// No description provided for @medicineNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Aspirin, Paracetamol'**
+  String get medicineNameHint;
+
+  /// No description provided for @photoCapturedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo captured successfully!'**
+  String get photoCapturedSuccess;
+
+  /// No description provided for @photoSelectedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo selected successfully!'**
+  String get photoSelectedSuccess;
+
+  /// No description provided for @photoRemovedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get photoRemovedSuccess;
+
+  /// No description provided for @lookingUpMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up medication...'**
+  String get lookingUpMedication;
+
+  /// No description provided for @scannedCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned Code'**
+  String get scannedCodeLabel;
+
+  /// No description provided for @failedToCapturePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to capture photo: {error}'**
+  String failedToCapturePhoto(String error);
+
+  /// No description provided for @failedToPickPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick photo: {error}'**
+  String failedToPickPhoto(String error);
+
+  /// No description provided for @scannedMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned: {name}'**
+  String scannedMedication(String name);
+
+  /// No description provided for @medicationFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication found: {name}'**
+  String medicationFound(String name);
+
+  /// No description provided for @scannedCodeEnterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned code: {code}\nPlease enter details manually'**
+  String scannedCodeEnterManually(String code);
+
+  /// No description provided for @whenAndHowOftenToTake.
+  ///
+  /// In en, this message translates to:
+  /// **'When and how often to take this medicine'**
+  String get whenAndHowOftenToTake;
+
+  /// No description provided for @howManyTimesPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'How many times per day?'**
+  String get howManyTimesPerDay;
+
+  /// No description provided for @selectTimesPerDayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the number of times you need to take this medicine daily'**
+  String get selectTimesPerDayDesc;
+
+  /// No description provided for @timeSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'time'**
+  String get timeSingular;
+
+  /// No description provided for @timePlural.
+  ///
+  /// In en, this message translates to:
+  /// **'times'**
+  String get timePlural;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unit;
+
+  /// No description provided for @treatmentDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Treatment duration'**
+  String get treatmentDuration;
+
+  /// No description provided for @startingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting'**
+  String get startingLabel;
+
+  /// No description provided for @treatmentEndsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Treatment ends on {date}'**
+  String treatmentEndsOn(String date);
+
+  /// No description provided for @reminderTimesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder times'**
+  String get reminderTimesTitle;
+
+  /// No description provided for @selectTimesForReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Select times per day to set reminder times'**
+  String get selectTimesForReminders;
+
+  /// No description provided for @scheduleSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule summary'**
+  String get scheduleSummary;
+
+  /// No description provided for @completeTheForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the form'**
+  String get completeTheForm;
+
+  /// No description provided for @eachDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Each dose'**
+  String get eachDose;
+
+  /// No description provided for @starts.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get starts;
+
+  /// No description provided for @repetitionPatternTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Repetition pattern'**
+  String get repetitionPatternTitle;
+
+  /// No description provided for @whenToTakeMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'When should this medication be taken?'**
+  String get whenToTakeMedication;
+
+  /// No description provided for @activeOnDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Active on: {days}'**
+  String activeOnDays(String days);
+
+  /// No description provided for @selectDaysOfWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Select days of the week'**
+  String get selectDaysOfWeek;
+
+  /// No description provided for @everyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get everyDay;
+
+  /// No description provided for @everyOtherDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every other day'**
+  String get everyOtherDay;
+
+  /// No description provided for @mondayToFriday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday to Friday'**
+  String get mondayToFriday;
+
+  /// No description provided for @saturdayAndSunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday and Sunday'**
+  String get saturdayAndSunday;
+
+  /// No description provided for @noDaysSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No days selected'**
+  String get noDaysSelected;
+
+  /// No description provided for @recurringReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Reminders'**
+  String get recurringReminders;
+
+  /// No description provided for @followUpRemindersForMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Get follow-up reminders for missed doses'**
+  String get followUpRemindersForMissed;
+
+  /// No description provided for @reminderIntervalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Interval'**
+  String get reminderIntervalTitle;
+
+  /// No description provided for @missedDoseReminderInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'If you miss a dose, you\'ll get a reminder every {minutes} minutes (up to 4 times)'**
+  String missedDoseReminderInfo(int minutes);
+
+  /// No description provided for @trackMedicineSupply.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your medicine supply and get low stock alerts'**
+  String get trackMedicineSupply;
+
+  /// No description provided for @howManyDoYouHave.
+  ///
+  /// In en, this message translates to:
+  /// **'How many {unit}s do you have?'**
+  String howManyDoYouHave(String unit);
+
+  /// No description provided for @quantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantityLabel;
+
+  /// No description provided for @inStock.
+  ///
+  /// In en, this message translates to:
+  /// **'in stock'**
+  String get inStock;
+
+  /// No description provided for @stockTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Timeline'**
+  String get stockTimeline;
+
+  /// No description provided for @dailyUsageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily usage'**
+  String get dailyUsageLabel;
+
+  /// No description provided for @stockLastsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock lasts for'**
+  String get stockLastsFor;
+
+  /// No description provided for @stockRunsOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock runs out'**
+  String get stockRunsOut;
+
+  /// No description provided for @stockLevelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock level'**
+  String get stockLevelLabel;
+
+  /// No description provided for @lowStockReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Low stock reminder'**
+  String get lowStockReminder;
+
+  /// No description provided for @getNotifiedBeforeRunOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified before your medicine runs out'**
+  String get getNotifiedBeforeRunOut;
+
+  /// No description provided for @remindMeDaysBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me this many days before:'**
+  String get remindMeDaysBefore;
+
+  /// No description provided for @expiryDateOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry date (optional)'**
+  String get expiryDateOptional;
+
+  /// No description provided for @trackWhenExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Track when your medication expires'**
+  String get trackWhenExpires;
+
+  /// No description provided for @tapToSetExpiryDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to set expiry date'**
+  String get tapToSetExpiryDate;
+
+  /// No description provided for @remindMeBeforeExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me before expiry:'**
+  String get remindMeBeforeExpiry;
+
+  /// No description provided for @readyToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to save!'**
+  String get readyToSave;
+
+  /// No description provided for @completeAllSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete all steps to continue'**
+  String get completeAllSteps;
+
+  /// No description provided for @medicineInfoComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Your medicine information is complete and ready to be saved'**
+  String get medicineInfoComplete;
+
+  /// No description provided for @fillRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all required fields in previous steps'**
+  String get fillRequiredFields;
+
+  /// No description provided for @medicineTypeAndDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine type and details'**
+  String get medicineTypeAndDetails;
+
+  /// No description provided for @scheduleConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule configured'**
+  String get scheduleConfigured;
+
+  /// No description provided for @stockInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock information'**
+  String get stockInformation;
+
+  /// No description provided for @xTimesPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}x per day'**
+  String xTimesPerDay(int count);
+
+  /// No description provided for @takeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Take All'**
+  String get takeAll;
+
+  /// No description provided for @swipeRightToTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right to take'**
+  String get swipeRightToTake;
+
+  /// No description provided for @swipeLeftToSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to skip'**
+  String get swipeLeftToSkip;
+
+  /// No description provided for @snoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed'**
+  String get snoozed;
+
+  /// No description provided for @scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get scheduled;
+
+  /// No description provided for @takenAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken at'**
+  String get takenAt;
+
+  /// No description provided for @onTime.
+  ///
+  /// In en, this message translates to:
+  /// **'On time'**
+  String get onTime;
+
+  /// No description provided for @minEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min early'**
+  String minEarly(int minutes);
+
+  /// No description provided for @minLate.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min late'**
+  String minLate(int minutes);
+
+  /// No description provided for @hoursMinLate.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m late'**
+  String hoursMinLate(int hours, int minutes);
+
+  /// No description provided for @startStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your streak today!'**
+  String get startStreak;
+
+  /// No description provided for @keepItUpStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up! {remaining} more days to a week!'**
+  String keepItUpStreak(int remaining);
+
+  /// No description provided for @amazingStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing! {remaining} more days to a month!'**
+  String amazingStreak(int remaining);
+
+  /// No description provided for @incredibleStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Incredible! {remaining} more days to 100!'**
+  String incredibleStreak(int remaining);
+
+  /// No description provided for @streakChampion.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re a medication adherence champion!'**
+  String get streakChampion;
+
+  /// No description provided for @excellentAdherenceExclaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent adherence! 🎉'**
+  String get excellentAdherenceExclaim;
+
+  /// No description provided for @goodProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Good progress!'**
+  String get goodProgress;
+
+  /// No description provided for @keepItUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up!'**
+  String get keepItUp;
+
+  /// No description provided for @letsCatchUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s catch up'**
+  String get letsCatchUp;
+
+  /// No description provided for @startYourDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your day'**
+  String get startYourDay;
+
+  /// No description provided for @excellentAdherenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent adherence! Keep up the great work!'**
+  String get excellentAdherenceMessage;
+
+  /// No description provided for @goodAdherenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Good adherence. Try to improve consistency.'**
+  String get goodAdherenceMessage;
+
+  /// No description provided for @fairAdherenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair adherence. Consider setting more reminders.'**
+  String get fairAdherenceMessage;
+
+  /// No description provided for @lowAdherenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Low adherence. Please try to take your medications regularly.'**
+  String get lowAdherenceMessage;
+
+  /// No description provided for @veryLowAdherenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Very low adherence. Talk to your healthcare provider.'**
+  String get veryLowAdherenceMessage;
+
+  /// No description provided for @overallAdherence.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Adherence'**
+  String get overallAdherence;
+
+  /// No description provided for @adherence.
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence'**
+  String get adherence;
+
+  /// No description provided for @medicationPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication Performance'**
+  String get medicationPerformance;
+
+  /// No description provided for @weeklyAdherenceInsightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Adherence'**
+  String get weeklyAdherenceInsightTitle;
+
+  /// No description provided for @weeklyAdherenceInsightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You took {percent}% of your doses this week ({taken}/{total})'**
+  String weeklyAdherenceInsightDesc(int percent, int taken, int total);
+
+  /// No description provided for @improvingTrendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Improving Trend 📈'**
+  String get improvingTrendTitle;
+
+  /// No description provided for @decliningTrendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Declining Trend 📉'**
+  String get decliningTrendTitle;
+
+  /// No description provided for @improvingTrendDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You improved by {change}% compared to last week. Great progress!'**
+  String improvingTrendDesc(int change);
+
+  /// No description provided for @decliningTrendDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You declined by {change}% compared to last week. Let\'s get back on track!'**
+  String decliningTrendDesc(int change);
+
+  /// No description provided for @topMedicationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Medication'**
+  String get topMedicationTitle;
+
+  /// No description provided for @topMedicationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has {percent}% adherence - your most consistent medication!'**
+  String topMedicationDesc(String name, int percent);
+
+  /// No description provided for @streakDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{streak}-Day Streak! 🔥'**
+  String streakDayTitle(int streak);
+
+  /// No description provided for @streakAmazingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing! You\'ve been consistent for over a week!'**
+  String get streakAmazingDesc;
+
+  /// No description provided for @streakConsistencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up! Consistency is key to better health.'**
+  String get streakConsistencyDesc;
+
+  /// No description provided for @bestTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Time ⏰'**
+  String get bestTimeTitle;
+
+  /// No description provided for @bestTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your most consistent time is {period} with {percent}% adherence'**
+  String bestTimeDesc(String period, int percent);
+
+  /// No description provided for @excellentAdherenceInsightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent Adherence! 🌟'**
+  String get excellentAdherenceInsightTitle;
+
+  /// No description provided for @excellentAdherenceInsightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding! You took {percent}% of your doses this week. Keep up the great work!'**
+  String excellentAdherenceInsightDesc(int percent);
+
+  /// No description provided for @needsImprovementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get needsImprovementTitle;
+
+  /// No description provided for @needsImprovementInsightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your adherence this week was {percent}%. Try setting more reminders or adjusting your schedule to improve.'**
+  String needsImprovementInsightDesc(int percent);
+
+  /// No description provided for @summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get summary;
+
+  /// No description provided for @medication.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get medication;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @generatedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated on: {date}'**
+  String generatedOn(String date);
+
+  /// No description provided for @adherenceStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence Statistics'**
+  String get adherenceStatistics;
+
+  /// No description provided for @recentDoseHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Dose History'**
+  String get recentDoseHistory;
+
+  /// No description provided for @reportPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Period: {start} - {end}'**
+  String reportPeriod(String start, String end);
+
+  /// No description provided for @medAssistAnalyticsReport.
+  ///
+  /// In en, this message translates to:
+  /// **'MedAssist Analytics Report'**
+  String get medAssistAnalyticsReport;
 }
 
 class _AppLocalizationsDelegate

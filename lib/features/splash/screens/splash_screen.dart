@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Premium Animated Splash Screen
 ///
@@ -17,25 +20,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Timer? _navigationTimer;
+
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    // Wait for splash animation to complete (2.8 seconds total)
+    _navigationTimer = Timer(const Duration(milliseconds: 2800), () {
+      if (mounted) {
+        context.go('/home');
+      }
+    });
   }
 
-  Future<void> _navigateToHome() async {
-    // Wait for splash animation to complete (3.5 seconds total)
-    await Future.delayed(const Duration(milliseconds: 2800));
-
-    if (mounted) {
-      context.go('/home');
-    }
+  @override
+  void dispose() {
+    _navigationTimer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -54,146 +62,155 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo with premium animations
-              Image.asset(
-                'assets/logo1.png',
-                width: size.width * 0.9,
-                height: size.width * 0.9,
-                fit: BoxFit.contain,
-              )
-              .animate()
-              .fadeIn(
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.easeOut,
-              )
-              .scale(
-                begin: const Offset(0.5, 0.5),
-                end: const Offset(1.0, 1.0),
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.easeOutBack,
-              )
-              .then(delay: const Duration(milliseconds: 200))
-              .shimmer(
-                duration: const Duration(milliseconds: 1500),
-                color: Colors.white.withOpacity(0.3),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: size.height - MediaQuery.paddingOf(context).vertical - 48,
               ),
-
-              const SizedBox(height: 40),
-
-              // Slogan with typewriter effect
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  children: [
-                    // Main slogan
-                    Text(
-                      'Say hi to your',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 1.2,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                    .animate()
-                    .fadeIn(
-                      delay: const Duration(milliseconds: 1000),
-                      duration: const Duration(milliseconds: 600),
-                    )
-                    .slideY(
-                      begin: 0.3,
-                      end: 0,
-                      delay: const Duration(milliseconds: 1000),
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOut,
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // AI Medical Assistant - highlighted
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Text(
-                        'AI Medical Assistant',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                    .animate()
-                    .fadeIn(
-                      delay: const Duration(milliseconds: 1400),
-                      duration: const Duration(milliseconds: 600),
-                    )
-                    .scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1.0, 1.0),
-                      delay: const Duration(milliseconds: 1400),
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutBack,
-                    )
-                    .then(delay: const Duration(milliseconds: 200))
-                    .shimmer(
-                      duration: const Duration(milliseconds: 1500),
-                      color: Colors.white.withOpacity(0.5),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 60),
-
-              // Loading indicator
-              SizedBox(
-                width: 40,
-                height: 40,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withOpacity(0.8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo with premium animations
+                  Image.asset(
+                    'assets/logo1.png',
+                    width: size.width * 0.9,
+                    height: (size.width * 0.9).clamp(0.0, size.height * 0.45),
+                    fit: BoxFit.contain,
+                  )
+                  .animate()
+                  .fadeIn(
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOut,
+                  )
+                  .scale(
+                    begin: const Offset(0.5, 0.5),
+                    end: const Offset(1, 1),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutBack,
+                  )
+                  .then(delay: const Duration(milliseconds: 200))
+                  .shimmer(
+                    duration: const Duration(milliseconds: 1500),
+                    color: Colors.white.withOpacity(0.3),
                   ),
-                ),
-              )
-              .animate()
-              .fadeIn(
-                delay: const Duration(milliseconds: 2000),
-                duration: const Duration(milliseconds: 600),
-              ),
 
-              const SizedBox(height: 20),
+                  const SizedBox(height: 40),
 
-              // Powered by text
-              Text(
-                'Powered by AI',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withOpacity(0.7),
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-              .animate()
-              .fadeIn(
-                delay: const Duration(milliseconds: 2200),
-                duration: const Duration(milliseconds: 600),
+                  // Slogan with typewriter effect
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        // Main slogan
+                        Text(
+                          l10n.splashGreeting,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            letterSpacing: 1.2,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                        .animate()
+                        .fadeIn(
+                          delay: const Duration(milliseconds: 1000),
+                          duration: const Duration(milliseconds: 600),
+                        )
+                        .slideY(
+                          begin: 0.3,
+                          end: 0,
+                          delay: const Duration(milliseconds: 1000),
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeOut,
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        // AI Medical Assistant - highlighted
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Text(
+                            l10n.splashAiTitle,
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                        .animate()
+                        .fadeIn(
+                          delay: const Duration(milliseconds: 1400),
+                          duration: const Duration(milliseconds: 600),
+                        )
+                        .scale(
+                          begin: const Offset(0.8, 0.8),
+                          end: const Offset(1, 1),
+                          delay: const Duration(milliseconds: 1400),
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeOutBack,
+                        )
+                        .then(delay: const Duration(milliseconds: 200))
+                        .shimmer(
+                          duration: const Duration(milliseconds: 1500),
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 60),
+
+                  // Loading indicator
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(
+                    delay: const Duration(milliseconds: 2000),
+                    duration: const Duration(milliseconds: 600),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Powered by text
+                  Text(
+                    l10n.poweredByAi,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withOpacity(0.7),
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(
+                    delay: const Duration(milliseconds: 2200),
+                    duration: const Duration(milliseconds: 600),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

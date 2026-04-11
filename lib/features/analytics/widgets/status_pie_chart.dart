@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Status Pie Chart Widget
 /// Shows distribution of dose statuses
@@ -11,6 +12,7 @@ class StatusPieChart extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return ref.watch(monthAdherenceProvider).when(
           data: (stats) {
@@ -20,7 +22,7 @@ class StatusPieChart extends ConsumerWidget {
                   padding: const EdgeInsets.all(40),
                   child: Center(
                     child: Text(
-                      'No dose data for this month',
+                      l10n.noDoseDataThisMonth,
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -33,9 +35,18 @@ class StatusPieChart extends ConsumerWidget {
             final sections = <PieChartSectionData>[];
             const touchedIndex = -1;
 
+            final takenColor = colorScheme.brightness == Brightness.dark
+                ? const Color(0xFF66BB6A) : Colors.green;
+            final missedColor = colorScheme.brightness == Brightness.dark
+                ? const Color(0xFFEF5350) : Colors.red;
+            final skippedColor = colorScheme.brightness == Brightness.dark
+                ? const Color(0xFFFFA726) : Colors.orange;
+            final snoozedColor = colorScheme.brightness == Brightness.dark
+                ? const Color(0xFF42A5F5) : Colors.blue;
+
             if (stats.takenDoses > 0) {
               sections.add(PieChartSectionData(
-                color: Colors.green,
+                color: takenColor,
                 value: stats.takenDoses.toDouble(),
                 title: '${stats.takenDoses}',
                 radius: 100,
@@ -49,7 +60,7 @@ class StatusPieChart extends ConsumerWidget {
 
             if (stats.missedDoses > 0) {
               sections.add(PieChartSectionData(
-                color: Colors.red,
+                color: missedColor,
                 value: stats.missedDoses.toDouble(),
                 title: '${stats.missedDoses}',
                 radius: 100,
@@ -63,7 +74,7 @@ class StatusPieChart extends ConsumerWidget {
 
             if (stats.skippedDoses > 0) {
               sections.add(PieChartSectionData(
-                color: Colors.orange,
+                color: skippedColor,
                 value: stats.skippedDoses.toDouble(),
                 title: '${stats.skippedDoses}',
                 radius: 100,
@@ -77,7 +88,7 @@ class StatusPieChart extends ConsumerWidget {
 
             if (stats.snoozedDoses > 0) {
               sections.add(PieChartSectionData(
-                color: Colors.blue,
+                color: snoozedColor,
                 value: stats.snoozedDoses.toDouble(),
                 title: '${stats.snoozedDoses}',
                 radius: 100,
@@ -90,6 +101,7 @@ class StatusPieChart extends ConsumerWidget {
             }
 
             return Card(
+              margin: const EdgeInsets.all(0),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -104,7 +116,7 @@ class StatusPieChart extends ConsumerWidget {
                         const SizedBox(width: 8),
                         Expanded( // 👈 يجبر النص يلتزم بالعرض المتاح
                           child: Text(
-                            'Dose Status Distribution (This Month)',
+                            l10n.doseStatusDistribution,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -116,20 +128,25 @@ class StatusPieChart extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    Center(
-                      child: SizedBox(
-                        height: 200,
-                        child: PieChart(
-                          PieChartData(
-                            sections: sections,
-                            centerSpaceRadius: 0,
-                            sectionsSpace: 2,
-                            pieTouchData: PieTouchData(
-                              touchCallback: (FlTouchEvent event, pieTouchResponse) {},
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final chartHeight = constraints.maxWidth < 360 ? 160.0 : 200.0;
+                        return Center(
+                          child: SizedBox(
+                            height: chartHeight,
+                            child: PieChart(
+                              PieChartData(
+                                sections: sections,
+                                centerSpaceRadius: 0,
+                                sectionsSpace: 2,
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {},
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     // Legend
@@ -139,26 +156,26 @@ class StatusPieChart extends ConsumerWidget {
                       children: [
                         if (stats.takenDoses > 0)
                           _LegendItem(
-                            color: Colors.green,
-                            label: 'Taken',
+                            color: takenColor,
+                            label: l10n.taken,
                             value: stats.takenDoses,
                           ),
                         if (stats.missedDoses > 0)
                           _LegendItem(
-                            color: Colors.red,
-                            label: 'Missed',
+                            color: missedColor,
+                            label: l10n.missed,
                             value: stats.missedDoses,
                           ),
                         if (stats.skippedDoses > 0)
                           _LegendItem(
-                            color: Colors.orange,
-                            label: 'Skipped',
+                            color: skippedColor,
+                            label: l10n.skipped,
                             value: stats.skippedDoses,
                           ),
                         if (stats.snoozedDoses > 0)
                           _LegendItem(
-                            color: Colors.blue,
-                            label: 'Snoozed',
+                            color: snoozedColor,
+                            label: l10n.snooze,
                             value: stats.snoozedDoses,
                           ),
                       ],
@@ -177,7 +194,7 @@ class StatusPieChart extends ConsumerWidget {
           error: (err, stack) => Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Error loading chart: $err'),
+              child: Text(l10n.errorLoadingChart(err.toString())),
             ),
           ),
         );

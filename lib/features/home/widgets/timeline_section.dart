@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
 import 'package:med_assist/features/home/models/dose_event.dart';
+import 'package:med_assist/features/home/providers/home_providers.dart';
 import 'package:med_assist/features/home/widgets/dose_card.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Timeline Section - Groups medications by time of day with staggered animations
-class TimelineSection extends StatefulWidget {
+class TimelineSection extends ConsumerStatefulWidget {
 
   const TimelineSection({
     required this.timeOfDay,
@@ -20,10 +23,10 @@ class TimelineSection extends StatefulWidget {
   final List<DoseEvent> doses;
 
   @override
-  State<TimelineSection> createState() => _TimelineSectionState();
+  ConsumerState<TimelineSection> createState() => _TimelineSectionState();
 }
 
-class _TimelineSectionState extends State<TimelineSection>
+class _TimelineSectionState extends ConsumerState<TimelineSection>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -53,6 +56,9 @@ class _TimelineSectionState extends State<TimelineSection>
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
+    final hasPending =
+        widget.doses.any((d) => d.status == DoseStatus.pending);
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -64,6 +70,10 @@ class _TimelineSectionState extends State<TimelineSection>
               timeRange: widget.timeRange,
               icon: widget.icon,
               doseCount: widget.doses.length,
+              hasPending: hasPending,
+              onTakeAll: () => ref
+                  .read(todayDosesProvider.notifier)
+                  .takeAllPending(widget.doses),
             ),
             const SizedBox(height: 12),
             ...widget.doses.asMap().entries.map((entry) {
@@ -150,17 +160,22 @@ class _TimeSectionHeader extends StatelessWidget {
     required this.timeRange,
     required this.icon,
     required this.doseCount,
+    required this.hasPending,
+    required this.onTakeAll,
   });
   final String timeOfDay;
   final String timeRange;
   final IconData icon;
   final int doseCount;
+  final bool hasPending;
+  final VoidCallback onTakeAll;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final timeColor = _getTimeColor(timeOfDay);
+    final timeColor = _getTimeColor(icon);
+    final l10n = AppLocalizations.of(context)!;
 
     return Row(
       children: [
@@ -196,6 +211,23 @@ class _TimeSectionHeader extends StatelessWidget {
           ),
         ),
 
+        // "Take All" button — only shown when there are pending doses
+        if (hasPending) ...[
+          FilledButton.tonal(
+            onPressed: onTakeAll,
+            style: FilledButton.styleFrom(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              textStyle: theme.textTheme.labelSmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            child: Text(l10n.takeAll),
+          ),
+          const SizedBox(width: 8),
+        ],
+
         // Dose count badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -214,18 +246,11 @@ class _TimeSectionHeader extends StatelessWidget {
     );
   }
 
-  Color _getTimeColor(String timeOfDay) {
-    switch (timeOfDay) {
-      case 'Morning':
-        return AppColors.morningColor;
-      case 'Afternoon':
-        return AppColors.afternoonColor;
-      case 'Evening':
-        return AppColors.eveningColor;
-      case 'Night':
-        return AppColors.nightColor;
-      default:
-        return AppColors.primaryBlue;
-    }
+  Color _getTimeColor(IconData icon) {
+    if (icon == Icons.wb_sunny) return AppColors.morningColor;
+    if (icon == Icons.wb_twilight) return AppColors.afternoonColor;
+    if (icon == Icons.nights_stay) return AppColors.eveningColor;
+    if (icon == Icons.bedtime) return AppColors.nightColor;
+    return AppColors.primaryBlue;
   }
 }

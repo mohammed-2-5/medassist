@@ -98,7 +98,7 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: widget.isSelected ? gradient : null,
-            color: widget.isSelected ? null : Colors.white,
+            color: widget.isSelected ? null : colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: widget.isSelected
@@ -142,13 +142,13 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: widget.isSelected
-                        ? Colors.white.withOpacity(0.2)
+                        ? colorScheme.onPrimary.withOpacity(0.2)
                         : colorScheme.surfaceContainerHighest.withOpacity(0.5),
                     shape: BoxShape.circle,
                     boxShadow: [
                       if (widget.isSelected)
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.5),
+                          color: colorScheme.onPrimary.withOpacity(0.5),
                           blurRadius: 15,
                           spreadRadius: 2,
                         ),
@@ -169,8 +169,8 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.isSelected
-                      ? Colors.white
-                      : AppColors.textPrimary,
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurface,
                   letterSpacing: 0.5,
                 ),
                 textAlign: TextAlign.center,
@@ -183,8 +183,8 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                 widget.type.description,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: widget.isSelected
-                      ? Colors.white.withOpacity(0.9)
-                      : AppColors.textSecondary,
+                      ? colorScheme.onPrimary.withOpacity(0.9)
+                      : colorScheme.onSurfaceVariant,
                   height: 1.2,
                 ),
                 textAlign: TextAlign.center,
@@ -198,11 +198,11 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorScheme.onPrimary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.white.withOpacity(0.5),
+                        color: colorScheme.onPrimary.withOpacity(0.5),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),

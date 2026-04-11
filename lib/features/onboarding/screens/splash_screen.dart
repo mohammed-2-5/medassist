@@ -56,16 +56,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _animationController.forward();
 
     // Navigate to onboarding or home based on first launch status
-    Future.delayed(const Duration(milliseconds: 2500), () {
-      if (mounted) {
-        final hasSeenOnboarding = ref.read(settingsProvider).hasSeenOnboarding;
-        if (hasSeenOnboarding) {
-          // User has completed onboarding, go to home
-          context.go(AppConstants.routeHome);
-        } else {
-          // First launch, show onboarding
-          context.go(AppConstants.routeOnboarding);
-        }
+    Future.delayed(const Duration(milliseconds: 2500), () async {
+      if (!mounted) return;
+      // Ensure settings are loaded before reading onboarding flag
+      await ref.read(settingsProvider.notifier).ready;
+      if (!mounted) return;
+      final hasSeenOnboarding = ref.read(settingsProvider).hasSeenOnboarding;
+      if (hasSeenOnboarding) {
+        // User has completed onboarding, go to home
+        context.go(AppConstants.routeHome);
+      } else {
+        // First launch, show onboarding
+        context.go(AppConstants.routeOnboarding);
       }
     });
   }

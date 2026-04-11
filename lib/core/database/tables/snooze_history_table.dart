@@ -23,4 +23,9 @@ class SnoozeHistoryTable extends Table {
 
   /// Suggested snooze minutes used
   IntColumn get suggestedMinutes => integer().withDefault(const Constant(15))();
+
+  @override
+  List<String> get customConstraints => [
+        'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
+      ];
 }

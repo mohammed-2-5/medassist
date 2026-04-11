@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/widgets/animated_card.dart';
 import 'package:med_assist/core/widgets/gradient_container.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Card widget displaying the current adherence streak with animations
 class StreakCard extends StatefulWidget {
@@ -38,9 +39,9 @@ class _StreakCardState extends State<StreakCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return AnimatedCard(
-      onTap: () {},
       child: Row(
         children: [
           // Fire icon with pulse animation
@@ -111,7 +112,7 @@ class _StreakCardState extends State<StreakCard>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _getStreakMessage(widget.streak),
+                  _getStreakMessage(widget.streak, l10n),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.secondary,
                     fontWeight: FontWeight.w500,
@@ -153,17 +154,17 @@ class _StreakCardState extends State<StreakCard>
     );
   }
 
-  String _getStreakMessage(int streak) {
+  String _getStreakMessage(int streak, AppLocalizations l10n) {
     if (streak == 0) {
-      return 'Start your streak today!';
+      return l10n.startStreak;
     } else if (streak < 7) {
-      return 'Keep it up! ${7 - streak} more ${7 - streak == 1 ? 'day' : 'days'} to a week!';
+      return l10n.keepItUpStreak(7 - streak);
     } else if (streak < 30) {
-      return 'Amazing! ${30 - streak} more ${30 - streak == 1 ? 'day' : 'days'} to a month!';
+      return l10n.amazingStreak(30 - streak);
     } else if (streak < 100) {
-      return 'Incredible! ${100 - streak} more ${100 - streak == 1 ? 'day' : 'days'} to 100!';
+      return l10n.incredibleStreak(100 - streak);
     } else {
-      return "You're a medication adherence champion!";
+      return l10n.streakChampion;
     }
   }
 

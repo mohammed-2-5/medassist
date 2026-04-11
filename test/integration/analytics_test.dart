@@ -54,7 +54,7 @@ void main() {
         actualTime: today.subtract(const Duration(days: 2)),
       );
 
-      final stats = await db.getAdherenceStats(weekAgo, today);
+      final stats = await db.getAdherenceStats(weekAgo, today.add(const Duration(days: 1)));
 
       expect(stats['taken'], equals(2));
       expect(stats['skipped'], equals(1));
@@ -341,7 +341,7 @@ void main() {
         }
       }
 
-      final stats = await db.getAdherenceStats(weekStart, today);
+      final stats = await db.getAdherenceStats(weekStart, today.add(const Duration(days: 1)));
 
       expect(stats['taken'], equals(4)); // Days 0, 2, 4, 6
       expect(stats['skipped'], equals(3)); // Days 1, 3, 5

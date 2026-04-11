@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Custom Date Range Picker Dialog
 /// Allows users to select custom date ranges for analytics
@@ -49,9 +50,12 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Select Date Range'),
-      content: Column(
+      title: Text(l10n.selectDateRange),
+      content: SingleChildScrollView(
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Quick Selection Chips
@@ -60,22 +64,22 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
             runSpacing: 8,
             children: [
               _buildQuickSelectChip(
-                'Last 7 Days',
+                l10n.last7Days,
                 () => _setQuickRange(7),
                 colorScheme,
               ),
               _buildQuickSelectChip(
-                'Last 30 Days',
+                l10n.last30Days,
                 () => _setQuickRange(30),
                 colorScheme,
               ),
               _buildQuickSelectChip(
-                'Last 3 Months',
+                l10n.last3Months,
                 () => _setQuickRange(90),
                 colorScheme,
               ),
               _buildQuickSelectChip(
-                'This Year',
+                l10n.thisYear,
                 _setThisYear,
                 colorScheme,
               ),
@@ -87,7 +91,7 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
 
           // Start Date Selector
           _buildDateSelector(
-            label: 'Start Date',
+            label: l10n.startDate,
             date: _startDate,
             onTap: _selectStartDate,
             colorScheme: colorScheme,
@@ -96,7 +100,7 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
 
           // End Date Selector
           _buildDateSelector(
-            label: 'End Date',
+            label: l10n.endDate,
             date: _endDate,
             onTap: _selectEndDate,
             colorScheme: colorScheme,
@@ -120,7 +124,7 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '${_getDaysDifference()} days selected',
+                    l10n.daysSelected(_getDaysDifference()),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.onPrimaryContainer,
                     ),
@@ -131,14 +135,15 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
           ),
         ],
       ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: _confirmSelection,
-          child: const Text('Apply'),
+          child: Text(l10n.apply),
         ),
       ],
     );

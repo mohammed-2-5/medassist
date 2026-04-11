@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Dialog to let user choose snooze duration
 class SnoozeOptionsDialog extends StatelessWidget {
@@ -13,6 +14,7 @@ class SnoozeOptionsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return AlertDialog(
       title: Row(
@@ -24,7 +26,7 @@ class SnoozeOptionsDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Snooze Reminder',
+                  l10n.snoozeReminder,
                   style: theme.textTheme.titleLarge,
                 ),
                 Text(
@@ -38,54 +40,56 @@ class SnoozeOptionsDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Column(
+      content: SingleChildScrollView(
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'How long would you like to snooze?',
+            l10n.howLongSnooze,
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
           _SnoozeOption(
             icon: Icons.timer,
-            label: '5 minutes',
+            label: l10n.fiveMinutes,
             minutes: 5,
             onTap: () => Navigator.of(context).pop(5),
           ),
           const SizedBox(height: 8),
           _SnoozeOption(
             icon: Icons.timer,
-            label: '10 minutes',
+            label: l10n.tenMinutes,
             minutes: 10,
             onTap: () => Navigator.of(context).pop(10),
           ),
           const SizedBox(height: 8),
           _SnoozeOption(
             icon: Icons.timer,
-            label: '15 minutes',
+            label: l10n.fifteenMinutes,
             minutes: 15,
             onTap: () => Navigator.of(context).pop(15),
           ),
           const SizedBox(height: 8),
           _SnoozeOption(
             icon: Icons.timer_outlined,
-            label: '30 minutes',
+            label: l10n.thirtyMinutes,
             minutes: 30,
             onTap: () => Navigator.of(context).pop(30),
           ),
           const SizedBox(height: 8),
           _SnoozeOption(
             icon: Icons.timer_outlined,
-            label: '1 hour',
+            label: l10n.oneHour,
             minutes: 60,
             onTap: () => Navigator.of(context).pop(60),
           ),
         ],
       ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
       ],
     );

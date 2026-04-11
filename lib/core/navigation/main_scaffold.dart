@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/widgets/premium_bottom_navigation_bar.dart';
-import 'package:med_assist/core/widgets/main_scaffold_app_bar.dart';
 import 'package:med_assist/features/analytics/screens/analytics_dashboard_screen.dart';
 import 'package:med_assist/features/chatbot/screens/chatbot_screen.dart';
-import 'package:med_assist/features/history/screens/history_screen.dart';
 import 'package:med_assist/features/home/screens/home_screen.dart';
 import 'package:med_assist/features/medications/screens/medications_list_screen.dart';
-import 'package:med_assist/features/medications/widgets/medication_sort_bottom_sheet.dart';
-import 'package:med_assist/features/stock/screens/stock_overview_screen.dart';
-import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:med_assist/services/haptic/haptic_service.dart';
 
 /// Main scaffold with bottom navigation bar
@@ -33,8 +28,6 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     HomeScreen(),
     MedicationsListScreen(),
     AnalyticsDashboardScreen(),
-    HistoryScreen(),
-    StockOverviewScreen(),
     ChatbotScreen(),
   ];
 
@@ -55,17 +48,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
-      appBar: MainScaffoldAppBar.build(
-        context: context,
-        currentIndex: _currentIndex,
-        theme: theme,
-        l10n: l10n,
-        onMedicationSort: () => MedicationSortBottomSheet.show(context),
-      ),
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,

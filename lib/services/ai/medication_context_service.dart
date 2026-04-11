@@ -82,11 +82,9 @@ Suggestion: Help user understand how to add their first medication.
     buffer.writeln('Schedule: ${med.timesPerDay} times per day');
     buffer.writeln('Dose: ${med.dosePerTime} ${med.doseUnit ?? 'unit'}(s)');
 
-    if (med.startDate != null) {
-      final daysSince = DateTime.now().difference(med.startDate!).inDays;
-      buffer.writeln('Taking since: $daysSince days ago');
-    }
-
+    final daysSince = DateTime.now().difference(med.startDate).inDays;
+    buffer.writeln('Taking since: $daysSince days ago');
+  
     if (med.stockQuantity > 0) {
       buffer.writeln('Stock remaining: ${med.stockQuantity}');
 

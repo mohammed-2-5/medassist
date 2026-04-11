@@ -46,9 +46,7 @@ class MainScaffoldAppBar {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {
-              // TODO: Implement search
-            },
+            onPressed: () => context.push('/medications'),
             tooltip: l10n.searchMedications,
           ),
           IconButton(
@@ -88,6 +86,11 @@ class MainScaffoldAppBar {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.inventory_2_rounded),
+            onPressed: () => context.push('/stock'),
+            tooltip: l10n.stockOverview,
+          ),
+          IconButton(
             icon: const Icon(Icons.sort_rounded),
             onPressed: onMedicationSort,
             tooltip: l10n.sortBy,
@@ -101,34 +104,44 @@ class MainScaffoldAppBar {
       );
     }
 
-    // Other screens - generic gradient AppBars
-    final titles = [
-      l10n.today,
-      l10n.medications,
-      l10n.reports,
-      l10n.reminders,
-      'Stock',
-      'AI Chat',
-    ];
+    // Analytics screen
+    if (currentIndex == 2) {
+      return GradientAppBar(
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.analytics, size: 24, color: Colors.white),
+            ),
+            const SizedBox(width: 12),
+            Text(l10n.analytics),
+          ],
+        ),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            onPressed: () => context.push('/history'),
+            tooltip: l10n.history,
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push(AppConstants.routeSettings),
+            tooltip: l10n.settings,
+          ),
+        ],
+      );
+    }
 
-    final icons = [
-      Icons.home,
-      Icons.medication,
-      Icons.analytics,
-      Icons.history,
-      Icons.inventory,
-      Icons.smart_toy,
-    ];
-
-    final gradients = [
-      null,
-      null,
-      [const Color(0xFFFF6B6B), const Color(0xFFFF8E53)],
-      [const Color(0xFF667EEA), const Color(0xFF764BA2)],
-      [const Color(0xFFF093FB), const Color(0xFFF5576C)],
-      [const Color(0xFF4FACFE), const Color(0xFF00F2FE)],
-    ];
-
+    // AI Chat screen
     return GradientAppBar(
       title: Row(
         children: [
@@ -138,19 +151,17 @@ class MainScaffoldAppBar {
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icons[currentIndex], size: 24, color: Colors.white),
+            child: const Icon(Icons.smart_toy, size: 24, color: Colors.white),
           ),
           const SizedBox(width: 12),
-          Text(titles[currentIndex]),
+          Text(l10n.aiAssistant),
         ],
       ),
-      gradient: gradients[currentIndex] != null
-          ? LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradients[currentIndex]!,
-            )
-          : null,
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+      ),
       actions: [
         IconButton(
           icon: const Icon(Icons.settings_outlined),

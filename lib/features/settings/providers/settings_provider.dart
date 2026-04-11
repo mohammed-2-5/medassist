@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,10 @@ const String _settingsKey = 'app_settings';
 /// Settings notifier with persistence
 class SettingsNotifier extends Notifier<AppSettings> {
   SharedPreferences? _prefs;
+  final Completer<void> _ready = Completer<void>();
+
+  /// Completes when the initial load from SharedPreferences is done.
+  Future<void> get ready => _ready.future;
 
   @override
   AppSettings build() {
@@ -17,17 +22,21 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 
   Future<void> _loadSettings() async {
-    _prefs = await SharedPreferences.getInstance();
-    final settingsJson = _prefs?.getString(_settingsKey);
+    try {
+      _prefs = await SharedPreferences.getInstance();
+      final settingsJson = _prefs?.getString(_settingsKey);
 
-    if (settingsJson != null) {
-      try {
-        final json = jsonDecode(settingsJson) as Map<String, dynamic>;
-        state = AppSettings.fromJson(json);
-      } catch (e) {
-        // If loading fails, keep default settings
-        state = const AppSettings();
+      if (settingsJson != null) {
+        try {
+          final json = jsonDecode(settingsJson) as Map<String, dynamic>;
+          state = AppSettings.fromJson(json);
+        } catch (e) {
+          // If loading fails, keep default settings
+          state = const AppSettings();
+        }
       }
+    } finally {
+      if (!_ready.isCompleted) _ready.complete();
     }
   }
 
@@ -60,7 +69,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 
   Future<void> updateSnoozeDuration(int duration) async {
-    state = state.copyWith(snoozeDuration: duration);
+    state = state.copyWith(snoozeDuration: duration.clamp(5, 60));
     await _saveSettings();
   }
 

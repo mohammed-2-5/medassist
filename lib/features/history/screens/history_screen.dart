@@ -66,7 +66,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 month: DateFormat('MMMM yyyy').format(_focusedDay),
               ),
               loading: () => SkeletonLoader.statsCard(context: context),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
 
             const SizedBox(height: 16),
@@ -148,7 +148,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       });
                     },
                   ),
-                  error: (_, __) => TableCalendar(
+                  error: (_, _) => TableCalendar(
                     firstDay: DateTime.utc(2020),
                     lastDay: DateTime.utc(2030, 12, 31),
                     focusedDay: _focusedDay,

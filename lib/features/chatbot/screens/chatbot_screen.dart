@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/features/chatbot/models/chat_message.dart';
+import 'package:med_assist/features/chatbot/widgets/chatbot_app_bar.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_attachment_options.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_chat_bubble.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_input_area.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_suggested_prompts.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_typing_indicator.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
-import 'package:med_assist/services/ai/multi_ai_service.dart';
 import 'package:med_assist/services/ai/medication_context_service.dart';
+import 'package:med_assist/services/ai/multi_ai_service.dart';
 
 /// AI Chatbot Screen for medication assistance
 class ChatbotScreen extends ConsumerStatefulWidget {
@@ -63,10 +64,11 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
       if (mounted) {
         setState(() {
           _isLoadingSuggestions = false;
+          final l10n = AppLocalizations.of(context)!;
           _quickSuggestions = [
-            'How do I add my first medication?',
-            'What should I know about my medications?',
-            'Help me understand adherence',
+            l10n.chatSuggestion1,
+            l10n.chatSuggestion2,
+            l10n.chatSuggestion3,
           ];
         });
       }
@@ -134,10 +136,9 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
         }
       }
 
-      final response = await _aiService.sendMessage(
-        text,
-        medicationContext: medicationContext,
-      );
+      final response = await _aiService
+          .sendMessage(text, medicationContext: medicationContext)
+          .timeout(const Duration(seconds: 30));
 
       if (mounted) {
         setState(() {
@@ -160,14 +161,21 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
     _handleSendMessage();
   }
 
+  void _clearChat() {
+    setState(_messages.clear);
+    _aiService.clearHistory();
+    _currentAiProvider = null;
+    final l10n = AppLocalizations.of(context)!;
+    _addBotMessage(l10n.chatClearedMessage);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      appBar: _buildAppBar(l10n, theme, colorScheme),
+      appBar: ChatbotAppBar(
+        currentAiProvider: _currentAiProvider,
+        onClear: _clearChat,
+      ),
       body: Column(
         children: [
           if (_messages.length == 1)
@@ -202,121 +210,5 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
         ],
       ),
     );
-  }
-
-  PreferredSizeWidget _buildAppBar(
-    AppLocalizations l10n,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    return AppBar(
-      title: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.smart_toy,
-              color: colorScheme.onPrimaryContainer,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.aiAssistant,
-                style: theme.textTheme.titleMedium,
-              ),
-              Row(
-                children: [
-                  if (_currentAiProvider != null) ...[
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: _getProviderColor(_currentAiProvider!),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      _currentAiProvider!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: _getProviderColor(_currentAiProvider!),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '•',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                  ],
-                  Text(
-                    l10n.alwaysHereToHelp,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-      actions: [
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert),
-          onSelected: (value) {
-            if (value == 'clear') {
-              _clearChat();
-            }
-          },
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'clear',
-              child: Row(
-                children: [
-                  const Icon(Icons.delete_outline),
-                  const SizedBox(width: 12),
-                  Text(l10n.clearChat),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void _clearChat() {
-    setState(_messages.clear);
-    _aiService.clearHistory();
-    _currentAiProvider = null;
-    final l10n = AppLocalizations.of(context)!;
-    _addBotMessage(l10n.chatClearedMessage);
-  }
-
-  Color _getProviderColor(String provider) {
-    switch (provider.toLowerCase()) {
-      case 'groq':
-        return const Color(0xFF8B5CF6);
-      case 'gemini':
-        return const Color(0xFF4285F4);
-      case 'huggingface':
-        return const Color(0xFFFFD21E);
-      case 'offline':
-        return Colors.grey;
-      default:
-        return Colors.teal;
-    }
   }
 }

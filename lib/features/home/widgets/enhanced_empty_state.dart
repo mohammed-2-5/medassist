@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 class EnhancedEmptyState extends StatelessWidget {
 
@@ -12,12 +13,20 @@ class EnhancedEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final viewportHeight = MediaQuery.of(context).size.height - MediaQuery.paddingOf(context).vertical;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: viewportHeight),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             // Animated illustration
             Container(
               width: 200,
@@ -50,24 +59,24 @@ class EnhancedEmptyState extends StatelessWidget {
             const SizedBox(height: 48),
 
             // Title
-            const Text(
-              'No Medications Yet',
+            Text(
+              l10n.noMedicationsYet,
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
               ),
             ).animate().slideY(begin: 0.3, duration: 600.ms).fadeIn(),
 
             const SizedBox(height: 16),
 
             // Description
-            const Text(
-              "Start your health journey by adding your first medication. We'll help you stay on track!",
+            Text(
+              l10n.startByAdding,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
             )
@@ -102,9 +111,9 @@ class EnhancedEmptyState extends StatelessWidget {
                   ),
                 ),
                 icon: const Icon(Icons.add_rounded, color: Colors.white),
-                label: const Text(
-                  'Add Your First Medication',
-                  style: TextStyle(
+                label: Text(
+                  l10n.addYourFirstMedication,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -119,32 +128,36 @@ class EnhancedEmptyState extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Features
-            _buildFeaturesList().animate(delay: 600.ms).fadeIn(),
-          ],
+            _buildFeaturesList(l10n, colorScheme).animate(delay: 600.ms).fadeIn(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFeaturesList() {
+  Widget _buildFeaturesList(AppLocalizations l10n, ColorScheme colorScheme) {
     return Column(
       children: [
         _buildFeatureItem(
           icon: Icons.notifications_active_rounded,
-          text: 'Smart reminders at the right time',
+          text: l10n.smartRemindersDescription,
           gradient: AppColors.purpleGradient,
+          colorScheme: colorScheme,
         ),
         const SizedBox(height: 12),
         _buildFeatureItem(
           icon: Icons.analytics_rounded,
-          text: 'Track your medication adherence',
+          text: l10n.trackProgressDescription,
           gradient: AppColors.successGradient,
+          colorScheme: colorScheme,
         ),
         const SizedBox(height: 12),
         _buildFeatureItem(
           icon: Icons.shield_rounded,
-          text: '100% private and secure',
+          text: l10n.privateDataDescription,
           gradient: AppColors.warningGradient,
+          colorScheme: colorScheme,
         ),
       ],
     );
@@ -154,6 +167,7 @@ class EnhancedEmptyState extends StatelessWidget {
     required IconData icon,
     required String text,
     required LinearGradient gradient,
+    required ColorScheme colorScheme,
   }) {
     return Row(
       children: [
@@ -174,9 +188,9 @@ class EnhancedEmptyState extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ),

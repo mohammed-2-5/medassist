@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 import 'package:med_assist/core/widgets/animated_card.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Card showing monthly adherence statistics with smooth animations
 class MonthlyStatsCard extends StatelessWidget {
@@ -17,6 +19,7 @@ class MonthlyStatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     final adherenceRate = stats['adherenceRate'] as int;
     final takenDoses = stats['taken'] as int;
@@ -24,7 +27,7 @@ class MonthlyStatsCard extends StatelessWidget {
     final totalDoses = stats['total'] as int;
 
     return AnimatedCard(
-      onTap: () {},
+      onTap: () => context.push('/analytics'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,28 +116,25 @@ class MonthlyStatsCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _buildStatRow(
-                        context,
-                        'Total Doses',
-                        totalDoses.toString(),
-                        Icons.medication,
-                        colorScheme.primary,
+                      _StatRow(
+                        label: l10n.totalDoses,
+                        value: totalDoses.toString(),
+                        icon: Icons.medication,
+                        color: colorScheme.primary,
                       ),
                       const SizedBox(height: 8),
-                      _buildStatRow(
-                        context,
-                        'Taken',
-                        takenDoses.toString(),
-                        Icons.check_circle,
-                        colorScheme.secondary,
+                      _StatRow(
+                        label: l10n.taken,
+                        value: takenDoses.toString(),
+                        icon: Icons.check_circle,
+                        color: colorScheme.secondary,
                       ),
                       const SizedBox(height: 8),
-                      _buildStatRow(
-                        context,
-                        'Missed',
-                        missedDoses.toString(),
-                        Icons.cancel,
-                        colorScheme.error,
+                      _StatRow(
+                        label: l10n.missed,
+                        value: missedDoses.toString(),
+                        icon: Icons.cancel,
+                        color: colorScheme.error,
                       ),
                     ],
                   ),
@@ -162,7 +162,7 @@ class MonthlyStatsCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      _getAdherenceMessage(adherenceRate),
+                      _getAdherenceMessage(adherenceRate, l10n),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: _getAdherenceColor(adherenceRate, colorScheme),
                         fontWeight: FontWeight.w500,
@@ -177,13 +177,56 @@ class MonthlyStatsCard extends StatelessWidget {
       );
   }
 
-  Widget _buildStatRow(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Color _getAdherenceColor(int rate, ColorScheme colorScheme) {
+    if (rate >= 90) {
+      return colorScheme.secondary; // Green
+    } else if (rate >= 70) {
+      return colorScheme.tertiary; // Orange/Yellow
+    } else {
+      return colorScheme.error; // Red
+    }
+  }
+
+  IconData _getAdherenceIcon(int rate) {
+    if (rate >= 90) {
+      return Icons.emoji_events; // Trophy
+    } else if (rate >= 70) {
+      return Icons.trending_up;
+    } else {
+      return Icons.warning;
+    }
+  }
+
+  String _getAdherenceMessage(int rate, AppLocalizations l10n) {
+    if (rate >= 90) {
+      return l10n.excellentAdherenceMessage;
+    } else if (rate >= 80) {
+      return l10n.goodAdherenceMessage;
+    } else if (rate >= 70) {
+      return l10n.fairAdherenceMessage;
+    } else if (rate >= 50) {
+      return l10n.lowAdherenceMessage;
+    } else {
+      return l10n.veryLowAdherenceMessage;
+    }
+  }
+}
+
+class _StatRow extends StatelessWidget {
+  const _StatRow({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Row(
@@ -207,39 +250,5 @@ class MonthlyStatsCard extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Color _getAdherenceColor(int rate, ColorScheme colorScheme) {
-    if (rate >= 90) {
-      return colorScheme.secondary; // Green
-    } else if (rate >= 70) {
-      return colorScheme.tertiary; // Orange/Yellow
-    } else {
-      return colorScheme.error; // Red
-    }
-  }
-
-  IconData _getAdherenceIcon(int rate) {
-    if (rate >= 90) {
-      return Icons.emoji_events; // Trophy
-    } else if (rate >= 70) {
-      return Icons.trending_up;
-    } else {
-      return Icons.warning;
-    }
-  }
-
-  String _getAdherenceMessage(int rate) {
-    if (rate >= 90) {
-      return 'Excellent adherence! Keep up the great work!';
-    } else if (rate >= 80) {
-      return 'Good adherence. Try to improve consistency.';
-    } else if (rate >= 70) {
-      return 'Fair adherence. Consider setting more reminders.';
-    } else if (rate >= 50) {
-      return 'Low adherence. Please try to take your medications regularly.';
-    } else {
-      return 'Very low adherence. Talk to your healthcare provider.';
-    }
   }
 }

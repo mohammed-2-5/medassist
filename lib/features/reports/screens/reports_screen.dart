@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:med_assist/services/export/export_service.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -19,23 +20,23 @@ class ReportsScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/home') ,
+          onPressed: () => context.pop(),
         ),
-        title: const Text('Reports & Export'),
+        title: Text(AppLocalizations.of(context)!.reportsAndExportTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Header
           Text(
-            'Export Your Data',
+            AppLocalizations.of(context)!.exportYourDataTitle,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Generate reports and export your medication data in various formats',
+            AppLocalizations.of(context)!.exportYourDataSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -43,13 +44,13 @@ class ReportsScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // CSV Exports Section
-          _buildSectionHeader(theme, 'CSV Exports', Icons.table_chart),
+          _buildSectionHeader(theme, AppLocalizations.of(context)!.csvExports, Icons.table_chart),
           const SizedBox(height: 16),
           _buildExportCard(
             context,
             ref,
-            title: 'Medications List',
-            description: 'Export all medications data to CSV',
+            title: AppLocalizations.of(context)!.medicationsList,
+            description: AppLocalizations.of(context)!.exportAllMedicationsCSV,
             icon: Icons.medication,
             color: Colors.blue,
             onExport: () => _exportMedicationsCSV(context, ref),
@@ -58,8 +59,8 @@ class ReportsScreen extends ConsumerWidget {
           _buildExportCard(
             context,
             ref,
-            title: 'Dose History',
-            description: 'Export complete dose history to CSV',
+            title: AppLocalizations.of(context)!.doseHistory,
+            description: AppLocalizations.of(context)!.exportDoseHistoryCSV,
             icon: Icons.history,
             color: Colors.green,
             onExport: () => _exportDoseHistoryCSV(context, ref),
@@ -68,8 +69,8 @@ class ReportsScreen extends ConsumerWidget {
           _buildExportCard(
             context,
             ref,
-            title: 'Stock History',
-            description: 'Export stock changes history to CSV',
+            title: AppLocalizations.of(context)!.stockHistory,
+            description: AppLocalizations.of(context)!.exportStockHistoryCSV,
             icon: Icons.inventory,
             color: Colors.orange,
             onExport: () => _exportStockHistoryCSV(context, ref),
@@ -78,13 +79,13 @@ class ReportsScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // PDF Reports Section
-          _buildSectionHeader(theme, 'PDF Reports', Icons.picture_as_pdf),
+          _buildSectionHeader(theme, AppLocalizations.of(context)!.pdfReports, Icons.picture_as_pdf),
           const SizedBox(height: 16),
           _buildExportCard(
             context,
             ref,
-            title: 'Medications Report',
-            description: 'Generate detailed PDF report of all medications',
+            title: AppLocalizations.of(context)!.medicationsReport,
+            description: AppLocalizations.of(context)!.generateMedicationsPDF,
             icon: Icons.description,
             color: Colors.purple,
             onExport: () => _generateMedicationsPDF(context, ref),
@@ -93,8 +94,8 @@ class ReportsScreen extends ConsumerWidget {
           _buildExportCard(
             context,
             ref,
-            title: 'Adherence Report',
-            description: 'Generate PDF report with adherence statistics',
+            title: AppLocalizations.of(context)!.adherenceReport,
+            description: AppLocalizations.of(context)!.generateAdherencePDF,
             icon: Icons.analytics,
             color: Colors.teal,
             onExport: () => _generateAdherencePDF(context, ref),
@@ -116,7 +117,7 @@ class ReportsScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Exported files will be saved to your device and can be shared immediately',
+                      AppLocalizations.of(context)!.exportInfoMessage,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onPrimaryContainer,
                       ),
@@ -225,12 +226,12 @@ class ReportsScreen extends ConsumerWidget {
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, 'Medications exported successfully!');
+        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.medicationsList));
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, 'Failed to export: $e');
+        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
       }
     }
   }
@@ -261,12 +262,12 @@ class ReportsScreen extends ConsumerWidget {
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, 'Dose history exported successfully!');
+        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.doseHistory));
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, 'Failed to export: $e');
+        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
       }
     }
   }
@@ -305,12 +306,12 @@ class ReportsScreen extends ConsumerWidget {
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, 'Stock history exported successfully!');
+        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.stockHistory));
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, 'Failed to export: $e');
+        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
       }
     }
   }
@@ -332,12 +333,12 @@ class ReportsScreen extends ConsumerWidget {
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, 'PDF report generated successfully!');
+        _showSuccessSnackbar(context, AppLocalizations.of(context)!.pdfGeneratedSuccessfully(AppLocalizations.of(context)!.medicationsReport));
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, 'Failed to generate PDF: $e');
+        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()));
       }
     }
   }
@@ -381,12 +382,12 @@ class ReportsScreen extends ConsumerWidget {
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, 'Adherence report generated successfully!');
+        _showSuccessSnackbar(context, AppLocalizations.of(context)!.pdfGeneratedSuccessfully(AppLocalizations.of(context)!.adherenceReport));
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, 'Failed to generate PDF: $e');
+        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()));
       }
     }
   }
@@ -395,16 +396,16 @@ class ReportsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
+      builder: (context) => Center(
         child: Card(
           child: Padding(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Generating export...'),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(AppLocalizations.of(context)!.generatingExport),
               ],
             ),
           ),
@@ -417,7 +418,7 @@ class ReportsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -426,7 +427,7 @@ class ReportsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
   }

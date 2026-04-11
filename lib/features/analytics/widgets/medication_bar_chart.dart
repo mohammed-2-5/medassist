@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Medication Bar Chart Widget
 /// Shows adherence rate per medication
@@ -11,6 +12,7 @@ class MedicationBarChart extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return ref.watch(medicationInsightsProvider).when(
           data: (insights) {
@@ -20,7 +22,7 @@ class MedicationBarChart extends ConsumerWidget {
                   padding: const EdgeInsets.all(40),
                   child: Center(
                     child: Text(
-                      'No medication data available',
+                      l10n.noMedicationDataAvailable,
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -34,6 +36,7 @@ class MedicationBarChart extends ConsumerWidget {
             final topInsights = insights.take(5).toList();
 
             return Card(
+              margin: const EdgeInsets.all(0),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -47,7 +50,7 @@ class MedicationBarChart extends ConsumerWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Adherence by Medication',
+                          l10n.adherenceByMedication,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -55,9 +58,12 @@ class MedicationBarChart extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      height: 250,
-                      child: BarChart(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final chartHeight = constraints.maxWidth < 360 ? 180.0 : 250.0;
+                        return SizedBox(
+                          height: chartHeight,
+                          child: BarChart(
                         BarChartData(
                           alignment: BarChartAlignment.spaceAround,
                           maxY: 100,
@@ -180,7 +186,9 @@ class MedicationBarChart extends ConsumerWidget {
                             },
                           ),
                         ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -196,15 +204,16 @@ class MedicationBarChart extends ConsumerWidget {
           error: (err, stack) => Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Error loading chart: $err'),
+              child: Text(l10n.errorLoadingChart(err.toString())),
             ),
           ),
         );
   }
 
   Color _getAdherenceColor(double percentage, ColorScheme colorScheme) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 50) return Colors.orange;
-    return Colors.red;
+    final isDark = colorScheme.brightness == Brightness.dark;
+    if (percentage >= 80) return isDark ? const Color(0xFF66BB6A) : Colors.green;
+    if (percentage >= 50) return isDark ? const Color(0xFFFFA726) : Colors.orange;
+    return isDark ? const Color(0xFFEF5350) : Colors.red;
   }
 }

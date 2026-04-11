@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Helper to convert scheduled date/hour/minute to DateTime
 DateTime _getScheduledDateTime(DoseHistoryData dose) {
@@ -28,6 +29,7 @@ class DoseHistoryCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final medicationAsync = ref.watch(medicationByIdProvider(dose.medicationId));
 
     return medicationAsync.when(
@@ -94,7 +96,7 @@ class DoseHistoryCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _formatStatus(dose.status),
+                        _formatStatus(dose.status, l10n),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: statusInfo['color'] as Color,
                           fontWeight: FontWeight.bold,
@@ -114,7 +116,7 @@ class DoseHistoryCard extends ConsumerWidget {
                     Expanded(
                       child: _buildInfoItem(
                         context,
-                        'Dosage',
+                        l10n.dosage,
                         '${medication.dosePerTime} ${medication.doseUnit}',
                         Icons.medication,
                       ),
@@ -122,7 +124,7 @@ class DoseHistoryCard extends ConsumerWidget {
                     Expanded(
                       child: _buildInfoItem(
                         context,
-                        'Scheduled',
+                        l10n.scheduled,
                         DateFormat('h:mm a').format(_getScheduledDateTime(dose)),
                         Icons.schedule,
                       ),
@@ -137,7 +139,7 @@ class DoseHistoryCard extends ConsumerWidget {
                       Expanded(
                         child: _buildInfoItem(
                           context,
-                          'Taken at',
+                          l10n.takenAt,
                           DateFormat('h:mm a').format(dose.actualTime!),
                           Icons.check_circle,
                         ),
@@ -146,7 +148,7 @@ class DoseHistoryCard extends ConsumerWidget {
                         child: _buildInfoItem(
                           context,
                           'Delay',
-                          _calculateDelay(dose),
+                          _calculateDelay(dose, l10n),
                           Icons.timer,
                         ),
                       ),
@@ -189,7 +191,7 @@ class DoseHistoryCard extends ConsumerWidget {
           child: Center(child: CircularProgressIndicator()),
         ),
       ),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 
@@ -261,22 +263,22 @@ class DoseHistoryCard extends ConsumerWidget {
     }
   }
 
-  String _formatStatus(String status) {
+  String _formatStatus(String status, AppLocalizations l10n) {
     switch (status) {
       case 'taken':
-        return 'Taken';
+        return l10n.taken;
       case 'missed':
-        return 'Missed';
+        return l10n.missed;
       case 'skipped':
-        return 'Skipped';
+        return l10n.skipped;
       case 'snoozed':
-        return 'Snoozed';
+        return l10n.snoozed;
       default:
         return 'Pending';
     }
   }
 
-  String _calculateDelay(DoseHistoryData dose) {
+  String _calculateDelay(DoseHistoryData dose, AppLocalizations l10n) {
     if (dose.actualTime == null) {
       return 'N/A';
     }
@@ -286,15 +288,15 @@ class DoseHistoryCard extends ConsumerWidget {
     final minutes = delay.inMinutes.abs();
 
     if (minutes == 0) {
-      return 'On time';
+      return l10n.onTime;
     } else if (delay.isNegative) {
-      return '$minutes min early';
+      return l10n.minEarly(minutes);
     } else if (minutes < 60) {
-      return '$minutes min late';
+      return l10n.minLate(minutes);
     } else {
       final hours = (minutes / 60).floor();
       final remainingMinutes = minutes % 60;
-      return '${hours}h ${remainingMinutes}m late';
+      return l10n.hoursMinLate(hours, remainingMinutes);
     }
   }
 }

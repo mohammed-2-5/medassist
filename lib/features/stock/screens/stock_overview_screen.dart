@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/utils/provider_refresh_utils.dart';
 import 'package:med_assist/core/widgets/animated_card.dart';
-import 'package:med_assist/core/widgets/gradient_container.dart';
 import 'package:med_assist/features/stock/providers/stock_providers.dart';
 import 'package:med_assist/features/stock/widgets/stock_card.dart';
+import 'package:med_assist/features/stock/widgets/stock_empty_state.dart';
+import 'package:med_assist/features/stock/widgets/stock_stat_item.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Stock Overview Screen - Shows all medications with stock levels
@@ -43,7 +44,6 @@ class StockOverviewScreen extends ConsumerWidget {
             // Stock Statistics Summary with modern design
             stockStatsAsync.when(
               data: (stats) => AnimatedCard(
-                onTap: () {},
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -57,33 +57,29 @@ class StockOverviewScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildStatItem(
-                          context,
-                          l10n.total,
-                          stats['total']!,
-                          colorScheme.primary,
-                          0,
+                        StockStatItem(
+                          label: l10n.total,
+                          value: stats['total']!,
+                          color: colorScheme.primary,
+                          index: 0,
                         ),
-                        _buildStatItem(
-                          context,
-                          l10n.critical,
-                          stats['critical']!,
-                          Colors.red,
-                          1,
+                        StockStatItem(
+                          label: l10n.critical,
+                          value: stats['critical']!,
+                          color: Colors.red,
+                          index: 1,
                         ),
-                        _buildStatItem(
-                          context,
-                          l10n.low,
-                          stats['low']!,
-                          Colors.orange,
-                          2,
+                        StockStatItem(
+                          label: l10n.low,
+                          value: stats['low']!,
+                          color: Colors.orange,
+                          index: 2,
                         ),
-                        _buildStatItem(
-                          context,
-                          l10n.good,
-                          stats['good']!,
-                          Colors.green,
-                          3,
+                        StockStatItem(
+                          label: l10n.good,
+                          value: stats['good']!,
+                          color: Colors.green,
+                          index: 3,
                         ),
                       ],
                     ),
@@ -96,7 +92,7 @@ class StockOverviewScreen extends ConsumerWidget {
                   child: Center(child: CircularProgressIndicator()),
                 ),
               ),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
 
             const SizedBox(height: 16),
@@ -113,7 +109,7 @@ class StockOverviewScreen extends ConsumerWidget {
             medicationsStockAsync.when(
               data: (stockList) {
                 if (stockList.isEmpty) {
-                  return _buildEmptyState(theme, colorScheme, l10n);
+                  return const StockEmptyState();
                 }
 
                 return Column(
@@ -156,94 +152,4 @@ class StockOverviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(
-    BuildContext context,
-    String label,
-    int value,
-    Color color,
-    int index,
-  ) {
-    final theme = Theme.of(context);
-    final delay = index * 100;
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: Duration(milliseconds: 600 + delay),
-      curve: Curves.easeOutCubic,
-      builder: (context, animValue, child) {
-        return Opacity(
-          opacity: animValue,
-          child: Transform.translate(
-            offset: Offset(0, 20 * (1 - animValue)),
-            child: child,
-          ),
-        );
-      },
-      child: Column(
-        children: [
-          GradientContainer(
-            padding: const EdgeInsets.all(12),
-            borderRadius: BorderRadius.circular(12),
-            colors: [
-              color.withValues(alpha: 0.2),
-              color.withValues(alpha: 0.1),
-            ],
-            child: TweenAnimationBuilder<int>(
-              tween: IntTween(begin: 0, end: value),
-              duration: Duration(milliseconds: 800 + delay),
-              curve: Curves.easeOutCubic,
-              builder: (context, animValue, child) {
-                return Text(
-                  animValue.toString(),
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Icon(
-              Icons.inventory_2,
-              size: 64,
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.noMedications,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.addMedicationsToTrackStock,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

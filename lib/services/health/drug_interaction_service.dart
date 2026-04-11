@@ -118,7 +118,7 @@ class DrugInteractionService {
     'simvastatin:amlodipine': 'Amlodipine increases simvastatin levels, raising muscle damage risk.',
     'tramadol:sertraline': 'Increased risk of serotonin syndrome when combined.',
     'levothyroxine:calcium': 'Calcium can reduce thyroid hormone absorption.',
-    'aspirin:ibuprofen': 'Taking together may reduce aspirin\'s cardioprotective effects.',
+    'aspirin:ibuprofen': "Taking together may reduce aspirin's cardioprotective effects.",
     'insulin:alcohol': 'Alcohol can cause dangerous blood sugar drops with insulin.',
   };
 
@@ -208,7 +208,7 @@ class DrugInteractionService {
     final interactsWithMed1 = _interactionPairs[med1Lower];
     final interactsWithMed2 = _interactionPairs[med2Lower];
 
-    bool hasInteraction = false;
+    var hasInteraction = false;
     String? pairKey;
 
     if (interactsWithMed1 != null && interactsWithMed1.contains(med2Lower)) {

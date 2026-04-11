@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Dialog explaining the key features of the app.
 class LearnMoreDialog extends StatelessWidget {
@@ -6,35 +7,37 @@ class LearnMoreDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('How Med Assist Works'),
-      content: const Column(
+      title: Text(l10n.howMedAssistWorks),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _LearnMoreItem(
             icon: Icons.alarm,
-            title: 'Smart Reminders',
-            description: 'Get timely alerts even when offline',
+            title: l10n.smartReminders,
+            description: l10n.smartRemindersDescription,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _LearnMoreItem(
             icon: Icons.cloud_off,
-            title: '100% Private',
-            description: 'All data stays on your device',
+            title: l10n.privateData,
+            description: l10n.privateDataDescription,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _LearnMoreItem(
             icon: Icons.schedule,
-            title: 'Flexible Snoozing',
-            description: "Snooze reminders when you're busy",
+            title: l10n.flexibleSnoozing,
+            description: l10n.flexibleSnoozingDescription,
           ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Got it'),
+          child: Text(l10n.gotIt),
         ),
       ],
     );

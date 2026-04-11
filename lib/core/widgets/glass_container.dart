@@ -134,7 +134,7 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.97,
     ).animate(CurvedAnimation(
       parent: _controller,

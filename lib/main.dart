@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +9,6 @@ import 'package:med_assist/core/errors/error_handler_service.dart';
 import 'package:med_assist/services/background/background_service.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 import 'package:med_assist/services/permissions/permissions_service.dart';
-import 'package:workmanager/workmanager.dart';
 
 void main() async {
   // Run app in error-handling zone
@@ -18,17 +16,8 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     // Load environment variables
-    await dotenv.load(fileName: '.env');
-    // ✅ Initialize WorkManager FIRST
-    try {
-      await Workmanager().initialize(
-        callbackDispatcher, // your top-level function
-        isInDebugMode: kDebugMode,
-      );
-      debugPrint('✅ WorkManager initialized successfully');
-    } catch (e) {
-      debugPrint('❌ WorkManager init failed: $e');
-    }
+    await dotenv.load();
+
     // Initialize error handler
     debugPrint('Initializing error handler...');
     final errorHandler = ErrorHandlerService();
@@ -47,10 +36,16 @@ void main() async {
       debugPrint('Requesting notification permissions...');
       await notificationService.requestPermissions();
 
-      // Initialize background service
+      // Initialize background service (non-critical)
       debugPrint('Initializing background service...');
-      final bg = WorkManagerBackgroundService();
-      await bg.configure();
+      WorkManagerBackgroundService? bg;
+      try {
+        bg = WorkManagerBackgroundService();
+        await bg.configure();
+      } catch (e) {
+        bg = null;
+        debugPrint('⚠️ Background service init failed (non-critical): $e');
+      }
 
       // Clean up old snooze history from previous days
       debugPrint('Cleaning up old snooze history...');
@@ -70,8 +65,14 @@ void main() async {
 
       debugPrint('Permissions status: $permissions');
 
-      // Start background service
-      await bg.start();
+      // Start background service (if initialized)
+      if (bg != null) {
+        try {
+          await bg.start();
+        } catch (e) {
+          debugPrint('⚠️ Background service start failed (non-critical): $e');
+        }
+      }
 
       debugPrint('All services initialized successfully');
     } catch (e, stack) {

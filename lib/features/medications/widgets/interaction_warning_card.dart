@@ -1,6 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/services/health/drug_interaction_service.dart';
 
+/// Shared severity styling for drug interaction widgets.
+class InteractionSeverityStyle {
+  const InteractionSeverityStyle._();
+
+  static Color color(
+    InteractionSeverity severity,
+    ColorScheme colorScheme,
+  ) {
+    switch (severity) {
+      case InteractionSeverity.minor:
+        return Colors.green;
+      case InteractionSeverity.moderate:
+        return Colors.orange;
+      case InteractionSeverity.major:
+        return Colors.deepOrange;
+      case InteractionSeverity.severe:
+        return colorScheme.error;
+    }
+  }
+
+  static IconData icon(InteractionSeverity severity) {
+    switch (severity) {
+      case InteractionSeverity.minor:
+        return Icons.info_outline;
+      case InteractionSeverity.moderate:
+        return Icons.warning_amber_rounded;
+      case InteractionSeverity.major:
+        return Icons.error_outline;
+      case InteractionSeverity.severe:
+        return Icons.dangerous;
+    }
+  }
+}
+
 /// Card widget to display drug interaction warnings
 class InteractionWarningCard extends StatelessWidget {
   const InteractionWarningCard({
@@ -18,7 +52,7 @@ class InteractionWarningCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // Get severity-based colors
-    final severityColor = _getSeverityColor(warning.severity, colorScheme);
+    final severityColor = InteractionSeverityStyle.color(warning.severity, colorScheme);
     final backgroundColor = severityColor.withOpacity(0.1);
 
     return Card(
@@ -43,7 +77,7 @@ class InteractionWarningCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      _getSeverityIcon(warning.severity),
+                      InteractionSeverityStyle.icon(warning.severity),
                       color: severityColor,
                       size: 24,
                     ),
@@ -171,34 +205,6 @@ class InteractionWarningCard extends StatelessWidget {
     );
   }
 
-  Color _getSeverityColor(
-    InteractionSeverity severity,
-    ColorScheme colorScheme,
-  ) {
-    switch (severity) {
-      case InteractionSeverity.minor:
-        return Colors.green;
-      case InteractionSeverity.moderate:
-        return Colors.orange;
-      case InteractionSeverity.major:
-        return Colors.deepOrange;
-      case InteractionSeverity.severe:
-        return colorScheme.error;
-    }
-  }
-
-  IconData _getSeverityIcon(InteractionSeverity severity) {
-    switch (severity) {
-      case InteractionSeverity.minor:
-        return Icons.info_outline;
-      case InteractionSeverity.moderate:
-        return Icons.warning_amber_rounded;
-      case InteractionSeverity.major:
-        return Icons.error_outline;
-      case InteractionSeverity.severe:
-        return Icons.dangerous;
-    }
-  }
 }
 
 /// Compact version for lists
@@ -216,11 +222,11 @@ class InteractionWarningListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final severityColor = _getSeverityColor(warning.severity, colorScheme);
+    final severityColor = InteractionSeverityStyle.color(warning.severity, colorScheme);
 
     return ListTile(
       leading: Icon(
-        _getSeverityIcon(warning.severity),
+        InteractionSeverityStyle.icon(warning.severity),
         color: severityColor,
       ),
       title: Text(
@@ -250,34 +256,5 @@ class InteractionWarningListTile extends StatelessWidget {
       ),
       onTap: onTap,
     );
-  }
-
-  Color _getSeverityColor(
-    InteractionSeverity severity,
-    ColorScheme colorScheme,
-  ) {
-    switch (severity) {
-      case InteractionSeverity.minor:
-        return Colors.green;
-      case InteractionSeverity.moderate:
-        return Colors.orange;
-      case InteractionSeverity.major:
-        return Colors.deepOrange;
-      case InteractionSeverity.severe:
-        return colorScheme.error;
-    }
-  }
-
-  IconData _getSeverityIcon(InteractionSeverity severity) {
-    switch (severity) {
-      case InteractionSeverity.minor:
-        return Icons.info_outline;
-      case InteractionSeverity.moderate:
-        return Icons.warning_amber_rounded;
-      case InteractionSeverity.major:
-        return Icons.error_outline;
-      case InteractionSeverity.severe:
-        return Icons.dangerous;
-    }
   }
 }

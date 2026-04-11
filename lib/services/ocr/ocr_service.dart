@@ -143,8 +143,9 @@ class OCRService {
       }
 
       // Check if line looks like a medication name
-      // (Usually all caps or title case, no numbers except Roman numerals)
-      if (RegExp(r'^[A-Z][A-Za-z\s\-]+$').hasMatch(line)) {
+      // (Latin title/upper case, or Arabic text, with optional numbers/hyphens)
+      if (RegExp(r'^[A-Z][A-Za-z0-9\s\-\(\)]+$').hasMatch(line) ||
+          RegExp(r'^[\u0600-\u06FF\s\-0-9]+$').hasMatch(line)) {
         result['name'] = _cleanMedicationName(line);
         break;
       }
@@ -190,6 +191,7 @@ class OCRService {
 
   /// Capitalize dosage form properly
   String _capitalizeDosageForm(String form) {
+    if (form.isEmpty) return form;
     return form[0].toUpperCase() + form.substring(1).toLowerCase();
   }
 

@@ -852,6 +852,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportData => 'Export Data';
 
   @override
+  String get customDateRange => 'Custom Date Range';
+
+  @override
+  String get exportPdf => 'Export PDF';
+
+  @override
+  String get days => 'Days';
+
+  @override
   String get week => 'Week';
 
   @override
@@ -870,7 +879,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skippedDoses => 'Skipped';
 
   @override
-  String get totalDoses => 'Total';
+  String get totalDoses => 'Total Doses';
 
   @override
   String get bestStreak => 'Best Streak';
@@ -1413,8 +1422,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterManually => 'Enter Manually';
 
   @override
-  String get errorScanningBarcode =>
-      'An error occurred while scanning the barcode';
+  String errorScanningBarcode(String error) {
+    return 'Error scanning barcode: $error';
+  }
 
   @override
   String get tryAgain => 'Try Again';
@@ -1454,4 +1464,952 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectBackupFile => 'Select Backup File';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get adjustStock => 'Adjust Stock';
+
+  @override
+  String get currentStockLabel => 'Current Stock:';
+
+  @override
+  String get newStockAmount => 'New Stock Amount';
+
+  @override
+  String get enterUpdatedStockQuantity => 'Enter the updated stock quantity';
+
+  @override
+  String get quickAdjustments => 'Quick Adjustments:';
+
+  @override
+  String get pleaseEnterValidStock => 'Please enter a valid stock amount';
+
+  @override
+  String stockUpdatedTo(int quantity, String unit) {
+    return 'Stock updated to $quantity $unit';
+  }
+
+  @override
+  String errorUpdatingStock(String error) {
+    return 'Error updating stock: $error';
+  }
+
+  @override
+  String get daysRemainingLabel => 'Days Remaining';
+
+  @override
+  String get stockLevelCritical => 'CRITICAL';
+
+  @override
+  String get stockLevelLow => 'LOW';
+
+  @override
+  String get stockLevelMedium => 'MEDIUM';
+
+  @override
+  String get stockLevelGood => 'GOOD';
+
+  @override
+  String get stockWarningCritical =>
+      'Critical stock level! Refill immediately.';
+
+  @override
+  String get stockWarningLow => 'Low stock level. Consider refilling soon.';
+
+  @override
+  String get expiryDateLabel => 'Expiry Date';
+
+  @override
+  String get expiryStatusGood => 'Good';
+
+  @override
+  String get expiryStatusToday => 'Expires today';
+
+  @override
+  String get expiryStatusTomorrow => 'Expires tomorrow';
+
+  @override
+  String expiryStatusInDays(int days) {
+    return 'Expires in $days days';
+  }
+
+  @override
+  String get medicationExpiredWarning =>
+      'This medication has expired! Do not use.';
+
+  @override
+  String medicationExpiringSoonWarning(int days) {
+    return 'This medication is expiring soon ($days days).';
+  }
+
+  @override
+  String get generatingPdfReport => 'Generating PDF report...';
+
+  @override
+  String get pdfReportGenerated => 'PDF report generated successfully!';
+
+  @override
+  String errorGeneratingPdf(String error) {
+    return 'Error generating PDF: $error';
+  }
+
+  @override
+  String get lastBackup => 'Last Backup';
+
+  @override
+  String get processing => 'Processing...';
+
+  @override
+  String get backupCreatedSuccessfully => 'Backup created successfully!';
+
+  @override
+  String failedToCreateBackup(String error) {
+    return 'Failed to create backup: $error';
+  }
+
+  @override
+  String failedToShareBackup(String error) {
+    return 'Failed to share backup: $error';
+  }
+
+  @override
+  String get restoreFromBackupQuestion => 'Restore from Backup?';
+
+  @override
+  String get restoreConfirmMessage =>
+      'This will erase all current data and replace it with data from the backup file.\n\nThis action cannot be undone. Are you sure?';
+
+  @override
+  String get restoreComplete => 'Restore Complete!';
+
+  @override
+  String successfullyRestoredItems(int count) {
+    return 'Successfully restored $count items:';
+  }
+
+  @override
+  String failedToRestoreBackup(String error) {
+    return 'Failed to restore backup: $error';
+  }
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get takenSuccessfully => 'Taken successfully';
+
+  @override
+  String get missedDoseLabel => 'Missed dose';
+
+  @override
+  String get logNow => 'Log Now';
+
+  @override
+  String get snoozedForMinutes => 'Snoozed for 15 minutes';
+
+  @override
+  String get adherenceTrendChart => '7-Day Adherence Trend';
+
+  @override
+  String get adherenceByMedication => 'Adherence by Medication';
+
+  @override
+  String get doseStatusDistribution => 'Dose Status Distribution (This Month)';
+
+  @override
+  String get adherenceHeatmap30Day => '30-Day Adherence Heatmap';
+
+  @override
+  String get timeOfDayAnalysis => 'Time-of-Day Analysis';
+
+  @override
+  String get adherenceRateByHour => 'Adherence rate by hour of day';
+
+  @override
+  String get noMedicationDataAvailable => 'No medication data available';
+
+  @override
+  String get noTrendDataAvailable => 'No trend data available yet';
+
+  @override
+  String get noDoseDataForTimeAnalysis =>
+      'No dose data available for time analysis';
+
+  @override
+  String errorLoadingTrend(String error) {
+    return 'Error loading trend: $error';
+  }
+
+  @override
+  String errorLoadingHeatmap(String error) {
+    return 'Error loading heatmap: $error';
+  }
+
+  @override
+  String errorLoadingChart(String error) {
+    return 'Error loading chart: $error';
+  }
+
+  @override
+  String get lessLabel => 'Less';
+
+  @override
+  String get moreLabel => 'More';
+
+  @override
+  String get insightsLabel => 'Insights';
+
+  @override
+  String bestTimeInsight(String time, String percent) {
+    return 'Best time: $time ($percent% adherence)';
+  }
+
+  @override
+  String needsAttentionInsight(String time, String percent) {
+    return 'Needs attention: $time ($percent% adherence)';
+  }
+
+  @override
+  String get noDoseDataThisMonth => 'No dose data for this month';
+
+  @override
+  String get splashGreeting => 'Say hi to your';
+
+  @override
+  String get splashAiTitle => 'AI Medical Assistant';
+
+  @override
+  String get poweredByAi => 'Powered by AI';
+
+  @override
+  String dosesLabel(int taken, int total) {
+    return '$taken/$total doses';
+  }
+
+  @override
+  String get drugInteractionDetected => 'Drug Interaction Detected';
+
+  @override
+  String drugInteractionsDetected(int count) {
+    return '$count Drug Interactions Detected';
+  }
+
+  @override
+  String get tapToViewDetails => 'Tap to view details';
+
+  @override
+  String get drugInteractions => 'Drug Interactions';
+
+  @override
+  String get viewMedications => 'View Medications';
+
+  @override
+  String get viewAnalytics => 'View Analytics';
+
+  @override
+  String insightsCount(int count) {
+    return '$count insights';
+  }
+
+  @override
+  String get errorLoadingInsightsMessage => 'Error loading insights';
+
+  @override
+  String get noInsightsYetMessage => 'No insights yet';
+
+  @override
+  String get startTakingMedsForInsights =>
+      'Start taking your medications to generate personalized health insights';
+
+  @override
+  String get wantMoreInsights => 'Want more insights?';
+
+  @override
+  String get viewAnalyticsDescription =>
+      'View your detailed analytics dashboard for comprehensive charts, trends, and statistics.';
+
+  @override
+  String get chatSuggestion1 => 'How do I add my first medication?';
+
+  @override
+  String get chatSuggestion2 => 'What should I know about my medications?';
+
+  @override
+  String get chatSuggestion3 => 'Help me understand adherence';
+
+  @override
+  String onlyDosesLeft(int count) {
+    return 'Only $count doses left';
+  }
+
+  @override
+  String get addMedicineTitle => 'Add Medicine';
+
+  @override
+  String get saveDraft => 'Save Draft';
+
+  @override
+  String get finish => 'Finish';
+
+  @override
+  String get medicineAddedSuccess => 'Medicine added successfully!';
+
+  @override
+  String get failedToSaveMedicine =>
+      'Failed to save medicine. Please try again.';
+
+  @override
+  String get draftSaved => 'Draft saved!';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get snoozeReminder => 'Snooze Reminder';
+
+  @override
+  String get howLongSnooze => 'How long would you like to snooze?';
+
+  @override
+  String get fiveMinutes => '5 minutes';
+
+  @override
+  String get tenMinutes => '10 minutes';
+
+  @override
+  String get fifteenMinutes => '15 minutes';
+
+  @override
+  String get thirtyMinutes => '30 minutes';
+
+  @override
+  String get oneHour => '1 hour';
+
+  @override
+  String get selectDateRange => 'Select Date Range';
+
+  @override
+  String get last7Days => 'Last 7 Days';
+
+  @override
+  String get last30Days => 'Last 30 Days';
+
+  @override
+  String get last3Months => 'Last 3 Months';
+
+  @override
+  String get thisYear => 'This Year';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String daysSelected(int count) {
+    return '$count days selected';
+  }
+
+  @override
+  String get reportsAndExportTitle => 'Reports & Export';
+
+  @override
+  String get exportYourDataTitle => 'Export Your Data';
+
+  @override
+  String get exportYourDataSubtitle =>
+      'Generate reports and export your medication data in various formats';
+
+  @override
+  String get csvExports => 'CSV Exports';
+
+  @override
+  String get pdfReports => 'PDF Reports';
+
+  @override
+  String get medicationsList => 'Medications List';
+
+  @override
+  String get exportAllMedicationsCSV => 'Export all medications data to CSV';
+
+  @override
+  String get doseHistory => 'Dose History';
+
+  @override
+  String get exportDoseHistoryCSV => 'Export complete dose history to CSV';
+
+  @override
+  String get stockHistory => 'Stock History';
+
+  @override
+  String get exportStockHistoryCSV => 'Export stock changes history to CSV';
+
+  @override
+  String get medicationsReport => 'Medications Report';
+
+  @override
+  String get generateMedicationsPDF =>
+      'Generate detailed PDF report of all medications';
+
+  @override
+  String get adherenceReport => 'Adherence Report';
+
+  @override
+  String get generateAdherencePDF =>
+      'Generate PDF report with adherence statistics';
+
+  @override
+  String get exportInfoMessage =>
+      'Exported files will be saved to your device and can be shared immediately';
+
+  @override
+  String get generatingExport => 'Generating export...';
+
+  @override
+  String exportedSuccessfully(String type) {
+    return '$type exported successfully!';
+  }
+
+  @override
+  String failedToExport(String error) {
+    return 'Failed to export: $error';
+  }
+
+  @override
+  String failedToGeneratePdf(String error) {
+    return 'Failed to generate PDF: $error';
+  }
+
+  @override
+  String pdfGeneratedSuccessfully(String type) {
+    return '$type report generated successfully!';
+  }
+
+  @override
+  String get systemStatus => 'System Status';
+
+  @override
+  String get notificationPermission => 'Notification Permission';
+
+  @override
+  String get requiredForReminders => 'Required for medication reminders';
+
+  @override
+  String get exactAlarms => 'Exact Alarms Permission';
+
+  @override
+  String get requiredForPreciseTiming =>
+      'Required for precise reminder timing on Android 12+';
+
+  @override
+  String get databaseStatistics => 'Database Statistics';
+
+  @override
+  String get deviceInformation => 'Device Information';
+
+  @override
+  String get pluginVersion => 'Plugin Version';
+
+  @override
+  String get testingAndActions => 'Testing & Actions';
+
+  @override
+  String get sendTestNotificationTitle => 'Send Test Notification';
+
+  @override
+  String get testIfNotificationsWork => 'Test if notifications are working';
+
+  @override
+  String get scheduleTest1Min => 'Schedule Test (1 min)';
+
+  @override
+  String get scheduleTestDescription =>
+      'Schedule a test notification for 1 minute from now';
+
+  @override
+  String get requestPermissionsTitle => 'Request Permissions';
+
+  @override
+  String get requestPermissionsDescription =>
+      'Request all necessary permissions';
+
+  @override
+  String get troubleshooting => 'Troubleshooting';
+
+  @override
+  String get notificationsNotAppearing => 'Notifications not appearing?';
+
+  @override
+  String get notificationsNotAppearingTips =>
+      '• Check permissions above\n• Disable battery optimization\n• Enable exact alarms (Android 12+)\n• Test with \"Send Test Notification\"';
+
+  @override
+  String get appCrashing => 'App crashing?';
+
+  @override
+  String get appCrashingTips =>
+      '• Clear app data and restart\n• Ensure all permissions are granted\n• Check device timezone settings';
+
+  @override
+  String get advancedDiagnostics => 'Advanced Diagnostics';
+
+  @override
+  String get ok_status => 'OK';
+
+  @override
+  String get needed_status => 'NEEDED';
+
+  @override
+  String get medicinePhotoTitle => 'Medicine Photo';
+
+  @override
+  String get medicinePhotoSubtitle => 'Optional - helps identify your medicine';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get changePhoto => 'Change Photo';
+
+  @override
+  String get removePhoto => 'Remove';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get scanName => 'Scan Name';
+
+  @override
+  String get scanMedicationLabel => 'Scan Medication Label';
+
+  @override
+  String get autoFillFromPhoto => 'Auto-fill details from photo';
+
+  @override
+  String get medicineNameHint => 'e.g., Aspirin, Paracetamol';
+
+  @override
+  String get photoCapturedSuccess => 'Photo captured successfully!';
+
+  @override
+  String get photoSelectedSuccess => 'Photo selected successfully!';
+
+  @override
+  String get photoRemovedSuccess => 'Photo removed';
+
+  @override
+  String get lookingUpMedication => 'Looking up medication...';
+
+  @override
+  String get scannedCodeLabel => 'Scanned Code';
+
+  @override
+  String failedToCapturePhoto(String error) {
+    return 'Failed to capture photo: $error';
+  }
+
+  @override
+  String failedToPickPhoto(String error) {
+    return 'Failed to pick photo: $error';
+  }
+
+  @override
+  String scannedMedication(String name) {
+    return 'Scanned: $name';
+  }
+
+  @override
+  String medicationFound(String name) {
+    return 'Medication found: $name';
+  }
+
+  @override
+  String scannedCodeEnterManually(String code) {
+    return 'Scanned code: $code\nPlease enter details manually';
+  }
+
+  @override
+  String get whenAndHowOftenToTake =>
+      'When and how often to take this medicine';
+
+  @override
+  String get howManyTimesPerDay => 'How many times per day?';
+
+  @override
+  String get selectTimesPerDayDesc =>
+      'Select the number of times you need to take this medicine daily';
+
+  @override
+  String get timeSingular => 'time';
+
+  @override
+  String get timePlural => 'times';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get treatmentDuration => 'Treatment duration';
+
+  @override
+  String get startingLabel => 'Starting';
+
+  @override
+  String treatmentEndsOn(String date) {
+    return 'Treatment ends on $date';
+  }
+
+  @override
+  String get reminderTimesTitle => 'Reminder times';
+
+  @override
+  String get selectTimesForReminders =>
+      'Select times per day to set reminder times';
+
+  @override
+  String get scheduleSummary => 'Schedule summary';
+
+  @override
+  String get completeTheForm => 'Complete the form';
+
+  @override
+  String get eachDose => 'Each dose';
+
+  @override
+  String get starts => 'Starts';
+
+  @override
+  String get repetitionPatternTitle => 'Repetition pattern';
+
+  @override
+  String get whenToTakeMedication => 'When should this medication be taken?';
+
+  @override
+  String activeOnDays(String days) {
+    return 'Active on: $days';
+  }
+
+  @override
+  String get selectDaysOfWeek => 'Select days of the week';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get everyOtherDay => 'Every other day';
+
+  @override
+  String get mondayToFriday => 'Monday to Friday';
+
+  @override
+  String get saturdayAndSunday => 'Saturday and Sunday';
+
+  @override
+  String get noDaysSelected => 'No days selected';
+
+  @override
+  String get recurringReminders => 'Recurring Reminders';
+
+  @override
+  String get followUpRemindersForMissed =>
+      'Get follow-up reminders for missed doses';
+
+  @override
+  String get reminderIntervalTitle => 'Reminder Interval';
+
+  @override
+  String missedDoseReminderInfo(int minutes) {
+    return 'If you miss a dose, you\'ll get a reminder every $minutes minutes (up to 4 times)';
+  }
+
+  @override
+  String get trackMedicineSupply =>
+      'Track your medicine supply and get low stock alerts';
+
+  @override
+  String howManyDoYouHave(String unit) {
+    return 'How many ${unit}s do you have?';
+  }
+
+  @override
+  String get quantityLabel => 'Quantity';
+
+  @override
+  String get inStock => 'in stock';
+
+  @override
+  String get stockTimeline => 'Stock Timeline';
+
+  @override
+  String get dailyUsageLabel => 'Daily usage';
+
+  @override
+  String get stockLastsFor => 'Stock lasts for';
+
+  @override
+  String get stockRunsOut => 'Stock runs out';
+
+  @override
+  String get stockLevelLabel => 'Stock level';
+
+  @override
+  String get lowStockReminder => 'Low stock reminder';
+
+  @override
+  String get getNotifiedBeforeRunOut =>
+      'Get notified before your medicine runs out';
+
+  @override
+  String get remindMeDaysBefore => 'Remind me this many days before:';
+
+  @override
+  String get expiryDateOptional => 'Expiry date (optional)';
+
+  @override
+  String get trackWhenExpires => 'Track when your medication expires';
+
+  @override
+  String get tapToSetExpiryDate => 'Tap to set expiry date';
+
+  @override
+  String get remindMeBeforeExpiry => 'Remind me before expiry:';
+
+  @override
+  String get readyToSave => 'Ready to save!';
+
+  @override
+  String get completeAllSteps => 'Complete all steps to continue';
+
+  @override
+  String get medicineInfoComplete =>
+      'Your medicine information is complete and ready to be saved';
+
+  @override
+  String get fillRequiredFields =>
+      'Please fill in all required fields in previous steps';
+
+  @override
+  String get medicineTypeAndDetails => 'Medicine type and details';
+
+  @override
+  String get scheduleConfigured => 'Schedule configured';
+
+  @override
+  String get stockInformation => 'Stock information';
+
+  @override
+  String xTimesPerDay(int count) {
+    return '${count}x per day';
+  }
+
+  @override
+  String get takeAll => 'Take All';
+
+  @override
+  String get swipeRightToTake => 'Swipe right to take';
+
+  @override
+  String get swipeLeftToSkip => 'Swipe left to skip';
+
+  @override
+  String get snoozed => 'Snoozed';
+
+  @override
+  String get scheduled => 'Scheduled';
+
+  @override
+  String get takenAt => 'Taken at';
+
+  @override
+  String get onTime => 'On time';
+
+  @override
+  String minEarly(int minutes) {
+    return '$minutes min early';
+  }
+
+  @override
+  String minLate(int minutes) {
+    return '$minutes min late';
+  }
+
+  @override
+  String hoursMinLate(int hours, int minutes) {
+    return '${hours}h ${minutes}m late';
+  }
+
+  @override
+  String get startStreak => 'Start your streak today!';
+
+  @override
+  String keepItUpStreak(int remaining) {
+    return 'Keep it up! $remaining more days to a week!';
+  }
+
+  @override
+  String amazingStreak(int remaining) {
+    return 'Amazing! $remaining more days to a month!';
+  }
+
+  @override
+  String incredibleStreak(int remaining) {
+    return 'Incredible! $remaining more days to 100!';
+  }
+
+  @override
+  String get streakChampion => 'You\'re a medication adherence champion!';
+
+  @override
+  String get excellentAdherenceExclaim => 'Excellent adherence! 🎉';
+
+  @override
+  String get goodProgress => 'Good progress!';
+
+  @override
+  String get keepItUp => 'Keep it up!';
+
+  @override
+  String get letsCatchUp => 'Let\'s catch up';
+
+  @override
+  String get startYourDay => 'Start your day';
+
+  @override
+  String get excellentAdherenceMessage =>
+      'Excellent adherence! Keep up the great work!';
+
+  @override
+  String get goodAdherenceMessage =>
+      'Good adherence. Try to improve consistency.';
+
+  @override
+  String get fairAdherenceMessage =>
+      'Fair adherence. Consider setting more reminders.';
+
+  @override
+  String get lowAdherenceMessage =>
+      'Low adherence. Please try to take your medications regularly.';
+
+  @override
+  String get veryLowAdherenceMessage =>
+      'Very low adherence. Talk to your healthcare provider.';
+
+  @override
+  String get overallAdherence => 'Overall Adherence';
+
+  @override
+  String get adherence => 'Adherence';
+
+  @override
+  String get medicationPerformance => 'Medication Performance';
+
+  @override
+  String get weeklyAdherenceInsightTitle => 'Weekly Adherence';
+
+  @override
+  String weeklyAdherenceInsightDesc(int percent, int taken, int total) {
+    return 'You took $percent% of your doses this week ($taken/$total)';
+  }
+
+  @override
+  String get improvingTrendTitle => 'Improving Trend 📈';
+
+  @override
+  String get decliningTrendTitle => 'Declining Trend 📉';
+
+  @override
+  String improvingTrendDesc(int change) {
+    return 'You improved by $change% compared to last week. Great progress!';
+  }
+
+  @override
+  String decliningTrendDesc(int change) {
+    return 'You declined by $change% compared to last week. Let\'s get back on track!';
+  }
+
+  @override
+  String get topMedicationTitle => 'Top Medication';
+
+  @override
+  String topMedicationDesc(String name, int percent) {
+    return '$name has $percent% adherence - your most consistent medication!';
+  }
+
+  @override
+  String streakDayTitle(int streak) {
+    return '$streak-Day Streak! 🔥';
+  }
+
+  @override
+  String get streakAmazingDesc =>
+      'Amazing! You\'ve been consistent for over a week!';
+
+  @override
+  String get streakConsistencyDesc =>
+      'Keep it up! Consistency is key to better health.';
+
+  @override
+  String get bestTimeTitle => 'Best Time ⏰';
+
+  @override
+  String bestTimeDesc(String period, int percent) {
+    return 'Your most consistent time is $period with $percent% adherence';
+  }
+
+  @override
+  String get excellentAdherenceInsightTitle => 'Excellent Adherence! 🌟';
+
+  @override
+  String excellentAdherenceInsightDesc(int percent) {
+    return 'Outstanding! You took $percent% of your doses this week. Keep up the great work!';
+  }
+
+  @override
+  String get needsImprovementTitle => 'Needs Improvement';
+
+  @override
+  String needsImprovementInsightDesc(int percent) {
+    return 'Your adherence this week was $percent%. Try setting more reminders or adjusting your schedule to improve.';
+  }
+
+  @override
+  String get summary => 'Summary';
+
+  @override
+  String get medication => 'Medication';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String generatedOn(String date) {
+    return 'Generated on: $date';
+  }
+
+  @override
+  String get adherenceStatistics => 'Adherence Statistics';
+
+  @override
+  String get recentDoseHistory => 'Recent Dose History';
+
+  @override
+  String reportPeriod(String start, String end) {
+    return 'Report Period: $start - $end';
+  }
+
+  @override
+  String get medAssistAnalyticsReport => 'MedAssist Analytics Report';
 }

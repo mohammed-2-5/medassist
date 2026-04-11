@@ -139,9 +139,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen>
               valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Looking up medication...',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.lookingUpMedication,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -179,7 +179,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Scanned Code',
+                    AppLocalizations.of(context)!.scannedCodeLabel,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: colorScheme.onPrimaryContainer.withOpacity(0.7),
                     ),
@@ -301,8 +301,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen>
       builder: (context) => AlertDialog(
         title: Text(l10n.error ?? 'Error'),
         content: Text(
-          l10n.errorScanningBarcode ??
-              'An error occurred while scanning the barcode:\n\n$error',
+          l10n.errorScanningBarcode(error),
         ),
         actions: [
           TextButton(
@@ -310,7 +309,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen>
               Navigator.pop(context);
               Navigator.pop(this.context);
             },
-            child: Text(l10n.close ?? 'Close'),
+            child: Text(l10n.close),
           ),
           FilledButton(
             onPressed: () {

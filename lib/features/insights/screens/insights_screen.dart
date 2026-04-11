@@ -61,7 +61,7 @@ class InsightsScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.bar_chart_rounded),
-                tooltip: 'View Analytics',
+                tooltip: AppLocalizations.of(context)!.viewAnalytics,
                 onPressed: () => context.push('/analytics'),
               ),
             ],
@@ -86,6 +86,7 @@ class InsightsScreen extends ConsumerWidget {
                       children: [
                         // Insights header
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               padding: const EdgeInsets.all(8),
@@ -100,30 +101,37 @@ class InsightsScreen extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Text(
-                              AppLocalizations.of(context)!.yourHealthJourney,
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(context)!.yourHealthJourney,
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.successGreen.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: AppColors.successGreen.withOpacity(0.3),
+                            const SizedBox(width: 12),
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
                                 ),
-                              ),
-                              child: Text(
-                                '${insights.length} insights',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: AppColors.successGreen,
-                                  fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                  color: AppColors.successGreen.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: AppColors.successGreen.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.insightsCount(insights.length),
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: AppColors.successGreen,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -170,7 +178,7 @@ class InsightsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Error loading insights',
+                          AppLocalizations.of(context)!.errorLoadingInsightsMessage,
                           style: theme.textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
@@ -192,12 +200,13 @@ class InsightsScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: EmptyStateWidget(
         icon: Icons.insights_rounded,
-        title: 'No insights yet',
-        subtitle: 'Start taking your medications to generate personalized health insights',
-        actionLabel: 'View Medications',
+        title: l10n.noInsightsYetMessage,
+        subtitle: l10n.startTakingMedsForInsights,
+        actionLabel: l10n.viewMedications,
         onAction: () => context.push('/medications'),
       ),
     );
@@ -237,7 +246,7 @@ class InsightsScreen extends ConsumerWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Want more insights?',
+                AppLocalizations.of(context)!.wantMoreInsights,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -246,7 +255,7 @@ class InsightsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'View your detailed analytics dashboard for comprehensive charts, trends, and statistics.',
+            AppLocalizations.of(context)!.viewAnalyticsDescription,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -257,7 +266,7 @@ class InsightsScreen extends ConsumerWidget {
             child: FilledButton.icon(
               onPressed: () => context.push('/analytics'),
               icon: const Icon(Icons.analytics_rounded),
-              label: const Text('View Analytics'),
+              label: Text(AppLocalizations.of(context)!.viewAnalytics),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),

@@ -5,6 +5,7 @@ import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/core/utils/provider_refresh_utils.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:med_assist/services/haptic/haptic_service.dart';
+import 'package:med_assist/services/notification/notification_service.dart';
 
 /// Helper class for medication bulk actions
 ///
@@ -41,7 +42,7 @@ class MedicationBulkActions {
       isDestructive: true,
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         final repository = ref.read(medicationRepositoryProvider);
         for (final id in selectedIds) {
@@ -70,11 +71,14 @@ class MedicationBulkActions {
 
     try {
       final database = ref.read(appDatabaseProvider);
+      final notificationService = NotificationService();
 
       for (final id in selectedIds) {
-        final med = medications.firstWhere((m) => m.id == id);
+        final med = medications.where((m) => m.id == id).firstOrNull;
+        if (med == null) continue;
         final updated = med.copyWith(isActive: false);
         await database.updateMedication(updated);
+        await notificationService.cancelMedicationReminders(id);
       }
 
       if (context.mounted) {
@@ -96,11 +100,18 @@ class MedicationBulkActions {
 
     try {
       final database = ref.read(appDatabaseProvider);
+      final notificationService = NotificationService();
 
       for (final id in selectedIds) {
-        final med = medications.firstWhere((m) => m.id == id);
+        final med = medications.where((m) => m.id == id).firstOrNull;
+        if (med == null) continue;
         final updated = med.copyWith(isActive: true);
         await database.updateMedication(updated);
+        final reminderTimes = await database.getReminderTimes(id);
+        await notificationService.scheduleRemindersForMedication(
+          updated,
+          reminderTimes,
+        );
       }
 
       if (context.mounted) {
@@ -161,7 +172,7 @@ class MedicationBulkActions {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -170,7 +181,7 @@ class MedicationBulkActions {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
   }

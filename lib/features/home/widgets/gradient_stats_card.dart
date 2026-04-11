@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 class GradientStatsCard extends StatelessWidget {
 
@@ -15,6 +16,7 @@ class GradientStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final percentage =
         totalToday > 0 ? (takenToday / totalToday * 100).round() : 0;
 
@@ -105,7 +107,7 @@ class GradientStatsCard extends StatelessWidget {
                 Expanded(
                   child: _buildStatItem(
                     icon: Icons.medication_rounded,
-                    label: 'Taken',
+                    label: l10n.taken,
                     value: '$takenToday/$totalToday',
                   ),
                 ),
