@@ -213,7 +213,10 @@ class ReportsScreen extends ConsumerWidget {
       _showLoadingDialog(context);
 
       final medications = await ref.read(medicationsProvider.future);
-      final file = await ExportService.exportMedicationsToCSV(medications);
+      final file = await ExportService.exportMedicationsToCSV(
+        medications,
+        l10n: AppLocalizations.of(context)!,
+      );
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
@@ -321,7 +324,10 @@ class ReportsScreen extends ConsumerWidget {
       _showLoadingDialog(context);
 
       final medications = await ref.read(medicationsProvider.future);
-      final file = await ExportService.generateMedicationsPDF(medications);
+      final file = await ExportService.generateMedicationsPDF(
+        medications,
+        l10n: AppLocalizations.of(context)!,
+      );
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
@@ -370,6 +376,7 @@ class ReportsScreen extends ConsumerWidget {
         stats: stats,
         recentHistory: recentHistory,
         medicationsMap: medicationsMap,
+        l10n: AppLocalizations.of(context)!,
       );
 
       if (context.mounted) {

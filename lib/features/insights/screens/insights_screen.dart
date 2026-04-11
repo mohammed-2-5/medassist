@@ -17,7 +17,8 @@ class InsightsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final insightsAsync = ref.watch(adherenceInsightsProvider);
+    final l10n = AppLocalizations.of(context)!;
+    final insightsAsync = ref.watch(adherenceInsightsProvider(l10n));
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -71,7 +72,7 @@ class InsightsScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: RefreshIndicator(
               onRefresh: () async {
-                ref.invalidate(adherenceInsightsProvider);
+                ref.invalidate(adherenceInsightsProvider(l10n));
               },
               child: Padding(
                 padding: const EdgeInsets.all(16),

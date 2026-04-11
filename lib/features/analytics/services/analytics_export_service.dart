@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -20,6 +21,7 @@ class AnalyticsExportService {
     required List<HourlyAdherenceData> hourlyData,
     required DateTime startDate,
     required DateTime endDate,
+    required AppLocalizations l10n,
   }) async {
     final pdf = pw.Document();
     final dateFormat = DateFormat('MMM dd, yyyy');
@@ -31,27 +33,27 @@ class AnalyticsExportService {
         margin: const pw.EdgeInsets.all(32),
         build: (context) => [
           // Header
-          _buildHeader(startDate, endDate, dateFormat),
+          _buildHeader(startDate, endDate, dateFormat, l10n),
           pw.SizedBox(height: 24),
 
           // Summary Section
-          _buildSummarySection(stats, streak),
+          _buildSummarySection(stats, streak, l10n),
           pw.SizedBox(height: 24),
 
           // Medications Section
-          _buildMedicationsSection(medications),
+          _buildMedicationsSection(medications, l10n),
           pw.SizedBox(height: 24),
 
           // Trend Analysis
-          _buildTrendSection(trendData),
+          _buildTrendSection(trendData, l10n),
           pw.SizedBox(height: 24),
 
           // Time-of-Day Analysis
-          _buildTimeAnalysisSection(hourlyData),
+          _buildTimeAnalysisSection(hourlyData, l10n),
           pw.SizedBox(height: 24),
 
           // Footer
-          _buildFooter(),
+          _buildFooter(l10n),
         ],
       ),
     );
@@ -103,12 +105,12 @@ class AnalyticsExportService {
 
   // PDF Building Methods
 
-  pw.Widget _buildHeader(DateTime startDate, DateTime endDate, DateFormat format) {
+  pw.Widget _buildHeader(DateTime startDate, DateTime endDate, DateFormat format, AppLocalizations l10n) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'MedAssist Analytics Report',
+          l10n.medAssistAnalyticsReport,
           style: pw.TextStyle(
             fontSize: 24,
             fontWeight: pw.FontWeight.bold,
@@ -117,7 +119,7 @@ class AnalyticsExportService {
         ),
         pw.SizedBox(height: 8),
         pw.Text(
-          'Report Period: ${format.format(startDate)} - ${format.format(endDate)}',
+          l10n.reportPeriod(format.format(startDate), format.format(endDate)),
           style: const pw.TextStyle(
             fontSize: 12,
             color: PdfColors.grey700,
@@ -128,12 +130,12 @@ class AnalyticsExportService {
     );
   }
 
-  pw.Widget _buildSummarySection(AdherenceStats stats, StreakInfo streak) {
+  pw.Widget _buildSummarySection(AdherenceStats stats, StreakInfo streak, AppLocalizations l10n) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Summary',
+          l10n.summary,
           style: pw.TextStyle(
             fontSize: 18,
             fontWeight: pw.FontWeight.bold,
@@ -148,14 +150,14 @@ class AnalyticsExportService {
           ),
           child: pw.Column(
             children: [
-              _buildStatRow('Overall Adherence', '${stats.adherencePercentage.toStringAsFixed(1)}%'),
-              _buildStatRow('Total Doses', '${stats.totalDoses}'),
-              _buildStatRow('Taken', '${stats.takenDoses}'),
-              _buildStatRow('Missed', '${stats.missedDoses}'),
-              _buildStatRow('Skipped', '${stats.skippedDoses}'),
+              _buildStatRow(l10n.overallAdherence, '${stats.adherencePercentage.toStringAsFixed(1)}%'),
+              _buildStatRow(l10n.totalDoses, '${stats.totalDoses}'),
+              _buildStatRow(l10n.taken, '${stats.takenDoses}'),
+              _buildStatRow(l10n.missed, '${stats.missedDoses}'),
+              _buildStatRow(l10n.skipped, '${stats.skippedDoses}'),
               pw.Divider(),
-              _buildStatRow('Current Streak', '${streak.currentStreak} days'),
-              _buildStatRow('Best Streak', '${streak.bestStreak} days'),
+              _buildStatRow(l10n.currentStreak, '${streak.currentStreak} ${l10n.days}'),
+              _buildStatRow(l10n.bestStreak, '${streak.bestStreak} ${l10n.days}'),
             ],
           ),
         ),
@@ -182,12 +184,12 @@ class AnalyticsExportService {
     );
   }
 
-  pw.Widget _buildMedicationsSection(List<MedicationInsight> medications) {
+  pw.Widget _buildMedicationsSection(List<MedicationInsight> medications, AppLocalizations l10n) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Medication Performance',
+          l10n.medicationPerformance,
           style: pw.TextStyle(
             fontSize: 18,
             fontWeight: pw.FontWeight.bold,
@@ -201,10 +203,10 @@ class AnalyticsExportService {
             pw.TableRow(
               decoration: const pw.BoxDecoration(color: PdfColors.grey200),
               children: [
-                _buildTableCell('Medication', isHeader: true),
-                _buildTableCell('Adherence', isHeader: true),
-                _buildTableCell('Taken', isHeader: true),
-                _buildTableCell('Total', isHeader: true),
+                _buildTableCell(l10n.medication, isHeader: true),
+                _buildTableCell(l10n.adherence, isHeader: true),
+                _buildTableCell(l10n.taken, isHeader: true),
+                _buildTableCell(l10n.total, isHeader: true),
               ],
             ),
             // Data rows
@@ -235,7 +237,7 @@ class AnalyticsExportService {
     );
   }
 
-  pw.Widget _buildTrendSection(List<TrendDataPoint> trendData) {
+  pw.Widget _buildTrendSection(List<TrendDataPoint> trendData, AppLocalizations l10n) {
     if (trendData.isEmpty) {
       return pw.SizedBox.shrink();
     }
@@ -244,7 +246,7 @@ class AnalyticsExportService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Adherence Trend',
+          l10n.adherenceTrend,
           style: pw.TextStyle(
             fontSize: 18,
             fontWeight: pw.FontWeight.bold,
@@ -253,13 +255,13 @@ class AnalyticsExportService {
         pw.SizedBox(height: 12),
         pw.Container(
           height: 150,
-          child: _buildSimpleLineChart(trendData),
+          child: _buildSimpleLineChart(trendData, l10n),
         ),
       ],
     );
   }
 
-  pw.Widget _buildSimpleLineChart(List<TrendDataPoint> data) {
+  pw.Widget _buildSimpleLineChart(List<TrendDataPoint> data, AppLocalizations l10n) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(16),
       decoration: pw.BoxDecoration(
@@ -267,13 +269,13 @@ class AnalyticsExportService {
         borderRadius: pw.BorderRadius.circular(8),
       ),
       child: pw.Text(
-        'Adherence trend: ${data.first.adherencePercentage.toStringAsFixed(1)}% → ${data.last.adherencePercentage.toStringAsFixed(1)}%',
+        '${l10n.adherenceTrend}: ${data.first.adherencePercentage.toStringAsFixed(1)}% → ${data.last.adherencePercentage.toStringAsFixed(1)}%',
         style: const pw.TextStyle(fontSize: 11),
       ),
     );
   }
 
-  pw.Widget _buildTimeAnalysisSection(List<HourlyAdherenceData> hourlyData) {
+  pw.Widget _buildTimeAnalysisSection(List<HourlyAdherenceData> hourlyData, AppLocalizations l10n) {
     // Find best and worst hours
     final hoursWithData = hourlyData.where((h) => h.totalDoses > 0).toList();
 
@@ -289,7 +291,7 @@ class AnalyticsExportService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Time-of-Day Analysis',
+          l10n.timeOfDayAnalysis,
           style: pw.TextStyle(
             fontSize: 18,
             fontWeight: pw.FontWeight.bold,
@@ -306,20 +308,20 @@ class AnalyticsExportService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                '✓ Best Performance: ${_formatHourForPdf(bestHour.hour)}',
+                '✓ ${_formatHourForPdf(bestHour.hour)}',
                 style: const pw.TextStyle(fontSize: 11),
               ),
               pw.Text(
-                '  ${bestHour.adherencePercentage.toStringAsFixed(1)}% adherence (${bestHour.takenDoses}/${bestHour.totalDoses} doses)',
+                '  ${bestHour.adherencePercentage.toStringAsFixed(1)}% ${l10n.adherence} (${bestHour.takenDoses}/${bestHour.totalDoses})',
                 style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
               ),
               pw.SizedBox(height: 8),
               pw.Text(
-                '⚠ Needs Attention: ${_formatHourForPdf(worstHour.hour)}',
+                '⚠ ${_formatHourForPdf(worstHour.hour)}',
                 style: const pw.TextStyle(fontSize: 11),
               ),
               pw.Text(
-                '  ${worstHour.adherencePercentage.toStringAsFixed(1)}% adherence (${worstHour.takenDoses}/${worstHour.totalDoses} doses)',
+                '  ${worstHour.adherencePercentage.toStringAsFixed(1)}% ${l10n.adherence} (${worstHour.takenDoses}/${worstHour.totalDoses})',
                 style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
               ),
             ],
@@ -336,12 +338,12 @@ class AnalyticsExportService {
     return '${hour - 12}:00 PM';
   }
 
-  pw.Widget _buildFooter() {
+  pw.Widget _buildFooter(AppLocalizations l10n) {
     return pw.Column(
       children: [
         pw.Divider(),
         pw.Text(
-          'Generated by MedAssist on ${DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())}',
+          l10n.generatedOn(DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())),
           style: const pw.TextStyle(
             fontSize: 9,
             color: PdfColors.grey600,

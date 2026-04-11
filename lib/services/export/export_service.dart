@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -12,15 +13,16 @@ class ExportService {
 
   /// Export medications list to CSV
   static Future<File> exportMedicationsToCSV(
-    List<Medication> medications,
-  ) async {
+    List<Medication> medications, {
+    required AppLocalizations l10n,
+  }) async {
     final csvData = [
       // Header row
       [
         'ID',
-        'Name',
-        'Type',
-        'Dosage',
+        l10n.name,
+        l10n.type,
+        l10n.dosage,
         'Unit',
         'Times Per Day',
         'Duration (Days)',
@@ -28,7 +30,7 @@ class ExportService {
         'Low Stock Alert (Days)',
         'Expiry Date',
         'Expiry Alert (Days)',
-        'Active',
+        l10n.active,
         'Start Date',
         'Created At',
       ],
@@ -147,8 +149,9 @@ class ExportService {
 
   /// Generate PDF report for medications
   static Future<File> generateMedicationsPDF(
-    List<Medication> medications,
-  ) async {
+    List<Medication> medications, {
+    required AppLocalizations l10n,
+  }) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -159,7 +162,7 @@ class ExportService {
           pw.Header(
             level: 0,
             child: pw.Text(
-              'Medications Report',
+              l10n.medicationsReport,
               style: pw.TextStyle(
                 fontSize: 24,
                 fontWeight: pw.FontWeight.bold,
@@ -168,7 +171,7 @@ class ExportService {
           ),
           pw.SizedBox(height: 10),
           pw.Text(
-            'Generated on: ${DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())}',
+            l10n.generatedOn(DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())),
             style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 20),
@@ -184,18 +187,18 @@ class ExportService {
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  'Summary',
+                  l10n.summary,
                   style: pw.TextStyle(
                     fontSize: 16,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.SizedBox(height: 5),
-                pw.Text('Total Medications: ${medications.length}'),
+                pw.Text('${l10n.totalMedications}: ${medications.length}'),
                 pw.Text(
-                    'Active: ${medications.where((m) => m.isActive).length}'),
+                    '${l10n.active}: ${medications.where((m) => m.isActive).length}'),
                 pw.Text(
-                    'Paused: ${medications.where((m) => !m.isActive).length}'),
+                    '${l10n.paused}: ${medications.where((m) => !m.isActive).length}'),
               ],
             ),
           ),
@@ -203,7 +206,7 @@ class ExportService {
 
           // Medications table
           pw.Text(
-            'Medications List',
+            l10n.medicationsList,
             style: pw.TextStyle(
               fontSize: 18,
               fontWeight: pw.FontWeight.bold,
@@ -228,11 +231,11 @@ class ExportService {
               4: pw.Alignment.center,
             },
             headers: [
-              'Name',
-              'Type',
-              'Dosage',
-              'Frequency',
-              'Status',
+              l10n.name,
+              l10n.type,
+              l10n.dosage,
+              l10n.frequency,
+              l10n.status,
             ],
             data: medications.map((med) {
               return [
@@ -240,7 +243,7 @@ class ExportService {
                 med.medicineType,
                 '${med.dosePerTime} ${med.doseUnit}',
                 '${med.timesPerDay}x/day',
-                if (med.isActive) 'Active' else 'Paused',
+                if (med.isActive) l10n.active else l10n.paused,
               ];
             }).toList(),
           ),
@@ -262,6 +265,7 @@ class ExportService {
     required Map<String, int> stats,
     required List<DoseHistoryData> recentHistory,
     required Map<int, Medication> medicationsMap,
+    required AppLocalizations l10n,
   }) async {
     final pdf = pw.Document();
 
@@ -278,7 +282,7 @@ class ExportService {
           pw.Header(
             level: 0,
             child: pw.Text(
-              'Adherence Report',
+              l10n.adherenceReport,
               style: pw.TextStyle(
                 fontSize: 24,
                 fontWeight: pw.FontWeight.bold,
@@ -287,7 +291,7 @@ class ExportService {
           ),
           pw.SizedBox(height: 10),
           pw.Text(
-            'Generated on: ${DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())}',
+            l10n.generatedOn(DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())),
             style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 20),
@@ -303,7 +307,7 @@ class ExportService {
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  'Adherence Statistics',
+                  l10n.adherenceStatistics,
                   style: pw.TextStyle(
                     fontSize: 18,
                     fontWeight: pw.FontWeight.bold,
@@ -313,7 +317,7 @@ class ExportService {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Overall Adherence:'),
+                    pw.Text('${l10n.overallAdherence}:'),
                     pw.Text(
                       '$takenPercentage%',
                       style: pw.TextStyle(
@@ -328,7 +332,7 @@ class ExportService {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Taken:'),
+                    pw.Text('${l10n.taken}:'),
                     pw.Text(
                       '${stats['taken'] ?? 0}',
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -338,7 +342,7 @@ class ExportService {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Skipped:'),
+                    pw.Text('${l10n.skipped}:'),
                     pw.Text(
                       '${stats['skipped'] ?? 0}',
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -348,7 +352,7 @@ class ExportService {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Missed:'),
+                    pw.Text('${l10n.missed}:'),
                     pw.Text(
                       '${stats['missed'] ?? 0}',
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -358,7 +362,7 @@ class ExportService {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Total Doses:'),
+                    pw.Text('${l10n.totalDoses}:'),
                     pw.Text(
                       '$total',
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -373,7 +377,7 @@ class ExportService {
           // Recent history
           if (recentHistory.isNotEmpty) ...[
             pw.Text(
-              'Recent Dose History',
+              l10n.recentDoseHistory,
               style: pw.TextStyle(
                 fontSize: 18,
                 fontWeight: pw.FontWeight.bold,
@@ -392,9 +396,9 @@ class ExportService {
               cellHeight: 25,
               headers: [
                 'Date',
-                'Medication',
+                l10n.medication,
                 'Time',
-                'Status',
+                l10n.status,
               ],
               data: recentHistory.take(20).map((record) {
                 final medication = medicationsMap[record.medicationId];

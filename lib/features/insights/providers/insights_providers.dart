@@ -3,9 +3,21 @@ import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/core/utils/streak_utils.dart';
 import 'package:med_assist/core/utils/time_period_utils.dart';
 import 'package:med_assist/features/insights/models/health_insight.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
+
+/// Maps TimePeriodUtils period string to localized label.
+String _localizedPeriod(String period, AppLocalizations l10n) {
+  if (period == TimePeriodUtils.morning) return l10n.morning;
+  if (period == TimePeriodUtils.afternoon) return l10n.afternoon;
+  if (period == TimePeriodUtils.evening) return l10n.evening;
+  return l10n.night;
+}
 
 /// Provider for adherence insights
-final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) async {
+// ignore: specify_nonobvious_property_types
+final adherenceInsightsProvider =
+    FutureProvider.family<List<HealthInsight>, AppLocalizations>(
+        (ref, l10n) async {
   final database = ref.read(appDatabaseProvider);
   final insights = <HealthInsight>[];
 
@@ -26,20 +38,22 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
     // Filter for previous week
     final previousWeekHistory = allHistory.where((dose) {
       return dose.scheduledDate.isAfter(twoWeeksAgo) &&
-             dose.scheduledDate.isBefore(weekAgo);
+          dose.scheduledDate.isBefore(weekAgo);
     }).toList();
 
     if (lastWeekHistory.isNotEmpty) {
       // Calculate last week adherence
-      final lastWeekTaken = lastWeekHistory.where((d) => d.status == 'taken').length;
+      final lastWeekTaken =
+          lastWeekHistory.where((d) => d.status == 'taken').length;
       final lastWeekTotal = lastWeekHistory.length;
       final lastWeekPercent = (lastWeekTaken / lastWeekTotal * 100).round();
 
       // Add weekly summary insight
       insights.add(HealthInsight(
         type: HealthInsightType.adherenceSummary,
-        title: 'Weekly Adherence',
-        description: 'You took $lastWeekPercent% of your doses this week ($lastWeekTaken/$lastWeekTotal)',
+        title: l10n.weeklyAdherenceInsightTitle,
+        description: l10n.weeklyAdherenceInsightDesc(
+            lastWeekPercent, lastWeekTaken, lastWeekTotal),
         value: lastWeekPercent.toDouble(),
         sentiment: lastWeekPercent >= 90
             ? InsightSentiment.positive
@@ -51,18 +65,22 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
 
       // Calculate trend if we have previous week data
       if (previousWeekHistory.isNotEmpty) {
-        final prevWeekTaken = previousWeekHistory.where((d) => d.status == 'taken').length;
+        final prevWeekTaken =
+            previousWeekHistory.where((d) => d.status == 'taken').length;
         final prevWeekTotal = previousWeekHistory.length;
-        final prevWeekPercent = (prevWeekTaken / prevWeekTotal * 100).round();
+        final prevWeekPercent =
+            (prevWeekTaken / prevWeekTotal * 100).round();
         final change = lastWeekPercent - prevWeekPercent;
 
         if (change != 0) {
           insights.add(HealthInsight(
             type: HealthInsightType.trend,
-            title: change > 0 ? 'Improving Trend 📈' : 'Declining Trend 📉',
+            title: change > 0
+                ? l10n.improvingTrendTitle
+                : l10n.decliningTrendTitle,
             description: change > 0
-                ? 'You improved by ${change.abs()}% compared to last week. Great progress!'
-                : "You declined by ${change.abs()}% compared to last week. Let's get back on track!",
+                ? l10n.improvingTrendDesc(change.abs())
+                : l10n.decliningTrendDesc(change.abs()),
             value: change.toDouble(),
             sentiment: change > 0
                 ? InsightSentiment.positive
@@ -83,9 +101,11 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
         var bestPercent = 0.0;
 
         for (final med in medications) {
-          final medHistory = allHistory.where((d) => d.medicationId == med.id).toList();
+          final medHistory =
+              allHistory.where((d) => d.medicationId == med.id).toList();
           if (medHistory.isNotEmpty) {
-            final taken = medHistory.where((d) => d.status == 'taken').length;
+            final taken =
+                medHistory.where((d) => d.status == 'taken').length;
             final percent = taken / medHistory.length * 100;
             if (percent > bestPercent) {
               bestPercent = percent;
@@ -97,8 +117,9 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
         if (bestPercent > 0) {
           insights.add(HealthInsight(
             type: HealthInsightType.bestPerforming,
-            title: 'Top Medication',
-            description: '${bestMed.medicineName} has ${bestPercent.round()}% adherence - your most consistent medication!',
+            title: l10n.topMedicationTitle,
+            description: l10n.topMedicationDesc(
+                bestMed.medicineName, bestPercent.round()),
             value: bestPercent,
             sentiment: InsightSentiment.positive,
             icon: 'star',
@@ -114,10 +135,10 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
       if (streak > 0) {
         insights.add(HealthInsight(
           type: HealthInsightType.streak,
-          title: '$streak-Day Streak! 🔥',
+          title: l10n.streakDayTitle(streak),
           description: streak >= 7
-              ? "Amazing! You've been consistent for over a week!"
-              : 'Keep it up! Consistency is key to better health.',
+              ? l10n.streakAmazingDesc
+              : l10n.streakConsistencyDesc,
           value: streak.toDouble(),
           sentiment: InsightSentiment.positive,
           icon: 'local_fire_department',
@@ -157,8 +178,9 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
       if (bestPercent > 0) {
         insights.add(HealthInsight(
           type: HealthInsightType.bestTime,
-          title: 'Best Time ⏰',
-          description: 'Your most consistent time is $bestTime with ${bestPercent.round()}% adherence',
+          title: l10n.bestTimeTitle,
+          description: l10n.bestTimeDesc(
+              _localizedPeriod(bestTime, l10n), bestPercent.round()),
           value: bestPercent,
           sentiment: InsightSentiment.neutral,
           icon: 'schedule',
@@ -168,16 +190,16 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
 
     // Add motivational message if adherence is low
     if (lastWeekHistory.isNotEmpty) {
-      final lastWeekTaken = lastWeekHistory.where((d) => d.status == 'taken').length;
+      final lastWeekTaken =
+          lastWeekHistory.where((d) => d.status == 'taken').length;
       final lastWeekTotal = lastWeekHistory.length;
       final lastWeekPercent = (lastWeekTaken / lastWeekTotal * 100).round();
 
       if (lastWeekPercent >= 90) {
         insights.add(HealthInsight(
           type: HealthInsightType.motivation,
-          title: 'Excellent Adherence! 🌟',
-          description:
-              'Outstanding! You took $lastWeekPercent% of your doses this week. Keep up the great work!',
+          title: l10n.excellentAdherenceInsightTitle,
+          description: l10n.excellentAdherenceInsightDesc(lastWeekPercent),
           value: lastWeekPercent.toDouble(),
           sentiment: InsightSentiment.positive,
           icon: 'star',
@@ -185,9 +207,8 @@ final adherenceInsightsProvider = FutureProvider<List<HealthInsight>>((ref) asyn
       } else if (lastWeekPercent < 70) {
         insights.add(HealthInsight(
           type: HealthInsightType.motivation,
-          title: 'Needs Improvement',
-          description:
-              'Your adherence this week was $lastWeekPercent%. Try setting more reminders or adjusting your schedule to improve.',
+          title: l10n.needsImprovementTitle,
+          description: l10n.needsImprovementInsightDesc(lastWeekPercent),
           value: lastWeekPercent.toDouble(),
           sentiment: InsightSentiment.warning,
           icon: 'lightbulb',

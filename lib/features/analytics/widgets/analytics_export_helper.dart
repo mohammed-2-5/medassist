@@ -71,6 +71,7 @@ abstract final class AnalyticsExportHelper {
         hourlyData: hourlyData,
         startDate: startDate,
         endDate: endDate,
+        l10n: l10n,
       );
 
       await exportService.sharePdfReport(pdfFile);

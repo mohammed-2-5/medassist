@@ -45,14 +45,12 @@ class AddMedicationScreen extends ConsumerWidget {
 
           // Step content
           Expanded(
-            child: IndexedStack(
-              index: currentStep,
-              children: const [
-                Step1TypeInfo(),
-                Step2Schedule(),
-                Step3Stock(),
-              ],
-            ),
+            child: switch (currentStep) {
+              0 => const Step1TypeInfo(),
+              1 => const Step2Schedule(),
+              2 => const Step3Stock(),
+              _ => const SizedBox.shrink(),
+            },
           ),
         ],
       ),

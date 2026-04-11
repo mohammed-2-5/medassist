@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,9 +28,9 @@ class _MedicationEditScreenState extends ConsumerState<MedicationEditScreen> {
   bool _loadError = false;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    await _loadMedication();
+    unawaited(_loadMedication());
   }
 
   Future<void> _loadMedication() async {

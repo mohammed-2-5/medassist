@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/models/notification_sound.dart';
@@ -27,7 +29,7 @@ class _Step3StockState extends ConsumerState<Step3Stock>
   late Animation<Offset> _slideAnimation;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
@@ -51,7 +53,7 @@ class _Step3StockState extends ConsumerState<Step3Stock>
       ),
     );
 
-    await _animationController.forward();
+    unawaited(_animationController.forward());
   }
 
   @override
