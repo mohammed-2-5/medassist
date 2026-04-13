@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/features/settings/widgets/backup_passphrase_dialog.dart';
 import 'package:med_assist/features/settings/widgets/backup_restore_content.dart';
 import 'package:med_assist/features/settings/widgets/backup_restore_dialogs.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
+import 'package:med_assist/services/backup/backup_exception.dart';
+import 'package:med_assist/services/backup/backup_import_result.dart';
 import 'package:med_assist/services/backup/backup_service.dart';
 import 'package:med_assist/services/haptic/haptic_service.dart';
 
@@ -40,6 +43,12 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
   }
 
   Future<void> _createBackup() async {
+    final passphrase = await showBackupPassphraseDialog(
+      context: context,
+      isEncrypting: true,
+    );
+    if (passphrase == null) return;
+
     try {
       setState(() => _isProcessing = true);
       await HapticService.light();
@@ -47,7 +56,7 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       final database = ref.read(appDatabaseProvider);
       final backupService = BackupService(database);
 
-      await backupService.createBackup();
+      await backupService.createBackup(passphrase: passphrase);
 
       setState(() {
         _isProcessing = false;
@@ -89,6 +98,12 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
   }
 
   Future<void> _shareBackup() async {
+    final passphrase = await showBackupPassphraseDialog(
+      context: context,
+      isEncrypting: true,
+    );
+    if (passphrase == null) return;
+
     try {
       setState(() => _isProcessing = true);
       await HapticService.light();
@@ -96,7 +111,7 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       final database = ref.read(appDatabaseProvider);
       final backupService = BackupService(database);
 
-      await backupService.shareBackup();
+      await backupService.shareBackup(passphrase: passphrase);
 
       setState(() {
         _isProcessing = false;
@@ -137,9 +152,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       final database = ref.read(appDatabaseProvider);
       final backupService = BackupService(database);
 
-      final result = await backupService.restoreBackup();
-
+      final result = await _tryRestore(backupService);
       setState(() => _isProcessing = false);
+      if (result == null) return;
 
       if (!mounted) return;
 
@@ -160,6 +175,25 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           content: Text(l10n.failedToRestoreBackup(e.toString())),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
+      );
+    }
+  }
+
+  /// Run restore, prompting for a passphrase if the backup is encrypted.
+  /// Returns null if the user cancels the passphrase prompt.
+  Future<BackupImportResult?> _tryRestore(BackupService backupService) async {
+    try {
+      return await backupService.restoreBackup();
+    } on BackupEncryptedException catch (e) {
+      if (!mounted) return null;
+      final passphrase = await showBackupPassphraseDialog(
+        context: context,
+        isEncrypting: false,
+      );
+      if (passphrase == null || passphrase.isEmpty) return null;
+      return backupService.restoreBackup(
+        filePath: e.filePath,
+        passphrase: passphrase,
       );
     }
   }

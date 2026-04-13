@@ -31,6 +31,34 @@ class NotificationActionHandler {
     await instance._processAction(response);
   }
 
+  /// Validate + coerce notification payload. Returns null if invalid.
+  Map<String, dynamic>? _parsePayload(String payload) {
+    try {
+      final decoded = json.decode(payload);
+      if (decoded is! Map<String, dynamic>) return null;
+
+      final medicationId = decoded['medicationId'];
+      final medicationName = decoded['medicationName'];
+      final dose = decoded['dose'];
+
+      if (medicationId is! int || medicationId <= 0) return null;
+      if (medicationName is! String || medicationName.trim().isEmpty) {
+        return null;
+      }
+      if (medicationName.length > 200) return null;
+
+      final safeDose = dose is String && dose.length <= 100 ? dose : '';
+
+      return {
+        'medicationId': medicationId,
+        'medicationName': medicationName,
+        'dose': safeDose,
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> _processAction(NotificationResponse response) async {
     try {
       final actionId = response.actionId;
@@ -42,16 +70,15 @@ class NotificationActionHandler {
         return;
       }
 
-      final data = json.decode(payload) as Map<String, dynamic>;
-      final medicationId = data['medicationId'] as int?;
-      final medicationName = data['medicationName'] as String?;
-      final dose = data['dose'] as String? ?? '';
-
-      if (medicationId == null || medicationName == null) {
-        debugPrint('Missing required payload fields');
+      final data = _parsePayload(payload);
+      if (data == null) {
+        debugPrint('Invalid notification payload schema');
         await _showErrorNotification('Could not process medication action');
         return;
       }
+      final medicationId = data['medicationId'] as int;
+      final medicationName = data['medicationName'] as String;
+      final dose = data['dose'] as String;
 
       debugPrint(
           'Processing action: $actionId for medication: $medicationName');

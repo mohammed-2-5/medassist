@@ -39,16 +39,6 @@ class GlassContainer extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Default gradient border if none provided
-    final effectiveGradient = gradient ??
-        LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.primary.withOpacity(0.5),
-            colorScheme.secondary.withOpacity(0.5),
-          ],
-        );
 
     return Container(
       width: width,
@@ -124,6 +114,7 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
+
 
   @override
   void initState() {

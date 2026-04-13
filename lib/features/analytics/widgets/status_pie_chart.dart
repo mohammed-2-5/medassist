@@ -33,7 +33,6 @@ class StatusPieChart extends ConsumerWidget {
             }
 
             final sections = <PieChartSectionData>[];
-            const touchedIndex = -1;
 
             final takenColor = colorScheme.brightness == Brightness.dark
                 ? const Color(0xFF66BB6A) : Colors.green;

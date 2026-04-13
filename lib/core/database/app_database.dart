@@ -8,15 +8,16 @@ import 'package:med_assist/core/database/tables/stock_history_table.dart';
 part 'app_database.g.dart';
 
 /// Main application database
-@DriftDatabase(tables: [
-  Medications,
-  ReminderTimes,
-  DoseHistory,
-  StockHistory,
-  SnoozeHistoryTable,
-])
+@DriftDatabase(
+  tables: [
+    Medications,
+    ReminderTimes,
+    DoseHistory,
+    StockHistory,
+    SnoozeHistoryTable,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
-
   /// Returns the single shared database instance.
   factory AppDatabase() => _instance;
 
@@ -27,13 +28,36 @@ class AppDatabase extends _$AppDatabase {
   static final AppDatabase _instance = AppDatabase._internal();
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+        await customStatement('''
+          CREATE TABLE IF NOT EXISTS chat_sessions (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL DEFAULT '',
+            created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+            updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+          )
+        ''');
+        await customStatement('''
+          CREATE TABLE IF NOT EXISTS chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+            message TEXT NOT NULL,
+            is_user INTEGER NOT NULL,
+            ai_provider TEXT,
+            created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+          )
+        ''');
+        await customStatement(
+          'CREATE INDEX IF NOT EXISTS idx_chat_messages_session '
+          'ON chat_messages (session_id)',
+        );
+        await customStatement('PRAGMA foreign_keys = ON');
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Migrate from version 1 to 2 (add dose history table)
@@ -92,6 +116,86 @@ class AppDatabase extends _$AppDatabase {
             'ON snooze_history (medication_id)',
           );
         }
+
+        // Migrate from version 7 to 8 (add AI-enriched drug info columns)
+        if (from <= 7 && to >= 8) {
+          await m.addColumn(medications, medications.genericName);
+          await m.addColumn(medications, medications.activeIngredients);
+          await m.addColumn(medications, medications.drugCategory);
+          await m.addColumn(medications, medications.purpose);
+          await m.addColumn(medications, medications.sideEffects);
+          await m.addColumn(medications, medications.warnings);
+          await m.addColumn(medications, medications.route);
+        }
+
+        // Migrate from version 8 to 9 (add chat persistence tables)
+        if (from <= 8 && to >= 9) {
+          await customStatement('''
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+              id TEXT PRIMARY KEY,
+              title TEXT NOT NULL DEFAULT '',
+              created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),
+              updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+            )
+          ''');
+          await customStatement('''
+            CREATE TABLE IF NOT EXISTS chat_messages (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              session_id TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+              message TEXT NOT NULL,
+              is_user INTEGER NOT NULL,
+              ai_provider TEXT,
+              created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+            )
+          ''');
+          await customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_chat_messages_session '
+            'ON chat_messages (session_id)',
+          );
+          await customStatement('PRAGMA foreign_keys = ON');
+        }
+
+        // Migrate from version 9 to 10 (add ON DELETE CASCADE to chat_messages FK)
+        if (from <= 9 && to >= 10) {
+          await customStatement('PRAGMA foreign_keys = OFF');
+          await customStatement('''
+            CREATE TABLE IF NOT EXISTS chat_messages_backup (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              session_id TEXT NOT NULL,
+              message TEXT NOT NULL,
+              is_user INTEGER NOT NULL,
+              ai_provider TEXT,
+              created_at INTEGER NOT NULL
+            )
+          ''');
+          await customStatement(
+            'INSERT INTO chat_messages_backup '
+            'SELECT id, session_id, message, is_user, ai_provider, created_at '
+            'FROM chat_messages',
+          );
+          await customStatement('DROP TABLE IF EXISTS chat_messages');
+          await customStatement('''
+            CREATE TABLE chat_messages (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              session_id TEXT NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+              message TEXT NOT NULL,
+              is_user INTEGER NOT NULL,
+              ai_provider TEXT,
+              created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+            )
+          ''');
+          await customStatement(
+            'INSERT INTO chat_messages '
+            'SELECT id, session_id, message, is_user, ai_provider, created_at '
+            'FROM chat_messages_backup',
+          );
+          await customStatement('DROP TABLE chat_messages_backup');
+          await customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_chat_messages_session '
+            'ON chat_messages (session_id)',
+          );
+          await customStatement('PRAGMA foreign_keys = ON');
+        }
       },
     );
   }
@@ -103,33 +207,39 @@ class AppDatabase extends _$AppDatabase {
     return (select(medications)
           ..where((tbl) => tbl.isActive.equals(true))
           ..orderBy([
-            (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
+            (tbl) => OrderingTerm(
+              expression: tbl.createdAt,
+              mode: OrderingMode.desc,
+            ),
           ]))
         .get();
   }
 
   /// Get all medications including inactive (for backup)
   Future<List<Medication>> getAllMedicationsIncludingInactive() async {
-    return (select(medications)
-          ..orderBy([
-            (tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
-          ]))
+    return (select(medications)..orderBy([
+          (tbl) =>
+              OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc),
+        ]))
         .get();
   }
 
   /// Get a single medication by id
   Future<Medication?> getMedicationById(int id) async {
-    return (select(medications)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return (select(
+      medications,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
   /// Get medications for today (started and not yet past their duration)
   Future<List<Medication>> getTodaysMedications() async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final allActive = await (select(medications)
-          ..where((tbl) => tbl.isActive.equals(true))
-          ..where((tbl) => tbl.startDate.isSmallerOrEqualValue(now)))
-        .get();
+    final allActive =
+        await (select(medications)
+              ..where((tbl) => tbl.isActive.equals(true))
+              ..where((tbl) => tbl.startDate.isSmallerOrEqualValue(now)))
+            .get();
     return allActive.where((med) {
       final endDate = med.startDate.add(Duration(days: med.durationDays));
       return !today.isAfter(endDate);
@@ -148,8 +258,9 @@ class AppDatabase extends _$AppDatabase {
 
   /// Soft delete medication (set isActive to false)
   Future<int> deleteMedication(int id) async {
-    return (update(medications)..where((tbl) => tbl.id.equals(id)))
-        .write(const MedicationsCompanion(isActive: Value(false)));
+    return (update(medications)..where((tbl) => tbl.id.equals(id))).write(
+      const MedicationsCompanion(isActive: Value(false)),
+    );
   }
 
   /// Hard delete medication (actually remove from database)
@@ -172,7 +283,8 @@ class AppDatabase extends _$AppDatabase {
   /// Insert reminder times for a medication
   Future<void> insertReminderTimes(
     int medicationId,
-    List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})> times,
+    List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})>
+    times,
   ) async {
     await batch((batch) {
       batch.insertAll(
@@ -197,15 +309,16 @@ class AppDatabase extends _$AppDatabase {
 
   /// Delete all reminder times for a medication
   Future<int> deleteReminderTimes(int medicationId) async {
-    return (delete(reminderTimes)
-          ..where((tbl) => tbl.medicationId.equals(medicationId)))
-        .go();
+    return (delete(
+      reminderTimes,
+    )..where((tbl) => tbl.medicationId.equals(medicationId))).go();
   }
 
   /// Update reminder times for a medication
   Future<void> updateReminderTimes(
     int medicationId,
-    List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})> times,
+    List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})>
+    times,
   ) async {
     await transaction(() async {
       await deleteReminderTimes(medicationId);
@@ -222,7 +335,9 @@ class AppDatabase extends _$AppDatabase {
 
     for (final med in meds) {
       final times = await getReminderTimes(med.id);
-      result.add(MedicationWithReminders(medication: med, reminderTimes: times));
+      result.add(
+        MedicationWithReminders(medication: med, reminderTimes: times),
+      );
     }
 
     return result;
@@ -318,7 +433,10 @@ class AppDatabase extends _$AppDatabase {
     return (select(doseHistory)
           ..where((tbl) => tbl.medicationId.equals(medicationId))
           ..orderBy([
-            (tbl) => OrderingTerm(expression: tbl.scheduledDate, mode: OrderingMode.desc),
+            (tbl) => OrderingTerm(
+              expression: tbl.scheduledDate,
+              mode: OrderingMode.desc,
+            ),
           ]))
         .get();
   }
@@ -340,8 +458,11 @@ class AppDatabase extends _$AppDatabase {
     DateTime endDate,
   ) async {
     final start = DateTime(startDate.year, startDate.month, startDate.day);
-    final end = DateTime(endDate.year, endDate.month, endDate.day)
-        .add(const Duration(days: 1));
+    final end = DateTime(
+      endDate.year,
+      endDate.month,
+      endDate.day,
+    ).add(const Duration(days: 1));
 
     return (select(doseHistory)
           ..where((tbl) => tbl.scheduledDate.isBiggerOrEqualValue(start))
@@ -356,7 +477,11 @@ class AppDatabase extends _$AppDatabase {
     required int scheduledHour,
     required int scheduledMinute,
   }) async {
-    final startOfDay = DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day);
+    final startOfDay = DateTime(
+      scheduledDate.year,
+      scheduledDate.month,
+      scheduledDate.day,
+    );
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     return (select(doseHistory)
@@ -373,10 +498,13 @@ class AppDatabase extends _$AppDatabase {
     DateTime startDate,
     DateTime endDate,
   ) async {
-    final records = await (select(doseHistory)
-          ..where((tbl) => tbl.scheduledDate.isBiggerOrEqualValue(startDate))
-          ..where((tbl) => tbl.scheduledDate.isSmallerThanValue(endDate)))
-        .get();
+    final records =
+        await (select(doseHistory)
+              ..where(
+                (tbl) => tbl.scheduledDate.isBiggerOrEqualValue(startDate),
+              )
+              ..where((tbl) => tbl.scheduledDate.isSmallerThanValue(endDate)))
+            .get();
 
     final stats = <String, int>{
       'taken': 0,
@@ -399,7 +527,11 @@ class AppDatabase extends _$AppDatabase {
     required int scheduledHour,
     required int scheduledMinute,
   }) async {
-    final startOfDay = DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day);
+    final startOfDay = DateTime(
+      scheduledDate.year,
+      scheduledDate.month,
+      scheduledDate.day,
+    );
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     return (delete(doseHistory)
@@ -413,10 +545,12 @@ class AppDatabase extends _$AppDatabase {
 
   /// Get all dose history (for analytics and history screens)
   Future<List<DoseHistoryData>> getAllDoseHistory() async {
-    return (select(doseHistory)
-          ..orderBy([
-            (tbl) => OrderingTerm(expression: tbl.scheduledDate, mode: OrderingMode.desc),
-          ]))
+    return (select(doseHistory)..orderBy([
+          (tbl) => OrderingTerm(
+            expression: tbl.scheduledDate,
+            mode: OrderingMode.desc,
+          ),
+        ]))
         .get();
   }
 
@@ -493,9 +627,9 @@ class AppDatabase extends _$AppDatabase {
           ..where((tbl) => tbl.medicationId.equals(medicationId))
           ..orderBy([
             (tbl) => OrderingTerm(
-                  expression: tbl.changeDate,
-                  mode: OrderingMode.desc,
-                ),
+              expression: tbl.changeDate,
+              mode: OrderingMode.desc,
+            ),
           ]))
         .get();
   }
@@ -565,10 +699,11 @@ class AppDatabase extends _$AppDatabase {
     final today = DateTime.now();
     final todayDate = DateTime(today.year, today.month, today.day);
 
-    return (select(snoozeHistoryTable)
-          ..where((tbl) =>
+    return (select(snoozeHistoryTable)..where(
+          (tbl) =>
               tbl.medicationId.equals(medicationId) &
-              tbl.snoozeDate.equals(todayDate)))
+              tbl.snoozeDate.equals(todayDate),
+        ))
         .getSingleOrNull();
   }
 
@@ -585,9 +720,9 @@ class AppDatabase extends _$AppDatabase {
 
       if (existing != null) {
         // Update existing record
-        await (update(snoozeHistoryTable)
-              ..where((tbl) => tbl.id.equals(existing.id)))
-            .write(
+        await (update(
+          snoozeHistoryTable,
+        )..where((tbl) => tbl.id.equals(existing.id))).write(
           SnoozeHistoryTableCompanion(
             snoozeCount: Value(existing.snoozeCount + 1),
             lastSnoozeTime: Value(DateTime.now()),
@@ -615,23 +750,24 @@ class AppDatabase extends _$AppDatabase {
     final todayDate = DateTime(today.year, today.month, today.day);
 
     // Delete snooze records older than today
-    await (delete(snoozeHistoryTable)
-          ..where((tbl) => tbl.snoozeDate.isSmallerThanValue(todayDate)))
-        .go();
+    await (delete(
+      snoozeHistoryTable,
+    )..where((tbl) => tbl.snoozeDate.isSmallerThanValue(todayDate))).go();
   }
 
   /// Get snooze statistics for a medication
   Future<Map<String, dynamic>> getSnoozeStats(int medicationId) async {
-    final history = await (select(snoozeHistoryTable)
-          ..where((tbl) => tbl.medicationId.equals(medicationId))
-          ..orderBy([
-            (tbl) => OrderingTerm(
+    final history =
+        await (select(snoozeHistoryTable)
+              ..where((tbl) => tbl.medicationId.equals(medicationId))
+              ..orderBy([
+                (tbl) => OrderingTerm(
                   expression: tbl.snoozeDate,
                   mode: OrderingMode.desc,
                 ),
-          ])
-          ..limit(30))
-        .get();
+              ])
+              ..limit(30))
+            .get();
 
     if (history.isEmpty) {
       return {
@@ -663,32 +799,110 @@ class AppDatabase extends _$AppDatabase {
 
   /// Get all stock history (for backup)
   Future<List<StockHistoryData>> getAllStockHistory() async {
-    return (select(stockHistory)
-          ..orderBy([
-            (tbl) => OrderingTerm(
-                  expression: tbl.changeDate,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+    return (select(stockHistory)..orderBy([
+          (tbl) => OrderingTerm(
+            expression: tbl.changeDate,
+            mode: OrderingMode.desc,
+          ),
+        ]))
         .get();
   }
 
   /// Get all snooze history (for backup)
   Future<List<SnoozeHistoryData>> getAllSnoozeHistory() async {
-    return (select(snoozeHistoryTable)
-          ..orderBy([
-            (tbl) => OrderingTerm(
-                  expression: tbl.snoozeDate,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+    return (select(snoozeHistoryTable)..orderBy([
+          (tbl) => OrderingTerm(
+            expression: tbl.snoozeDate,
+            mode: OrderingMode.desc,
+          ),
+        ]))
         .get();
+  }
+
+  // Chat Persistence CRUD operations (raw SQL — tables not in Drift codegen)
+
+  Future<String> createChatSession({String title = ''}) async {
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await customStatement(
+      'INSERT INTO chat_sessions (id, title, created_at, updated_at) VALUES (?, ?, ?, ?)',
+      [id, title, now, now],
+    );
+    return id;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllChatSessions() async {
+    final rows = await customSelect(
+      'SELECT s.*, '
+      '(SELECT COUNT(*) FROM chat_messages m WHERE m.session_id = s.id) AS message_count '
+      'FROM chat_sessions s '
+      'ORDER BY s.updated_at DESC',
+    ).get();
+    return rows.map((r) => r.data).toList();
+  }
+
+  Future<void> updateChatSessionTitle(String sessionId, String title) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await customStatement(
+      'UPDATE chat_sessions SET title = ?, updated_at = ? WHERE id = ?',
+      [title, now, sessionId],
+    );
+  }
+
+  Future<void> deleteChatSession(String sessionId) async {
+    await transaction(() async {
+      await customStatement(
+        'DELETE FROM chat_messages WHERE session_id = ?',
+        [sessionId],
+      );
+      await customStatement(
+        'DELETE FROM chat_sessions WHERE id = ?',
+        [sessionId],
+      );
+    });
+  }
+
+  Future<void> insertChatMessage({
+    required String sessionId,
+    required String message,
+    required bool isUser,
+    String? aiProvider,
+  }) async {
+    await transaction(() async {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      await customStatement(
+        'UPDATE chat_sessions SET updated_at = ? WHERE id = ?',
+        [now, sessionId],
+      );
+      await customStatement(
+        'INSERT INTO chat_messages (session_id, message, is_user, ai_provider, created_at) '
+        'VALUES (?, ?, ?, ?, ?)',
+        [sessionId, message, isUser ? 1 : 0, aiProvider, now],
+      );
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getChatMessages(String sessionId) async {
+    final rows = await customSelect(
+      'SELECT * FROM chat_messages WHERE session_id = ? ORDER BY created_at ASC',
+      variables: [Variable(sessionId)],
+    ).get();
+    return rows.map((r) => r.data).toList();
+  }
+
+  Future<void> deleteAllChatSessions() async {
+    await transaction(() async {
+      await customStatement('DELETE FROM chat_messages');
+      await customStatement('DELETE FROM chat_sessions');
+    });
   }
 
   /// Clear all data (for restore)
   Future<void> clearAllData() async {
     await transaction(() async {
       // Delete in correct order (respecting foreign keys)
+      await customStatement('DELETE FROM chat_messages');
+      await customStatement('DELETE FROM chat_sessions');
       await delete(snoozeHistoryTable).go();
       await delete(doseHistory).go();
       await delete(stockHistory).go();
@@ -714,10 +928,18 @@ class AppDatabase extends _$AppDatabase {
       await delete(medications).go();
 
       // Insert in FK order (medications first)
-      for (final m in meds) { await into(medications).insert(m); }
-      for (final d in doses) { await into(doseHistory).insert(d); }
-      for (final s in snoozes) { await into(snoozeHistoryTable).insert(s); }
-      for (final s in stocks) { await into(stockHistory).insert(s); }
+      for (final m in meds) {
+        await into(medications).insert(m);
+      }
+      for (final d in doses) {
+        await into(doseHistory).insert(d);
+      }
+      for (final s in snoozes) {
+        await into(snoozeHistoryTable).insert(s);
+      }
+      for (final s in stocks) {
+        await into(stockHistory).insert(s);
+      }
     });
   }
 
@@ -739,7 +961,6 @@ class AppDatabase extends _$AppDatabase {
 
 /// Combined medication with its reminder times
 class MedicationWithReminders {
-
   MedicationWithReminders({
     required this.medication,
     required this.reminderTimes,

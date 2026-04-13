@@ -4,11 +4,17 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// App bar for the AI chatbot screen, showing current AI provider status.
 class ChatbotAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatbotAppBar({
-    required this.currentAiProvider, required this.onClear, super.key,
+    required this.currentAiProvider,
+    required this.onClear,
+    required this.onShowHistory,
+    required this.onNewChat,
+    super.key,
   });
 
   final String? currentAiProvider;
   final VoidCallback onClear;
+  final VoidCallback onShowHistory;
+  final VoidCallback onNewChat;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -104,9 +110,31 @@ class ChatbotAppBar extends StatelessWidget implements PreferredSizeWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           onSelected: (value) {
+            if (value == 'history') onShowHistory();
+            if (value == 'new') onNewChat();
             if (value == 'clear') onClear();
           },
           itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'history',
+              child: Row(
+                children: [
+                  const Icon(Icons.history),
+                  const SizedBox(width: 12),
+                  Text(l10n.chatHistory),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'new',
+              child: Row(
+                children: [
+                  const Icon(Icons.add_comment_outlined),
+                  const SizedBox(width: 12),
+                  Text(l10n.newChat),
+                ],
+              ),
+            ),
             PopupMenuItem(
               value: 'clear',
               child: Row(

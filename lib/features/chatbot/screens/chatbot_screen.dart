@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:med_assist/core/database/providers/database_providers.dart';
-import 'package:med_assist/features/chatbot/models/chat_message.dart';
+import 'package:med_assist/features/chatbot/providers/chat_providers.dart';
+import 'package:med_assist/features/chatbot/providers/chatbot_notifier.dart';
+import 'package:med_assist/features/chatbot/widgets/chat_history_sheet.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_app_bar.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_attachment_options.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_chat_bubble.dart';
@@ -9,10 +12,7 @@ import 'package:med_assist/features/chatbot/widgets/chatbot_input_area.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_suggested_prompts.dart';
 import 'package:med_assist/features/chatbot/widgets/chatbot_typing_indicator.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
-import 'package:med_assist/services/ai/medication_context_service.dart';
-import 'package:med_assist/services/ai/multi_ai_service.dart';
 
-/// AI Chatbot Screen for medication assistance
 class ChatbotScreen extends ConsumerStatefulWidget {
   const ChatbotScreen({super.key});
 
@@ -21,190 +21,146 @@ class ChatbotScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
-  final TextEditingController _messageController = TextEditingController();
-  final List<ChatMessage> _messages = [];
-  final ScrollController _scrollController = ScrollController();
-  final MultiAIService _aiService = MultiAIService();
-
-  MedicationContextService? _contextService;
-  List<String> _quickSuggestions = [];
-  bool _isLoadingSuggestions = true;
-  bool _isTyping = false;
-  String? _currentAiProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    _aiService.initialize();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final db = ref.read(appDatabaseProvider);
-        _contextService = MedicationContextService(db);
-
-        final l10n = AppLocalizations.of(context)!;
-        _addBotMessage(l10n.chatbotWelcomeMessage);
-        _loadQuickSuggestions();
-      }
-    });
-  }
-
-  Future<void> _loadQuickSuggestions() async {
-    if (_contextService == null) return;
-
-    try {
-      final suggestions = await _contextService!.getQuickSuggestions();
-      if (mounted) {
-        setState(() {
-          _quickSuggestions = suggestions;
-          _isLoadingSuggestions = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoadingSuggestions = false;
-          final l10n = AppLocalizations.of(context)!;
-          _quickSuggestions = [
-            l10n.chatSuggestion1,
-            l10n.chatSuggestion2,
-            l10n.chatSuggestion3,
-          ];
-        });
-      }
-    }
-  }
+  final _messageController = TextEditingController();
+  final _scrollController = ScrollController();
 
   @override
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
-    _aiService.dispose();
     super.dispose();
   }
 
-  void _addBotMessage(String text) {
-    setState(() {
-      _messages.add(ChatMessage(
-        text: text,
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
-    });
-    _scrollToBottom();
-  }
-
-  void _addUserMessage(String text) {
-    setState(() {
-      _messages.add(ChatMessage(
-        text: text,
-        isUser: true,
-        timestamp: DateTime.now(),
-      ));
-    });
-    _scrollToBottom();
-  }
+  ChatbotNotifier get _notifier => ref.read(chatbotProvider.notifier);
+  String get _welcome => AppLocalizations.of(context)!.chatbotWelcomeMessage;
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+        unawaited(
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          ),
         );
       }
     });
   }
 
-  Future<void> _handleSendMessage() async {
+  Future<void> _handleSend() async {
     final text = _messageController.text.trim();
-    if (text.isEmpty || _isTyping) return;
-
-    _addUserMessage(text);
+    if (text.isEmpty) return;
     _messageController.clear();
+    final l10n = AppLocalizations.of(context)!;
+    await _notifier.sendMessage(text, errorMessage: l10n.chatbotErrorMessage);
+    _scrollToBottom();
+  }
 
-    setState(() => _isTyping = true);
+  void _onPromptSelected(String prompt) {
+    _messageController.text = prompt;
+    unawaited(_handleSend());
+  }
 
-    try {
-      String? medicationContext;
-      if (_contextService != null) {
-        try {
-          medicationContext = await _contextService!.getMedicationContext();
-        } catch (e) {
-          medicationContext = null;
-        }
-      }
+  Future<void> _openHistory() async {
+    final sessions = await ref.read(chatRepositoryProvider).getAllSessions();
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+    await ChatHistorySheet.show(
+      context,
+      sessions: sessions,
+      currentSessionId: ref.read(chatbotProvider).currentSessionId,
+      onNewChat: () => unawaited(
+        _notifier.createNewSession(welcomeMessage: _welcome),
+      ),
+      onLoadSession: (id) => unawaited(
+        _notifier.loadSession(id, welcomeMessage: _welcome),
+      ),
+      onDeleteSession: (id) => unawaited(() async {
+        await _notifier.deleteSession(id);
+        if (mounted) _showSnackBar(l10n.chatSessionDeleted);
+      }()),
+      onDeleteAllSessions: () => unawaited(() async {
+        await _notifier.deleteAllSessions();
+        if (mounted) _showSnackBar(l10n.allChatsDeleted);
+      }()),
+    );
+  }
 
-      final response = await _aiService
-          .sendMessage(text, medicationContext: medicationContext)
-          .timeout(const Duration(seconds: 30));
-
-      if (mounted) {
-        setState(() {
-          _isTyping = false;
-          _currentAiProvider = _aiService.lastUsedApi;
-        });
-        _addBotMessage(response);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isTyping = false);
-        final l10n = AppLocalizations.of(context)!;
-        _addBotMessage(l10n.chatbotErrorMessage);
-      }
+  Future<void> _clearChat() async {
+    await _notifier.clearChat();
+    if (mounted) {
+      _showSnackBar(AppLocalizations.of(context)!.chatClearedMessage);
     }
   }
 
-  void _handlePromptSelected(String prompt) {
-    _messageController.text = prompt;
-    _handleSendMessage();
-  }
-
-  void _clearChat() {
-    setState(_messages.clear);
-    _aiService.clearHistory();
-    _currentAiProvider = null;
-    final l10n = AppLocalizations.of(context)!;
-    _addBotMessage(l10n.chatClearedMessage);
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatState = ref.watch(chatbotProvider);
+    final suggestionsAsync = ref.watch(quickSuggestionsProvider);
+
+    ref.listen(chatbotProvider, (prev, next) {
+      if (prev != null && next.messages.length > prev.messages.length) {
+        _scrollToBottom();
+      }
+    });
+
+    if (chatState.isInitializing) {
+      return Scaffold(
+        appBar: ChatbotAppBar(
+          currentAiProvider: null,
+          onClear: () {},
+          onNewChat: () {},
+          onShowHistory: () {},
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: ChatbotAppBar(
-        currentAiProvider: _currentAiProvider,
-        onClear: _clearChat,
+        currentAiProvider: chatState.currentAiProvider,
+        onClear: () => unawaited(_clearChat()),
+        onNewChat: () =>
+            unawaited(_notifier.createNewSession(welcomeMessage: _welcome)),
+        onShowHistory: () => unawaited(_openHistory()),
       ),
       body: Column(
         children: [
-          if (_messages.length == 1)
+          if (chatState.messages.length <= 1)
             ChatbotSuggestedPrompts(
-              quickSuggestions: _quickSuggestions,
-              fallbackPrompts: _aiService.getSuggestedPrompts(),
-              isLoading: _isLoadingSuggestions,
-              onPromptSelected: _handlePromptSelected,
+              quickSuggestions: suggestionsAsync.asData?.value ?? [],
+              fallbackPrompts: _notifier.aiService.getSuggestedPrompts(),
+              isLoading: suggestionsAsync.isLoading,
+              onPromptSelected: _onPromptSelected,
             ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
-              itemCount: _messages.length + (_isTyping ? 1 : 0),
+              itemCount:
+                  chatState.messages.length + (chatState.isTyping ? 1 : 0),
               itemBuilder: (context, index) {
-                if (_isTyping && index == _messages.length) {
+                if (chatState.isTyping && index == chatState.messages.length) {
                   return const ChatbotTypingIndicator();
                 }
-                return ChatBubble(message: _messages[index]);
+                return ChatBubble(message: chatState.messages[index]);
               },
             ),
           ),
           ChatbotInputArea(
             controller: _messageController,
-            onSend: _handleSendMessage,
+            onSend: _handleSend,
             onShowOptions: () => ChatbotAttachmentOptions.show(
               context,
-              _aiService,
-              _handlePromptSelected,
+              _notifier.aiService,
+              _onPromptSelected,
             ),
           ),
         ],

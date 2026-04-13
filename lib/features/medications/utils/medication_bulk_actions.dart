@@ -51,7 +51,7 @@ class MedicationBulkActions {
 
         if (context.mounted) {
           HapticService.success();
-          _showSuccessSnackBar('${selectedIds.length} ${l10n.medicationsDeleted ?? 'medication(s) deleted'}');
+          _showSuccessSnackBar('${selectedIds.length} ${l10n.medicationsDeleted}');
         }
 
         onComplete();

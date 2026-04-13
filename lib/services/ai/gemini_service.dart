@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/constants/api_constants.dart';
+import 'package:med_assist/services/ai/ai_prompt_sanitizer.dart';
 
 /// Message model for chat history
 class ChatMessage {
@@ -82,7 +83,7 @@ Always end with "Is there anything else I can help you with?" when appropriate.'
         initialize();
       }
 
-      final userMessage = message.trim();
+      final userMessage = AiPromptSanitizer.sanitizeUserMessage(message);
       if (userMessage.isEmpty) {
         return 'Please enter a message.';
       }
@@ -123,6 +124,17 @@ Always end with "Is there anything else I can help you with?" when appropriate.'
 
       // Add AI response to history
       _chatHistory.add(ChatMessage(text: responseText, isUser: false));
+
+      // Limit history to system prompt + last 10 exchanges (20 msgs).
+      if (_chatHistory.length > 21) {
+        final systemPrompt = _chatHistory.first;
+        final recent =
+            _chatHistory.skip(_chatHistory.length - 20).toList();
+        _chatHistory
+          ..clear()
+          ..add(systemPrompt)
+          ..addAll(recent);
+      }
 
       debugPrint('Received response from Gemini: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...');
 

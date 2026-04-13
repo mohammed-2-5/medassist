@@ -90,6 +90,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get other => 'Other';
 
   @override
+  String get pill => 'Pill';
+
+  @override
+  String get suppository => 'Suppository';
+
+  @override
+  String get ivSolution => 'IV Solution';
+
+  @override
+  String get medTypePillDesc => 'Tablet or capsule';
+
+  @override
+  String get medTypeInjectionDesc => 'Injectable medicine';
+
+  @override
+  String get medTypeSuppositoryDesc => 'Rectal or vaginal';
+
+  @override
+  String get medTypeIvSolutionDesc => 'Intravenous drip';
+
+  @override
+  String get medTypeSyrupDesc => 'Liquid medicine';
+
+  @override
+  String get medTypeDropsDesc => 'Eye or ear drops';
+
+  @override
   String get timesPerDay => 'Times Per Day';
 
   @override
@@ -310,7 +337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get gotIt => 'Got it';
+  String get gotIt => 'Got It';
 
   @override
   String get mealTiming => 'Meal Timing';
@@ -2412,4 +2439,178 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get medAssistAnalyticsReport => 'MedAssist Analytics Report';
+
+  @override
+  String get encryptBackupTitle => 'Encrypt Backup?';
+
+  @override
+  String get encryptBackupMessage =>
+      'Enter a passphrase to encrypt your backup with AES-256. Leave empty to save unencrypted. You will need the passphrase to restore.';
+
+  @override
+  String get enterPassphraseTitle => 'Enter Passphrase';
+
+  @override
+  String get enterPassphraseMessage =>
+      'This backup is encrypted. Enter the passphrase to decrypt and restore it.';
+
+  @override
+  String get passphrase => 'Passphrase';
+
+  @override
+  String get encrypt => 'Encrypt';
+
+  @override
+  String get decrypt => 'Decrypt';
+
+  @override
+  String get interactionWarningTitle => 'Drug Interaction Warning';
+
+  @override
+  String get interactionWarningMessage =>
+      'This medication may interact with medications you are already taking:';
+
+  @override
+  String get addAnyway => 'Add Anyway';
+
+  @override
+  String get interactionCheckFailed => 'Could not check drug interactions';
+
+  @override
+  String get drugInformation => 'Drug Information';
+
+  @override
+  String get genericName => 'Generic Name';
+
+  @override
+  String get activeIngredients => 'Ingredients';
+
+  @override
+  String get drugCategory => 'Category';
+
+  @override
+  String get purpose => 'Purpose';
+
+  @override
+  String get drugRoute => 'Route';
+
+  @override
+  String get sideEffects => 'Side Effects';
+
+  @override
+  String get drugWarnings => 'Warnings';
+
+  @override
+  String get medicationSavedTitle => 'Medication Saved';
+
+  @override
+  String get medicationSavedMessage =>
+      'Your medication has been added successfully.';
+
+  @override
+  String get drugInfoAddedHint =>
+      'Drug details, side effects and warnings have been added automatically. Check the medication details to review.';
+
+  @override
+  String interactionsFoundHint(int count) {
+    return '$count interaction(s) found with your existing medications. Open medication details to review.';
+  }
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get chatHistory => 'Chat History';
+
+  @override
+  String get newChat => 'New Chat';
+
+  @override
+  String get deleteChat => 'Delete Chat';
+
+  @override
+  String get deleteChatConfirm => 'Delete this conversation?';
+
+  @override
+  String get noChatHistory => 'No conversations yet';
+
+  @override
+  String get noChatHistorySubtitle =>
+      'Start a new chat to get medication advice';
+
+  @override
+  String get chatSessionDeleted => 'Conversation deleted';
+
+  @override
+  String get deleteAllChats => 'Delete All';
+
+  @override
+  String get deleteAllChatsConfirm => 'Delete all conversations?';
+
+  @override
+  String get allChatsDeleted => 'All conversations deleted';
+
+  @override
+  String get older => 'Older';
+
+  @override
+  String messagesCount(int count) {
+    return '$count messages';
+  }
+
+  @override
+  String get shoppingList => 'Shopping List';
+
+  @override
+  String get shoppingListSubtitle => 'Medications you need to refill';
+
+  @override
+  String get noItemsNeeded => 'All stocked up!';
+
+  @override
+  String get noItemsNeededSubtitle => 'Your medications are well-stocked';
+
+  @override
+  String get outOfStock => 'Out of Stock';
+
+  @override
+  String get expiringSoon => 'Expiring Soon';
+
+  @override
+  String daysOfStockLeft(int count) {
+    return '$count days left';
+  }
+
+  @override
+  String expiresInDays(int count) {
+    return 'Expires in $count days';
+  }
+
+  @override
+  String expiredAgo(int count) {
+    return 'Expired $count days ago';
+  }
+
+  @override
+  String get shareShoppingList => 'Share List';
+
+  @override
+  String get copyShoppingList => 'Copy List';
+
+  @override
+  String get shoppingListCopied => 'Shopping list copied to clipboard';
+
+  @override
+  String itemsToRefill(int count) {
+    return '$count items to refill';
+  }
+
+  @override
+  String get urgentRefill => 'Urgent';
+
+  @override
+  String get soonRefill => 'Soon';
+
+  @override
+  String get planAhead => 'Plan Ahead';
 }

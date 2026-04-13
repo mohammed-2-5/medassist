@@ -90,6 +90,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get other => 'أخرى';
 
   @override
+  String get pill => 'حبة دواء';
+
+  @override
+  String get suppository => 'تحميلة';
+
+  @override
+  String get ivSolution => 'محلول وريدي';
+
+  @override
+  String get medTypePillDesc => 'قرص أو كبسولة';
+
+  @override
+  String get medTypeInjectionDesc => 'دواء قابل للحقن';
+
+  @override
+  String get medTypeSuppositoryDesc => 'شرجي أو مهبلي';
+
+  @override
+  String get medTypeIvSolutionDesc => 'تنقيط وريدي';
+
+  @override
+  String get medTypeSyrupDesc => 'دواء سائل';
+
+  @override
+  String get medTypeDropsDesc => 'قطرة عين أو أذن';
+
+  @override
   String get timesPerDay => 'مرات في اليوم';
 
   @override
@@ -2378,4 +2405,177 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get medAssistAnalyticsReport => 'تقرير تحليلات MedAssist';
+
+  @override
+  String get encryptBackupTitle => 'تشفير النسخة الاحتياطية؟';
+
+  @override
+  String get encryptBackupMessage =>
+      'أدخل كلمة مرور لتشفير النسخة الاحتياطية باستخدام AES-256. اتركها فارغة للحفظ بدون تشفير. ستحتاج إلى كلمة المرور للاستعادة.';
+
+  @override
+  String get enterPassphraseTitle => 'أدخل كلمة المرور';
+
+  @override
+  String get enterPassphraseMessage =>
+      'هذه النسخة الاحتياطية مشفرة. أدخل كلمة المرور لفك التشفير واستعادتها.';
+
+  @override
+  String get passphrase => 'كلمة المرور';
+
+  @override
+  String get encrypt => 'تشفير';
+
+  @override
+  String get decrypt => 'فك التشفير';
+
+  @override
+  String get interactionWarningTitle => 'تحذير تفاعل دوائي';
+
+  @override
+  String get interactionWarningMessage =>
+      'قد يتفاعل هذا الدواء مع الأدوية التي تتناولها بالفعل:';
+
+  @override
+  String get addAnyway => 'إضافة على أي حال';
+
+  @override
+  String get interactionCheckFailed => 'تعذر التحقق من التفاعلات الدوائية';
+
+  @override
+  String get drugInformation => 'معلومات الدواء';
+
+  @override
+  String get genericName => 'الاسم العلمي';
+
+  @override
+  String get activeIngredients => 'المواد الفعالة';
+
+  @override
+  String get drugCategory => 'التصنيف';
+
+  @override
+  String get purpose => 'الاستخدام';
+
+  @override
+  String get drugRoute => 'طريقة الاستخدام';
+
+  @override
+  String get sideEffects => 'الآثار الجانبية';
+
+  @override
+  String get drugWarnings => 'التحذيرات';
+
+  @override
+  String get medicationSavedTitle => 'تم حفظ الدواء';
+
+  @override
+  String get medicationSavedMessage => 'تمت إضافة الدواء بنجاح.';
+
+  @override
+  String get drugInfoAddedHint =>
+      'تم إضافة تفاصيل الدواء والآثار الجانبية والتحذيرات تلقائياً. افتح تفاصيل الدواء للمراجعة.';
+
+  @override
+  String interactionsFoundHint(int count) {
+    return 'تم العثور على $count تفاعل(ات) مع أدويتك الحالية. افتح تفاصيل الدواء للمراجعة.';
+  }
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get chatHistory => 'سجل المحادثات';
+
+  @override
+  String get newChat => 'محادثة جديدة';
+
+  @override
+  String get deleteChat => 'حذف المحادثة';
+
+  @override
+  String get deleteChatConfirm => 'حذف هذه المحادثة؟';
+
+  @override
+  String get noChatHistory => 'لا توجد محادثات بعد';
+
+  @override
+  String get noChatHistorySubtitle =>
+      'ابدأ محادثة جديدة للحصول على نصائح الأدوية';
+
+  @override
+  String get chatSessionDeleted => 'تم حذف المحادثة';
+
+  @override
+  String get deleteAllChats => 'حذف الكل';
+
+  @override
+  String get deleteAllChatsConfirm => 'حذف جميع المحادثات؟';
+
+  @override
+  String get allChatsDeleted => 'تم حذف جميع المحادثات';
+
+  @override
+  String get older => 'أقدم';
+
+  @override
+  String messagesCount(int count) {
+    return '$count رسائل';
+  }
+
+  @override
+  String get shoppingList => 'قائمة التسوق';
+
+  @override
+  String get shoppingListSubtitle => 'الأدوية التي تحتاج إلى إعادة تعبئة';
+
+  @override
+  String get noItemsNeeded => 'المخزون مكتمل!';
+
+  @override
+  String get noItemsNeededSubtitle => 'أدويتك متوفرة بشكل جيد';
+
+  @override
+  String get outOfStock => 'نفد المخزون';
+
+  @override
+  String get expiringSoon => 'ينتهي قريباً';
+
+  @override
+  String daysOfStockLeft(int count) {
+    return '$count أيام متبقية';
+  }
+
+  @override
+  String expiresInDays(int count) {
+    return 'ينتهي خلال $count أيام';
+  }
+
+  @override
+  String expiredAgo(int count) {
+    return 'انتهت صلاحيته منذ $count أيام';
+  }
+
+  @override
+  String get shareShoppingList => 'مشاركة القائمة';
+
+  @override
+  String get copyShoppingList => 'نسخ القائمة';
+
+  @override
+  String get shoppingListCopied => 'تم نسخ قائمة التسوق';
+
+  @override
+  String itemsToRefill(int count) {
+    return '$count أدوية تحتاج إعادة تعبئة';
+  }
+
+  @override
+  String get urgentRefill => 'عاجل';
+
+  @override
+  String get soonRefill => 'قريباً';
+
+  @override
+  String get planAhead => 'خطط مسبقاً';
 }

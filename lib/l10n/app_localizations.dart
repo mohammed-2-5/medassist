@@ -260,6 +260,60 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
+  /// No description provided for @pill.
+  ///
+  /// In en, this message translates to:
+  /// **'Pill'**
+  String get pill;
+
+  /// No description provided for @suppository.
+  ///
+  /// In en, this message translates to:
+  /// **'Suppository'**
+  String get suppository;
+
+  /// No description provided for @ivSolution.
+  ///
+  /// In en, this message translates to:
+  /// **'IV Solution'**
+  String get ivSolution;
+
+  /// No description provided for @medTypePillDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tablet or capsule'**
+  String get medTypePillDesc;
+
+  /// No description provided for @medTypeInjectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Injectable medicine'**
+  String get medTypeInjectionDesc;
+
+  /// No description provided for @medTypeSuppositoryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rectal or vaginal'**
+  String get medTypeSuppositoryDesc;
+
+  /// No description provided for @medTypeIvSolutionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Intravenous drip'**
+  String get medTypeIvSolutionDesc;
+
+  /// No description provided for @medTypeSyrupDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Liquid medicine'**
+  String get medTypeSyrupDesc;
+
+  /// No description provided for @medTypeDropsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Eye or ear drops'**
+  String get medTypeDropsDesc;
+
   /// No description provided for @timesPerDay.
   ///
   /// In en, this message translates to:
@@ -683,7 +737,7 @@ abstract class AppLocalizations {
   /// No description provided for @gotIt.
   ///
   /// In en, this message translates to:
-  /// **'Got it'**
+  /// **'Got It'**
   String get gotIt;
 
   /// No description provided for @mealTiming.
@@ -4441,6 +4495,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MedAssist Analytics Report'**
   String get medAssistAnalyticsReport;
+
+  /// No description provided for @encryptBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypt Backup?'**
+  String get encryptBackupTitle;
+
+  /// No description provided for @encryptBackupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a passphrase to encrypt your backup with AES-256. Leave empty to save unencrypted. You will need the passphrase to restore.'**
+  String get encryptBackupMessage;
+
+  /// No description provided for @enterPassphraseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Passphrase'**
+  String get enterPassphraseTitle;
+
+  /// No description provided for @enterPassphraseMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is encrypted. Enter the passphrase to decrypt and restore it.'**
+  String get enterPassphraseMessage;
+
+  /// No description provided for @passphrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Passphrase'**
+  String get passphrase;
+
+  /// No description provided for @encrypt.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypt'**
+  String get encrypt;
+
+  /// No description provided for @decrypt.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrypt'**
+  String get decrypt;
+
+  /// No description provided for @interactionWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug Interaction Warning'**
+  String get interactionWarningTitle;
+
+  /// No description provided for @interactionWarningMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This medication may interact with medications you are already taking:'**
+  String get interactionWarningMessage;
+
+  /// No description provided for @addAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Anyway'**
+  String get addAnyway;
+
+  /// No description provided for @interactionCheckFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not check drug interactions'**
+  String get interactionCheckFailed;
+
+  /// No description provided for @drugInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug Information'**
+  String get drugInformation;
+
+  /// No description provided for @genericName.
+  ///
+  /// In en, this message translates to:
+  /// **'Generic Name'**
+  String get genericName;
+
+  /// No description provided for @activeIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get activeIngredients;
+
+  /// No description provided for @drugCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get drugCategory;
+
+  /// No description provided for @purpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose'**
+  String get purpose;
+
+  /// No description provided for @drugRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get drugRoute;
+
+  /// No description provided for @sideEffects.
+  ///
+  /// In en, this message translates to:
+  /// **'Side Effects'**
+  String get sideEffects;
+
+  /// No description provided for @drugWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings'**
+  String get drugWarnings;
+
+  /// No description provided for @medicationSavedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication Saved'**
+  String get medicationSavedTitle;
+
+  /// No description provided for @medicationSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your medication has been added successfully.'**
+  String get medicationSavedMessage;
+
+  /// No description provided for @drugInfoAddedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug details, side effects and warnings have been added automatically. Check the medication details to review.'**
+  String get drugInfoAddedHint;
+
+  /// No description provided for @interactionsFoundHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} interaction(s) found with your existing medications. Open medication details to review.'**
+  String interactionsFoundHint(int count);
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @chatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat History'**
+  String get chatHistory;
+
+  /// No description provided for @newChat.
+  ///
+  /// In en, this message translates to:
+  /// **'New Chat'**
+  String get newChat;
+
+  /// No description provided for @deleteChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Chat'**
+  String get deleteChat;
+
+  /// No description provided for @deleteChatConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this conversation?'**
+  String get deleteChatConfirm;
+
+  /// No description provided for @noChatHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet'**
+  String get noChatHistory;
+
+  /// No description provided for @noChatHistorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new chat to get medication advice'**
+  String get noChatHistorySubtitle;
+
+  /// No description provided for @chatSessionDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation deleted'**
+  String get chatSessionDeleted;
+
+  /// No description provided for @deleteAllChats.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get deleteAllChats;
+
+  /// No description provided for @deleteAllChatsConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all conversations?'**
+  String get deleteAllChatsConfirm;
+
+  /// No description provided for @allChatsDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'All conversations deleted'**
+  String get allChatsDeleted;
+
+  /// No description provided for @older.
+  ///
+  /// In en, this message translates to:
+  /// **'Older'**
+  String get older;
+
+  /// No description provided for @messagesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} messages'**
+  String messagesCount(int count);
+
+  /// No description provided for @shoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping List'**
+  String get shoppingList;
+
+  /// No description provided for @shoppingListSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications you need to refill'**
+  String get shoppingListSubtitle;
+
+  /// No description provided for @noItemsNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'All stocked up!'**
+  String get noItemsNeeded;
+
+  /// No description provided for @noItemsNeededSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your medications are well-stocked'**
+  String get noItemsNeededSubtitle;
+
+  /// No description provided for @outOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get outOfStock;
+
+  /// No description provided for @expiringSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring Soon'**
+  String get expiringSoon;
+
+  /// No description provided for @daysOfStockLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days left'**
+  String daysOfStockLeft(int count);
+
+  /// No description provided for @expiresInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {count} days'**
+  String expiresInDays(int count);
+
+  /// No description provided for @expiredAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired {count} days ago'**
+  String expiredAgo(int count);
+
+  /// No description provided for @shareShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Share List'**
+  String get shareShoppingList;
+
+  /// No description provided for @copyShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy List'**
+  String get copyShoppingList;
+
+  /// No description provided for @shoppingListCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list copied to clipboard'**
+  String get shoppingListCopied;
+
+  /// No description provided for @itemsToRefill.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items to refill'**
+  String itemsToRefill(int count);
+
+  /// No description provided for @urgentRefill.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgentRefill;
+
+  /// No description provided for @soonRefill.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon'**
+  String get soonRefill;
+
+  /// No description provided for @planAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Ahead'**
+  String get planAhead;
 }
 
 class _AppLocalizationsDelegate

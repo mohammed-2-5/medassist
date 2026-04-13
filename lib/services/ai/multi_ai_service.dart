@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/services/ai/ai_prompt_sanitizer.dart';
 import 'package:med_assist/services/ai/gemini_service.dart';
 import 'package:med_assist/services/ai/groq_service.dart';
 import 'package:med_assist/services/ai/huggingface_service.dart';
@@ -30,6 +31,46 @@ class MultiAIService {
   int _huggingFaceSuccessCount = 0;
   int _totalRequests = 0;
 
+  // Circuit breaker: after _breakerThreshold consecutive failures,
+  // skip the service for _breakerCooldown.
+  static const int _breakerThreshold = 3;
+  static const Duration _breakerCooldown = Duration(minutes: 2);
+  final Map<String, int> _consecutiveFailures = {
+    'groq': 0,
+    'gemini': 0,
+    'huggingface': 0,
+  };
+  final Map<String, DateTime?> _openedAt = {
+    'groq': null,
+    'gemini': null,
+    'huggingface': null,
+  };
+
+  bool _isBreakerOpen(String key) {
+    final openedAt = _openedAt[key];
+    if (openedAt == null) return false;
+    if (DateTime.now().difference(openedAt) > _breakerCooldown) {
+      _openedAt[key] = null;
+      _consecutiveFailures[key] = 0;
+      return false;
+    }
+    return true;
+  }
+
+  void _recordSuccess(String key) {
+    _consecutiveFailures[key] = 0;
+    _openedAt[key] = null;
+  }
+
+  void _recordFailure(String key) {
+    final count = (_consecutiveFailures[key] ?? 0) + 1;
+    _consecutiveFailures[key] = count;
+    if (count >= _breakerThreshold) {
+      _openedAt[key] = DateTime.now();
+      debugPrint('MultiAI: Circuit breaker OPEN for $key');
+    }
+  }
+
   /// Initialize all AI services
   void initialize() {
     if (_initialized) return;
@@ -50,6 +91,11 @@ class MultiAIService {
 
     _totalRequests++;
 
+    if (_isBreakerOpen('groq')) {
+      debugPrint('MultiAI: Groq breaker open, skipping to Gemini');
+      return _tryGeminiFallback(message, medicationContext);
+    }
+
     // Try Groq first (fastest, best free tier)
     try {
       debugPrint('MultiAI: Trying Groq (primary)...');
@@ -60,24 +106,27 @@ class MultiAIService {
 
       _lastUsedApi = 'Groq';
       _groqSuccessCount++;
+      _recordSuccess('groq');
       debugPrint('MultiAI: ✓ Groq succeeded');
 
       return response;
     } on GroqException catch (e) {
       debugPrint('MultiAI: ✗ Groq failed: $e');
-
-      // If rate limited or API issue, try Gemini
+      _recordFailure('groq');
       return _tryGeminiFallback(message, medicationContext);
     } catch (e) {
       debugPrint('MultiAI: ✗ Groq error: $e');
-
-      // Try Gemini for any other error
+      _recordFailure('groq');
       return _tryGeminiFallback(message, medicationContext);
     }
   }
 
   /// Fallback to Gemini
   Future<String> _tryGeminiFallback(String message, String? medicationContext) async {
+    if (_isBreakerOpen('gemini')) {
+      debugPrint('MultiAI: Gemini breaker open, skipping to HuggingFace');
+      return _tryHuggingFaceFallback(message, medicationContext);
+    }
     try {
       debugPrint('MultiAI: Trying Gemini (fallback #1)...');
 
@@ -85,7 +134,8 @@ class MultiAIService {
       // For context-aware, we'd need to update the prompt
       var enhancedMessage = message;
       if (medicationContext != null && medicationContext.isNotEmpty) {
-        enhancedMessage = '''$medicationContext
+        final safeContext = AiPromptSanitizer.sanitizeContext(medicationContext);
+        enhancedMessage = '''$safeContext
 
 User Question: $message''';
       }
@@ -94,19 +144,23 @@ User Question: $message''';
 
       _lastUsedApi = 'Gemini';
       _geminiSuccessCount++;
+      _recordSuccess('gemini');
       debugPrint('MultiAI: ✓ Gemini succeeded');
 
       return response;
     } catch (e) {
       debugPrint('MultiAI: ✗ Gemini failed: $e');
-
-      // Try HuggingFace as last resort
+      _recordFailure('gemini');
       return _tryHuggingFaceFallback(message, medicationContext);
     }
   }
 
   /// Fallback to HuggingFace
   Future<String> _tryHuggingFaceFallback(String message, String? medicationContext) async {
+    if (_isBreakerOpen('huggingface')) {
+      debugPrint('MultiAI: HuggingFace breaker open, returning offline');
+      return _getOfflineResponse(message);
+    }
     try {
       debugPrint('MultiAI: Trying HuggingFace (fallback #2)...');
       final response = await _huggingFaceService.sendMessage(
@@ -116,18 +170,17 @@ User Question: $message''';
 
       _lastUsedApi = 'HuggingFace';
       _huggingFaceSuccessCount++;
+      _recordSuccess('huggingface');
       debugPrint('MultiAI: ✓ HuggingFace succeeded');
 
       return response;
     } on HuggingFaceException catch (e) {
       debugPrint('MultiAI: ✗ HuggingFace failed: $e');
-
-      // All APIs failed - return offline message
+      _recordFailure('huggingface');
       return _getOfflineResponse(message);
     } catch (e) {
       debugPrint('MultiAI: ✗ HuggingFace error: $e');
-
-      // All APIs failed - return offline message
+      _recordFailure('huggingface');
       return _getOfflineResponse(message);
     }
   }

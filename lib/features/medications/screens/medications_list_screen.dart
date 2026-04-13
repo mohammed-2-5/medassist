@@ -50,24 +50,28 @@ class _MedicationsListScreenState
               },
             )
           : null,
-      body: Column(
-        children: [
-          MedicationsSearchBar(controller: _searchController),
-          const MedicationsFilterChips(),
-          Expanded(
-            child: medicationsAsync.when(
-              data: (medications) => MedicationsList(
-                medications: medications,
-                isSelectionMode: selection.isSelectionMode,
-                selectedIds: selection.selectedIds,
-                onToggleSelection: (id) =>
-                    ref.read(medicationSelectionProvider.notifier).toggle(id),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            MedicationsSearchBar(controller: _searchController),
+            const MedicationsFilterChips(),
+            Expanded(
+              child: medicationsAsync.when(
+                data: (medications) => MedicationsList(
+                  medications: medications,
+                  isSelectionMode: selection.isSelectionMode,
+                  selectedIds: selection.selectedIds,
+                  onToggleSelection: (id) => ref
+                      .read(medicationSelectionProvider.notifier)
+                      .toggle(id),
+                ),
+                loading: () => SkeletonLoader.list(context: context),
+                error: (error, _) => MedicationsErrorState(error: error),
               ),
-              loading: () => SkeletonLoader.list(context: context),
-              error: (error, _) => MedicationsErrorState(error: error),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: selection.isSelectionMode
           ? MedicationsBulkActionBar(

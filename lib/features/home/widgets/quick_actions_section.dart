@@ -10,7 +10,8 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// can scroll the timeline into view.
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({
-    required this.onTakeDoseTap, super.key,
+    required this.onTakeDoseTap,
+    super.key,
   });
 
   final VoidCallback onTakeDoseTap;
@@ -60,7 +61,7 @@ class QuickActionsSection extends StatelessWidget {
                   icon: Icons.analytics,
                   label: l10n.viewStats,
                   color: const Color(0xFF9C27B0),
-                  onTap: () => context.push('/analytics'),
+                  onTap: () => context.push(AppConstants.routeAnalytics),
                 ),
               ),
               const SizedBox(width: 12),
@@ -69,10 +70,17 @@ class QuickActionsSection extends StatelessWidget {
                   icon: Icons.chat,
                   label: l10n.askAI,
                   color: const Color(0xFFFF9800),
-                  onTap: () => context.push('/chatbot'),
+                  onTap: () => context.push(AppConstants.routeChatbot),
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          QuickActionCard(
+            icon: Icons.shopping_bag_outlined,
+            label: l10n.shoppingList,
+            color: const Color(0xFF009688),
+            onTap: () => context.push(AppConstants.routeShoppingList),
           ),
         ],
       ),

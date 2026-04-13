@@ -100,6 +100,83 @@ class $MedicationsTable extends Medications
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _genericNameMeta = const VerificationMeta(
+    'genericName',
+  );
+  @override
+  late final GeneratedColumn<String> genericName = GeneratedColumn<String>(
+    'generic_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeIngredientsMeta =
+      const VerificationMeta('activeIngredients');
+  @override
+  late final GeneratedColumn<String> activeIngredients =
+      GeneratedColumn<String>(
+    'active_ingredients',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _drugCategoryMeta = const VerificationMeta(
+    'drugCategory',
+  );
+  @override
+  late final GeneratedColumn<String> drugCategory = GeneratedColumn<String>(
+    'drug_category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _purposeMeta = const VerificationMeta(
+    'purpose',
+  );
+  @override
+  late final GeneratedColumn<String> purpose = GeneratedColumn<String>(
+    'purpose',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sideEffectsMeta = const VerificationMeta(
+    'sideEffects',
+  );
+  @override
+  late final GeneratedColumn<String> sideEffects = GeneratedColumn<String>(
+    'side_effects',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _warningsMeta = const VerificationMeta(
+    'warnings',
+  );
+  @override
+  late final GeneratedColumn<String> warnings = GeneratedColumn<String>(
+    'warnings',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _routeMeta = const VerificationMeta(
+    'route',
+  );
+  @override
+  late final GeneratedColumn<String> route = GeneratedColumn<String>(
+    'route',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _timesPerDayMeta = const VerificationMeta(
     'timesPerDay',
   );
@@ -344,6 +421,13 @@ class $MedicationsTable extends Medications
     unit,
     notes,
     isScanned,
+    genericName,
+    activeIngredients,
+    drugCategory,
+    purpose,
+    sideEffects,
+    warnings,
+    route,
     timesPerDay,
     dosePerTime,
     doseUnit,
@@ -432,6 +516,48 @@ class $MedicationsTable extends Medications
       context.handle(
         _isScannedMeta,
         isScanned.isAcceptableOrUnknown(data['is_scanned']!, _isScannedMeta),
+      );
+    }
+    if (data.containsKey('generic_name')) {
+      context.handle(
+        _genericNameMeta,
+        genericName.isAcceptableOrUnknown(data['generic_name']!, _genericNameMeta),
+      );
+    }
+    if (data.containsKey('active_ingredients')) {
+      context.handle(
+        _activeIngredientsMeta,
+        activeIngredients.isAcceptableOrUnknown(data['active_ingredients']!, _activeIngredientsMeta),
+      );
+    }
+    if (data.containsKey('drug_category')) {
+      context.handle(
+        _drugCategoryMeta,
+        drugCategory.isAcceptableOrUnknown(data['drug_category']!, _drugCategoryMeta),
+      );
+    }
+    if (data.containsKey('purpose')) {
+      context.handle(
+        _purposeMeta,
+        purpose.isAcceptableOrUnknown(data['purpose']!, _purposeMeta),
+      );
+    }
+    if (data.containsKey('side_effects')) {
+      context.handle(
+        _sideEffectsMeta,
+        sideEffects.isAcceptableOrUnknown(data['side_effects']!, _sideEffectsMeta),
+      );
+    }
+    if (data.containsKey('warnings')) {
+      context.handle(
+        _warningsMeta,
+        warnings.isAcceptableOrUnknown(data['warnings']!, _warningsMeta),
+      );
+    }
+    if (data.containsKey('route')) {
+      context.handle(
+        _routeMeta,
+        route.isAcceptableOrUnknown(data['route']!, _routeMeta),
       );
     }
     if (data.containsKey('times_per_day')) {
@@ -630,6 +756,34 @@ class $MedicationsTable extends Medications
         DriftSqlType.bool,
         data['${effectivePrefix}is_scanned'],
       )!,
+      genericName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}generic_name'],
+      ),
+      activeIngredients: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}active_ingredients'],
+      ),
+      drugCategory: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}drug_category'],
+      ),
+      purpose: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}purpose'],
+      ),
+      sideEffects: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}side_effects'],
+      ),
+      warnings: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}warnings'],
+      ),
+      route: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}route'],
+      ),
       timesPerDay: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}times_per_day'],
@@ -724,6 +878,13 @@ class Medication extends DataClass implements Insertable<Medication> {
   final String? unit;
   final String? notes;
   final bool isScanned;
+  final String? genericName;
+  final String? activeIngredients;
+  final String? drugCategory;
+  final String? purpose;
+  final String? sideEffects;
+  final String? warnings;
+  final String? route;
   final int timesPerDay;
   final double dosePerTime;
   final String doseUnit;
@@ -752,6 +913,13 @@ class Medication extends DataClass implements Insertable<Medication> {
     this.unit,
     this.notes,
     required this.isScanned,
+    this.genericName,
+    this.activeIngredients,
+    this.drugCategory,
+    this.purpose,
+    this.sideEffects,
+    this.warnings,
+    this.route,
     required this.timesPerDay,
     required this.dosePerTime,
     required this.doseUnit,
@@ -791,6 +959,27 @@ class Medication extends DataClass implements Insertable<Medication> {
       map['notes'] = Variable<String>(notes);
     }
     map['is_scanned'] = Variable<bool>(isScanned);
+    if (!nullToAbsent || genericName != null) {
+      map['generic_name'] = Variable<String>(genericName);
+    }
+    if (!nullToAbsent || activeIngredients != null) {
+      map['active_ingredients'] = Variable<String>(activeIngredients);
+    }
+    if (!nullToAbsent || drugCategory != null) {
+      map['drug_category'] = Variable<String>(drugCategory);
+    }
+    if (!nullToAbsent || purpose != null) {
+      map['purpose'] = Variable<String>(purpose);
+    }
+    if (!nullToAbsent || sideEffects != null) {
+      map['side_effects'] = Variable<String>(sideEffects);
+    }
+    if (!nullToAbsent || warnings != null) {
+      map['warnings'] = Variable<String>(warnings);
+    }
+    if (!nullToAbsent || route != null) {
+      map['route'] = Variable<String>(route);
+    }
     map['times_per_day'] = Variable<int>(timesPerDay);
     map['dose_per_time'] = Variable<double>(dosePerTime);
     map['dose_unit'] = Variable<String>(doseUnit);
@@ -841,6 +1030,27 @@ class Medication extends DataClass implements Insertable<Medication> {
           ? const Value.absent()
           : Value(notes),
       isScanned: Value(isScanned),
+      genericName: genericName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(genericName),
+      activeIngredients: activeIngredients == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeIngredients),
+      drugCategory: drugCategory == null && nullToAbsent
+          ? const Value.absent()
+          : Value(drugCategory),
+      purpose: purpose == null && nullToAbsent
+          ? const Value.absent()
+          : Value(purpose),
+      sideEffects: sideEffects == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sideEffects),
+      warnings: warnings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(warnings),
+      route: route == null && nullToAbsent
+          ? const Value.absent()
+          : Value(route),
       timesPerDay: Value(timesPerDay),
       dosePerTime: Value(dosePerTime),
       doseUnit: Value(doseUnit),
@@ -883,6 +1093,13 @@ class Medication extends DataClass implements Insertable<Medication> {
       unit: serializer.fromJson<String?>(json['unit']),
       notes: serializer.fromJson<String?>(json['notes']),
       isScanned: serializer.fromJson<bool>(json['isScanned']),
+      genericName: serializer.fromJson<String?>(json['genericName']),
+      activeIngredients: serializer.fromJson<String?>(json['activeIngredients']),
+      drugCategory: serializer.fromJson<String?>(json['drugCategory']),
+      purpose: serializer.fromJson<String?>(json['purpose']),
+      sideEffects: serializer.fromJson<String?>(json['sideEffects']),
+      warnings: serializer.fromJson<String?>(json['warnings']),
+      route: serializer.fromJson<String?>(json['route']),
       timesPerDay: serializer.fromJson<int>(json['timesPerDay']),
       dosePerTime: serializer.fromJson<double>(json['dosePerTime']),
       doseUnit: serializer.fromJson<String>(json['doseUnit']),
@@ -926,6 +1143,13 @@ class Medication extends DataClass implements Insertable<Medication> {
       'unit': serializer.toJson<String?>(unit),
       'notes': serializer.toJson<String?>(notes),
       'isScanned': serializer.toJson<bool>(isScanned),
+      'genericName': serializer.toJson<String?>(genericName),
+      'activeIngredients': serializer.toJson<String?>(activeIngredients),
+      'drugCategory': serializer.toJson<String?>(drugCategory),
+      'purpose': serializer.toJson<String?>(purpose),
+      'sideEffects': serializer.toJson<String?>(sideEffects),
+      'warnings': serializer.toJson<String?>(warnings),
+      'route': serializer.toJson<String?>(route),
       'timesPerDay': serializer.toJson<int>(timesPerDay),
       'dosePerTime': serializer.toJson<double>(dosePerTime),
       'doseUnit': serializer.toJson<String>(doseUnit),
@@ -965,6 +1189,13 @@ class Medication extends DataClass implements Insertable<Medication> {
     Value<String?> unit = const Value.absent(),
     Value<String?> notes = const Value.absent(),
     bool? isScanned,
+    Value<String?> genericName = const Value.absent(),
+    Value<String?> activeIngredients = const Value.absent(),
+    Value<String?> drugCategory = const Value.absent(),
+    Value<String?> purpose = const Value.absent(),
+    Value<String?> sideEffects = const Value.absent(),
+    Value<String?> warnings = const Value.absent(),
+    Value<String?> route = const Value.absent(),
     int? timesPerDay,
     double? dosePerTime,
     String? doseUnit,
@@ -995,6 +1226,13 @@ class Medication extends DataClass implements Insertable<Medication> {
     unit: unit.present ? unit.value : this.unit,
     notes: notes.present ? notes.value : this.notes,
     isScanned: isScanned ?? this.isScanned,
+    genericName: genericName.present ? genericName.value : this.genericName,
+    activeIngredients: activeIngredients.present ? activeIngredients.value : this.activeIngredients,
+    drugCategory: drugCategory.present ? drugCategory.value : this.drugCategory,
+    purpose: purpose.present ? purpose.value : this.purpose,
+    sideEffects: sideEffects.present ? sideEffects.value : this.sideEffects,
+    warnings: warnings.present ? warnings.value : this.warnings,
+    route: route.present ? route.value : this.route,
     timesPerDay: timesPerDay ?? this.timesPerDay,
     dosePerTime: dosePerTime ?? this.dosePerTime,
     doseUnit: doseUnit ?? this.doseUnit,
@@ -1037,6 +1275,13 @@ class Medication extends DataClass implements Insertable<Medication> {
       unit: data.unit.present ? data.unit.value : this.unit,
       notes: data.notes.present ? data.notes.value : this.notes,
       isScanned: data.isScanned.present ? data.isScanned.value : this.isScanned,
+      genericName: data.genericName.present ? data.genericName.value : this.genericName,
+      activeIngredients: data.activeIngredients.present ? data.activeIngredients.value : this.activeIngredients,
+      drugCategory: data.drugCategory.present ? data.drugCategory.value : this.drugCategory,
+      purpose: data.purpose.present ? data.purpose.value : this.purpose,
+      sideEffects: data.sideEffects.present ? data.sideEffects.value : this.sideEffects,
+      warnings: data.warnings.present ? data.warnings.value : this.warnings,
+      route: data.route.present ? data.route.value : this.route,
       timesPerDay: data.timesPerDay.present
           ? data.timesPerDay.value
           : this.timesPerDay,
@@ -1098,6 +1343,13 @@ class Medication extends DataClass implements Insertable<Medication> {
           ..write('unit: $unit, ')
           ..write('notes: $notes, ')
           ..write('isScanned: $isScanned, ')
+          ..write('genericName: $genericName, ')
+          ..write('activeIngredients: $activeIngredients, ')
+          ..write('drugCategory: $drugCategory, ')
+          ..write('purpose: $purpose, ')
+          ..write('sideEffects: $sideEffects, ')
+          ..write('warnings: $warnings, ')
+          ..write('route: $route, ')
           ..write('timesPerDay: $timesPerDay, ')
           ..write('dosePerTime: $dosePerTime, ')
           ..write('doseUnit: $doseUnit, ')
@@ -1131,6 +1383,13 @@ class Medication extends DataClass implements Insertable<Medication> {
     unit,
     notes,
     isScanned,
+    genericName,
+    activeIngredients,
+    drugCategory,
+    purpose,
+    sideEffects,
+    warnings,
+    route,
     timesPerDay,
     dosePerTime,
     doseUnit,
@@ -1163,6 +1422,13 @@ class Medication extends DataClass implements Insertable<Medication> {
           other.unit == this.unit &&
           other.notes == this.notes &&
           other.isScanned == this.isScanned &&
+          other.genericName == this.genericName &&
+          other.activeIngredients == this.activeIngredients &&
+          other.drugCategory == this.drugCategory &&
+          other.purpose == this.purpose &&
+          other.sideEffects == this.sideEffects &&
+          other.warnings == this.warnings &&
+          other.route == this.route &&
           other.timesPerDay == this.timesPerDay &&
           other.dosePerTime == this.dosePerTime &&
           other.doseUnit == this.doseUnit &&
@@ -1193,6 +1459,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   final Value<String?> unit;
   final Value<String?> notes;
   final Value<bool> isScanned;
+  final Value<String?> genericName;
+  final Value<String?> activeIngredients;
+  final Value<String?> drugCategory;
+  final Value<String?> purpose;
+  final Value<String?> sideEffects;
+  final Value<String?> warnings;
+  final Value<String?> route;
   final Value<int> timesPerDay;
   final Value<double> dosePerTime;
   final Value<String> doseUnit;
@@ -1221,6 +1494,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.unit = const Value.absent(),
     this.notes = const Value.absent(),
     this.isScanned = const Value.absent(),
+    this.genericName = const Value.absent(),
+    this.activeIngredients = const Value.absent(),
+    this.drugCategory = const Value.absent(),
+    this.purpose = const Value.absent(),
+    this.sideEffects = const Value.absent(),
+    this.warnings = const Value.absent(),
+    this.route = const Value.absent(),
     this.timesPerDay = const Value.absent(),
     this.dosePerTime = const Value.absent(),
     this.doseUnit = const Value.absent(),
@@ -1250,6 +1530,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.unit = const Value.absent(),
     this.notes = const Value.absent(),
     this.isScanned = const Value.absent(),
+    this.genericName = const Value.absent(),
+    this.activeIngredients = const Value.absent(),
+    this.drugCategory = const Value.absent(),
+    this.purpose = const Value.absent(),
+    this.sideEffects = const Value.absent(),
+    this.warnings = const Value.absent(),
+    this.route = const Value.absent(),
     this.timesPerDay = const Value.absent(),
     this.dosePerTime = const Value.absent(),
     this.doseUnit = const Value.absent(),
@@ -1281,6 +1568,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Expression<String>? unit,
     Expression<String>? notes,
     Expression<bool>? isScanned,
+    Expression<String>? genericName,
+    Expression<String>? activeIngredients,
+    Expression<String>? drugCategory,
+    Expression<String>? purpose,
+    Expression<String>? sideEffects,
+    Expression<String>? warnings,
+    Expression<String>? route,
     Expression<int>? timesPerDay,
     Expression<double>? dosePerTime,
     Expression<String>? doseUnit,
@@ -1310,6 +1604,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       if (unit != null) 'unit': unit,
       if (notes != null) 'notes': notes,
       if (isScanned != null) 'is_scanned': isScanned,
+      if (genericName != null) 'generic_name': genericName,
+      if (activeIngredients != null) 'active_ingredients': activeIngredients,
+      if (drugCategory != null) 'drug_category': drugCategory,
+      if (purpose != null) 'purpose': purpose,
+      if (sideEffects != null) 'side_effects': sideEffects,
+      if (warnings != null) 'warnings': warnings,
+      if (route != null) 'route': route,
       if (timesPerDay != null) 'times_per_day': timesPerDay,
       if (dosePerTime != null) 'dose_per_time': dosePerTime,
       if (doseUnit != null) 'dose_unit': doseUnit,
@@ -1347,6 +1648,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Value<String?>? unit,
     Value<String?>? notes,
     Value<bool>? isScanned,
+    Value<String?>? genericName,
+    Value<String?>? activeIngredients,
+    Value<String?>? drugCategory,
+    Value<String?>? purpose,
+    Value<String?>? sideEffects,
+    Value<String?>? warnings,
+    Value<String?>? route,
     Value<int>? timesPerDay,
     Value<double>? dosePerTime,
     Value<String>? doseUnit,
@@ -1376,6 +1684,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       unit: unit ?? this.unit,
       notes: notes ?? this.notes,
       isScanned: isScanned ?? this.isScanned,
+      genericName: genericName ?? this.genericName,
+      activeIngredients: activeIngredients ?? this.activeIngredients,
+      drugCategory: drugCategory ?? this.drugCategory,
+      purpose: purpose ?? this.purpose,
+      sideEffects: sideEffects ?? this.sideEffects,
+      warnings: warnings ?? this.warnings,
+      route: route ?? this.route,
       timesPerDay: timesPerDay ?? this.timesPerDay,
       dosePerTime: dosePerTime ?? this.dosePerTime,
       doseUnit: doseUnit ?? this.doseUnit,
@@ -1428,6 +1743,27 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     }
     if (isScanned.present) {
       map['is_scanned'] = Variable<bool>(isScanned.value);
+    }
+    if (genericName.present) {
+      map['generic_name'] = Variable<String>(genericName.value);
+    }
+    if (activeIngredients.present) {
+      map['active_ingredients'] = Variable<String>(activeIngredients.value);
+    }
+    if (drugCategory.present) {
+      map['drug_category'] = Variable<String>(drugCategory.value);
+    }
+    if (purpose.present) {
+      map['purpose'] = Variable<String>(purpose.value);
+    }
+    if (sideEffects.present) {
+      map['side_effects'] = Variable<String>(sideEffects.value);
+    }
+    if (warnings.present) {
+      map['warnings'] = Variable<String>(warnings.value);
+    }
+    if (route.present) {
+      map['route'] = Variable<String>(route.value);
     }
     if (timesPerDay.present) {
       map['times_per_day'] = Variable<int>(timesPerDay.value);
@@ -1508,6 +1844,13 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
           ..write('unit: $unit, ')
           ..write('notes: $notes, ')
           ..write('isScanned: $isScanned, ')
+          ..write('genericName: $genericName, ')
+          ..write('activeIngredients: $activeIngredients, ')
+          ..write('drugCategory: $drugCategory, ')
+          ..write('purpose: $purpose, ')
+          ..write('sideEffects: $sideEffects, ')
+          ..write('warnings: $warnings, ')
+          ..write('route: $route, ')
           ..write('timesPerDay: $timesPerDay, ')
           ..write('dosePerTime: $dosePerTime, ')
           ..write('doseUnit: $doseUnit, ')

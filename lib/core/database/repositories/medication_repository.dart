@@ -82,6 +82,13 @@ class MedicationRepository {
       reminderDaysBeforeRunOut: drift.Value(formData.reminderDaysBeforeRunOut),
       customSoundPath: drift.Value(formData.customSoundPath),
       maxSnoozesPerDay: drift.Value(formData.maxSnoozesPerDay),
+      genericName: drift.Value(formData.genericName),
+      activeIngredients: drift.Value(formData.activeIngredients),
+      drugCategory: drift.Value(formData.drugCategory),
+      purpose: drift.Value(formData.purpose),
+      sideEffects: drift.Value(formData.sideEffects),
+      warnings: drift.Value(formData.drugWarnings),
+      route: drift.Value(formData.drugRoute),
     );
 
     // Use transaction to ensure medication + reminder times are saved atomically
@@ -139,6 +146,13 @@ class MedicationRepository {
       reminderDaysBeforeExpiry: formData.reminderDaysBeforeExpiry,
       enableRecurringReminders: formData.enableRecurringReminders,
       recurringReminderInterval: formData.recurringReminderInterval,
+      genericName: drift.Value(formData.genericName),
+      activeIngredients: drift.Value(formData.activeIngredients),
+      drugCategory: drift.Value(formData.drugCategory),
+      purpose: drift.Value(formData.purpose),
+      sideEffects: drift.Value(formData.sideEffects),
+      warnings: drift.Value(formData.drugWarnings),
+      route: drift.Value(formData.drugRoute),
       updatedAt: DateTime.now(),
     );
 
@@ -472,6 +486,13 @@ class MedicationRepository {
       reminderDaysBeforeRunOut: medication.reminderDaysBeforeRunOut,
       customSoundPath: medication.customSoundPath,
       maxSnoozesPerDay: medication.maxSnoozesPerDay,
+      genericName: medication.genericName,
+      activeIngredients: medication.activeIngredients,
+      drugCategory: medication.drugCategory,
+      purpose: medication.purpose,
+      sideEffects: medication.sideEffects,
+      drugWarnings: medication.warnings,
+      drugRoute: medication.route,
     );
   }
 

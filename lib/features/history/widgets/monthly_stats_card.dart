@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:med_assist/core/constants/app_constants.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 import 'package:med_assist/core/widgets/animated_card.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
@@ -27,7 +28,7 @@ class MonthlyStatsCard extends StatelessWidget {
     final totalDoses = stats['total'] as int;
 
     return AnimatedCard(
-      onTap: () => context.push('/analytics'),
+      onTap: () => context.push(AppConstants.routeAnalytics),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

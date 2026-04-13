@@ -95,6 +95,13 @@ class MedicationFormData {
     this.maxSnoozesPerDay = 3,
     this.enableRecurringReminders,
     this.recurringReminderInterval,
+    this.genericName,
+    this.activeIngredients,
+    this.drugCategory,
+    this.purpose,
+    this.sideEffects,
+    this.drugWarnings,
+    this.drugRoute,
   })  : reminderTimes = reminderTimes ?? [],
         specificDaysOfWeek = specificDaysOfWeek ?? repetitionPattern.defaultDays;
   // ID (null for new, set for edit)
@@ -134,6 +141,15 @@ class MedicationFormData {
   bool? enableRecurringReminders;
   int? recurringReminderInterval;
 
+  // AI-enriched drug info
+  String? genericName;
+  String? activeIngredients;
+  String? drugCategory;
+  String? purpose;
+  String? sideEffects;
+  String? drugWarnings;
+  String? drugRoute;
+
   /// Check if this is an edit (has ID) or new medication
   bool get isEdit => id != null;
 
@@ -163,6 +179,13 @@ class MedicationFormData {
     int? maxSnoozesPerDay,
     bool? enableRecurringReminders,
     int? recurringReminderInterval,
+    String? genericName,
+    String? activeIngredients,
+    String? drugCategory,
+    String? purpose,
+    String? sideEffects,
+    String? drugWarnings,
+    String? drugRoute,
   }) {
     return MedicationFormData(
       id: id ?? this.id,
@@ -191,6 +214,13 @@ class MedicationFormData {
       maxSnoozesPerDay: maxSnoozesPerDay ?? this.maxSnoozesPerDay,
       enableRecurringReminders: enableRecurringReminders ?? this.enableRecurringReminders,
       recurringReminderInterval: recurringReminderInterval ?? this.recurringReminderInterval,
+      genericName: genericName ?? this.genericName,
+      activeIngredients: activeIngredients ?? this.activeIngredients,
+      drugCategory: drugCategory ?? this.drugCategory,
+      purpose: purpose ?? this.purpose,
+      sideEffects: sideEffects ?? this.sideEffects,
+      drugWarnings: drugWarnings ?? this.drugWarnings,
+      drugRoute: drugRoute ?? this.drugRoute,
     );
   }
 

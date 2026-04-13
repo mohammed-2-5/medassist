@@ -3,21 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
 import 'package:med_assist/features/add_medication/providers/medication_form_provider.dart';
-import 'package:med_assist/features/add_medication/screens/barcode_scanner_screen.dart';
 import 'package:med_assist/features/add_medication/widgets/scan_medication_dialog.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
-import 'package:med_assist/services/drug_database/models/drug_info.dart';
 import 'package:med_assist/services/ocr/ocr_service.dart';
 import 'package:med_assist/services/permissions/permissions_service.dart';
 
-/// Static action handlers for Step 1 (Type & Info).
 class Step1Actions {
   Step1Actions._();
 
   static final _imagePicker = ImagePicker();
   static final _permissionsService = PermissionsService();
 
-  /// Scan medicine name via OCR dialog.
   static Future<void> scanMedicineName({
     required BuildContext context,
     required WidgetRef ref,
@@ -72,91 +68,6 @@ class Step1Actions {
     );
   }
 
-  /// Scan barcode and auto-fill form.
-  static Future<void> scanBarcode({
-    required BuildContext context,
-    required WidgetRef ref,
-    required TextEditingController nameController,
-    required TextEditingController strengthController,
-    required TextEditingController notesController,
-    required List<String> strengthUnits,
-    required ValueChanged<String> onUnitChanged,
-  }) async {
-    try {
-      final hasPermission = await _permissionsService.isCameraGranted();
-      if (!hasPermission) {
-        final granted = await _permissionsService.requestCameraPermission();
-        if (!granted) {
-          if (!context.mounted) return;
-          await _permissionsService.showPermissionDeniedDialog(
-            context,
-            title: 'Camera Permission Required',
-            message:
-                'Camera access is needed to scan medication barcodes. '
-                'Please grant permission in Settings.',
-          );
-          return;
-        }
-      }
-
-      if (!context.mounted) return;
-      final result = await Navigator.push<dynamic>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const BarcodeScannerScreen(),
-        ),
-      );
-
-      if (result == null || !context.mounted) return;
-
-      if (result is DrugInfo) {
-        _fillFromDrugInfo(
-          result,
-          ref: ref,
-          nameController: nameController,
-          strengthController: strengthController,
-          notesController: notesController,
-          strengthUnits: strengthUnits,
-          onUnitChanged: onUnitChanged,
-        );
-
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!
-                  .medicationFound(result.displayName)),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      } else if (result is String) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!
-                  .scannedCodeEnterManually(result)),
-              backgroundColor: Colors.orange,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!
-                .errorScanningBarcode(e.toString())),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    }
-  }
-
-  /// Take a photo with the camera.
   static Future<void> takePhoto({
     required BuildContext context,
     required WidgetRef ref,
@@ -227,7 +138,6 @@ class Step1Actions {
     }
   }
 
-  /// Pick a photo from gallery.
   static Future<void> pickFromGallery({
     required BuildContext context,
     required WidgetRef ref,
@@ -298,7 +208,6 @@ class Step1Actions {
     }
   }
 
-  /// Remove the medicine photo.
   static void removePhoto({
     required BuildContext context,
     required WidgetRef ref,
@@ -318,8 +227,6 @@ class Step1Actions {
       ),
     );
   }
-
-  // ── Private helpers ────────────────────────────────────────────────
 
   static MedicineType? _detectMedicineType(String dosageForm) {
     final form = dosageForm.toLowerCase();
@@ -343,65 +250,5 @@ class Step1Actions {
       return MedicineType.ivSolution;
     }
     return null;
-  }
-
-  static void _fillFromDrugInfo(
-    DrugInfo result, {
-    required WidgetRef ref,
-    required TextEditingController nameController,
-    required TextEditingController strengthController,
-    required TextEditingController notesController,
-    required List<String> strengthUnits,
-    required ValueChanged<String> onUnitChanged,
-  }) {
-    nameController.text = result.displayName;
-
-    MedicineType medicineTypeEnum;
-    switch (result.medicineType.toLowerCase()) {
-      case 'injection':
-        medicineTypeEnum = MedicineType.injection;
-      case 'syrup':
-      case 'solution':
-      case 'suspension':
-        medicineTypeEnum = MedicineType.syrup;
-      case 'suppository':
-        medicineTypeEnum = MedicineType.suppository;
-      case 'inhaler':
-      case 'drops':
-        medicineTypeEnum = MedicineType.drops;
-      case 'cream':
-      case 'ointment':
-      case 'gel':
-      case 'tablet':
-      case 'capsule':
-      default:
-        medicineTypeEnum = MedicineType.pill;
-    }
-    ref
-        .read(medicationFormProvider.notifier)
-        .setMedicineType(medicineTypeEnum);
-
-    if (result.strength != null && result.strength!.isNotEmpty) {
-      final strengthMatch =
-          RegExp(r'(\d+\.?\d*)\s*([a-zA-Z]+)').firstMatch(result.strength!);
-
-      if (strengthMatch != null) {
-        strengthController.text = strengthMatch.group(1)!;
-        final unit = strengthMatch.group(2)!.toLowerCase();
-        if (strengthUnits.contains(unit)) {
-          onUnitChanged(unit);
-        }
-      } else {
-        strengthController.text = result.strength!;
-      }
-    }
-
-    if (result.manufacturer != null) {
-      final currentNotes = notesController.text;
-      final manufacturerNote = 'Manufacturer: ${result.manufacturer}';
-      notesController.text = currentNotes.isEmpty
-          ? manufacturerNote
-          : '$currentNotes\n\n$manufacturerNote';
-    }
   }
 }

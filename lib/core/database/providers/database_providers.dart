@@ -20,10 +20,10 @@ final hasMedicationsProvider = FutureProvider<bool>((ref) async {
   return repository.hasMedications();
 });
 
-/// Provider to get all medications
+/// Provider to get all medications (active + paused)
 final medicationsProvider = FutureProvider<List<Medication>>((ref) async {
-  final repository = ref.watch(medicationRepositoryProvider);
-  return repository.getAllMedications();
+  final db = ref.watch(appDatabaseProvider);
+  return db.getAllMedicationsIncludingInactive();
 });
 
 /// Provider to get today's medications

@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
-import 'package:med_assist/core/widgets/glass_container.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
-/// Premium Bottom Navigation Bar
-///
-/// Features:
-/// - 4 unique gradient colors per tab
-/// - Animated icon backgrounds with scale effects
-/// - Shimmer badges for expiring medications and low stock
-/// - Glass effect background
+/// Modern bottom navigation bar. Single-accent Material 3 look with an
+/// animated expanding pill for the selected tab.
 class PremiumBottomNavigationBar extends ConsumerWidget {
   const PremiumBottomNavigationBar({
     required this.currentIndex,
@@ -24,195 +18,227 @@ class PremiumBottomNavigationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final isDark = theme.brightness == Brightness.dark;
 
-    final lowStockFuture = ref.watch(appDatabaseProvider).getLowStockMedications();
-    final expiringFuture = ref.watch(appDatabaseProvider).getExpiringMedications();
+    final db = ref.watch(appDatabaseProvider);
 
-    final tabColors = [
-      const Color(0xFF6366F1), // Home - Indigo
-      const Color(0xFF10B981), // Medications - Emerald
-      const Color(0xFFF59E0B), // Analytics - Amber
-      const Color(0xFF06B6D4), // AI Chat - Cyan
+    final tabs = <_NavTab>[
+      _NavTab(
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home_rounded,
+        label: l10n.home,
+      ),
+      _NavTab(
+        icon: Icons.medication_outlined,
+        selectedIcon: Icons.medication_rounded,
+        label: l10n.medications,
+      ),
+      _NavTab(
+        icon: Icons.insights_outlined,
+        selectedIcon: Icons.insights_rounded,
+        label: l10n.analytics,
+      ),
+      _NavTab(
+        icon: Icons.auto_awesome_outlined,
+        selectedIcon: Icons.auto_awesome_rounded,
+        label: l10n.aiAssistant,
+      ),
     ];
 
-    final tabIcons = [
-      Icons.home_rounded,
-      Icons.medication_liquid_rounded,
-      Icons.pie_chart_rounded,
-      Icons.psychology_rounded,
-    ];
+    final barColor = isDark
+        ? colorScheme.surfaceContainerHigh
+        : colorScheme.surface;
 
-    final tabLabels = [
-      l10n.home,
-      l10n.medications,
-      l10n.analytics,
-      l10n.aiAssistant,
-    ];
-
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
+        color: barColor,
+        border: Border(
+          top: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.15),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
+            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
-      child: ClipRect(
-        child: GlassContainer(
-          blur: 20,
-          opacity: theme.brightness == Brightness.dark ? 0.25 : 0.1,
-          borderRadius: 0,
-          child: SafeArea(
-            child: Container(
-              height: 70,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(4, (index) {
-                  final isSelected = currentIndex == index;
-                  final color = tabColors[index];
-
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => onTap(index),
-                      behavior: HitTestBehavior.opaque,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOutCubic,
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeOutCubic,
-                                  width: isSelected ? 56 : 40,
-                                  height: isSelected ? 32 : 28,
-                                  decoration: BoxDecoration(
-                                    gradient: isSelected
-                                        ? LinearGradient(
-                                            colors: [
-                                              color,
-                                              color.withOpacity(0.7),
-                                            ],
-                                          )
-                                        : null,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: color.withOpacity(0.4),
-                                              blurRadius: 12,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Icon(
-                                    tabIcons[index],
-                                    size: isSelected ? 22 : 20,
-                                    color: isSelected
-                                        ? Colors.white
-                                        : colorScheme.onSurface.withOpacity(0.6),
-                                  ).animate(target: isSelected ? 1 : 0)
-                                    .scale(
-                                      begin: const Offset(0.9, 0.9),
-                                      end: const Offset(1.1, 1.1),
-                                      duration: const Duration(milliseconds: 300),
-                                    ),
-                                ),
-                                if (index == 1)
-                                  _buildCombinedBadge(
-                                    expiringFuture,
-                                    lowStockFuture,
-                                    colorScheme.error,
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 300),
-                              style: theme.textTheme.labelSmall!.copyWith(
-                                fontSize: isSelected ? 11 : 10,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                                color: isSelected
-                                    ? color
-                                    : colorScheme.onSurface.withOpacity(0.6),
-                                letterSpacing: 0.5,
-                              ),
-                              child: Text(
-                                tabLabels[index],
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Row(
+              children: [
+                for (var i = 0; i < tabs.length; i++)
+                  Expanded(
+                    child: _NavItem(
+                      tab: tabs[i],
+                      isSelected: currentIndex == i,
+                      onTap: () => onTap(i),
+                      badge: i == 1
+                          ? _AlertBadge(database: db)
+                          : null,
                     ),
-                  );
-                }),
-              ),
+                  ),
+              ],
             ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildCombinedBadge(
-    Future<List<dynamic>> future1,
-    Future<List<dynamic>> future2,
-    Color color,
-  ) {
-    return FutureBuilder<List<List<dynamic>>>(
-      future: Future.wait([future1, future2]),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data!.length < 2) return const SizedBox.shrink();
-        final count = snapshot.data![0].length + snapshot.data![1].length;
-        if (count == 0) return const SizedBox.shrink();
+class _NavTab {
+  const _NavTab({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+  });
 
-        return Positioned(
-          right: -4,
-          top: -4,
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: color.withOpacity(0.5),
-                  blurRadius: 6,
-                  spreadRadius: 1,
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.tab,
+    required this.isSelected,
+    required this.onTap,
+    this.badge,
+  });
+
+  final _NavTab tab;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final Widget? badge;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final selectedFg = colorScheme.onPrimaryContainer;
+    final unselectedFg = colorScheme.onSurfaceVariant;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        splashColor: colorScheme.primary.withValues(alpha: 0.12),
+        highlightColor: colorScheme.primary.withValues(alpha: 0.06),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 320),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.primaryContainer
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 220),
+                    transitionBuilder: (child, anim) => ScaleTransition(
+                      scale: anim,
+                      child: FadeTransition(opacity: anim, child: child),
+                    ),
+                    child: Icon(
+                      isSelected ? tab.selectedIcon : tab.icon,
+                      key: ValueKey<bool>(isSelected),
+                      size: 22,
+                      color: isSelected ? selectedFg : unselectedFg,
+                    ),
+                  ),
+                  if (badge != null)
+                    Positioned(
+                      right: -6,
+                      top: -4,
+                      child: badge!,
+                    ),
+                ],
+              ),
+              if (isSelected) ...[
+                const SizedBox(width: 6),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      tab.label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: selectedFg,
+                      ),
+                      maxLines: 1,
+                    ),
+                  ),
                 ),
               ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AlertBadge extends StatelessWidget {
+  const _AlertBadge({required this.database});
+
+  final AppDatabase database;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return FutureBuilder<List<int>>(
+      future: Future.wait([
+        database.getLowStockMedications().then((l) => l.length),
+        database.getExpiringMedications().then((l) => l.length),
+      ]),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data!.length < 2) {
+          return const SizedBox.shrink();
+        }
+        final count = snapshot.data![0] + snapshot.data![1];
+        if (count == 0) return const SizedBox.shrink();
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+          constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+          decoration: BoxDecoration(
+            color: colorScheme.error,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: colorScheme.surface,
+              width: 1.5,
             ),
-            constraints: const BoxConstraints(
-              minWidth: 18,
-              minHeight: 18,
+          ),
+          child: Text(
+            count > 9 ? '9+' : '$count',
+            style: TextStyle(
+              color: colorScheme.onError,
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              height: 1.2,
             ),
-            child: Text(
-              count > 9 ? '9+' : '$count',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onError,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ).animate(onPlay: (controller) => controller.repeat())
-           .shimmer(
-             duration: const Duration(milliseconds: 1500),
-             color: Theme.of(context).colorScheme.onError.withOpacity(0.3),
-           ),
+            textAlign: TextAlign.center,
+          ),
         );
       },
     );

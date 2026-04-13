@@ -1,6 +1,6 @@
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/services/ai/ai_drug_info_service.dart';
 
-/// Drug interaction warning model
 class InteractionWarning {
   InteractionWarning({
     required this.medication1,
@@ -17,245 +17,356 @@ class InteractionWarning {
   final String recommendation;
 
   @override
-  String toString() {
-    return '$medication1 + $medication2: $description';
-  }
+  String toString() => '$medication1 + $medication2: $description';
 }
 
-/// Interaction severity levels
 enum InteractionSeverity {
-  minor,     // Minor interaction, monitor
-  moderate,  // Moderate interaction, caution advised
-  major,     // Major interaction, avoid if possible
-  severe,    // Severe interaction, do not combine
+  minor,
+  moderate,
+  major,
+  severe,
 }
 
-/// Service for checking drug-drug interactions
 class DrugInteractionService {
   DrugInteractionService(this._database);
 
   final AppDatabase _database;
 
-  /// Common drug interactions database
-  /// Format: 'drug1' -> List of drugs that interact with drug1
-  /// This is a simplified database. In production, use a comprehensive medical API
-  static const Map<String, List<String>> _interactionPairs = {
-    // Anticoagulants
-    'warfarin': ['aspirin', 'ibuprofen', 'naproxen', 'diclofenac', 'vitamin k', 'vitamin e'],
+  static const Map<String, List<String>> _categoryConflicts = {
+    'nsaid': ['nsaid', 'anticoagulant', 'blood thinner'],
+    'anticoagulant': ['nsaid', 'anticoagulant', 'antiplatelet'],
+    'blood thinner': ['nsaid', 'blood thinner', 'anticoagulant'],
+    'antiplatelet': ['anticoagulant', 'antiplatelet'],
+    'ace inhibitor': ['arb', 'potassium-sparing diuretic'],
+    'arb': ['ace inhibitor'],
+    'ssri': ['maoi', 'snri', 'tca'],
+    'maoi': ['ssri', 'snri', 'tca'],
+    'snri': ['maoi', 'ssri'],
+    'tca': ['maoi', 'ssri'],
+  };
 
-    // NSAIDs
+  static const Map<String, List<String>> _ingredientConflicts = {
+    'warfarin': ['aspirin', 'ibuprofen', 'naproxen', 'diclofenac'],
     'aspirin': ['warfarin', 'ibuprofen', 'naproxen', 'heparin'],
     'ibuprofen': ['warfarin', 'aspirin', 'lithium', 'methotrexate'],
     'naproxen': ['warfarin', 'aspirin', 'lithium'],
     'diclofenac': ['warfarin', 'methotrexate'],
-
-    // Diabetes medications
-    'metformin': ['alcohol', 'contrast dye', 'iodine'],
-    'insulin': ['alcohol', 'beta blockers'],
-    'glipizide': ['alcohol', 'beta blockers'],
-
-    // Blood pressure medications
-    'lisinopril': ['potassium', 'nsaids', 'lithium'],
-    'losartan': ['potassium', 'nsaids'],
-    'amlodipine': ['simvastatin', 'clarithromycin'],
-    'atenolol': ['insulin', 'calcium'],
-
-    // Statins
-    'atorvastatin': ['clarithromycin', 'itraconazole', 'grapefruit'],
-    'simvastatin': ['amlodipine', 'clarithromycin', 'grapefruit'],
-
-    // Antibiotics
-    'ciprofloxacin': ['theophylline', 'warfarin', 'antacids'],
-    'azithromycin': ['warfarin', 'digoxin'],
+    'metformin': ['contrast dye'],
+    'lisinopril': ['potassium', 'lithium'],
+    'losartan': ['potassium', 'lithium'],
+    'atorvastatin': ['clarithromycin', 'itraconazole'],
+    'simvastatin': ['amlodipine', 'clarithromycin'],
+    'ciprofloxacin': ['theophylline', 'warfarin'],
     'clarithromycin': ['simvastatin', 'atorvastatin', 'warfarin'],
-
-    // Antidepressants
-    'sertraline': ['tramadol', 'warfarin', 'nsaids'],
-    'fluoxetine': ['tramadol', 'warfarin', 'aspirin'],
-    'citalopram': ['tramadol', 'nsaids'],
-
-    // Pain medications
+    'sertraline': ['tramadol', 'warfarin'],
+    'fluoxetine': ['tramadol', 'warfarin'],
     'tramadol': ['sertraline', 'fluoxetine', 'citalopram'],
-
-    // Other common medications
-    'digoxin': ['amiodarone', 'verapamil', 'quinidine'],
+    'digoxin': ['amiodarone', 'verapamil'],
     'lithium': ['ibuprofen', 'naproxen', 'lisinopril'],
-    'theophylline': ['ciprofloxacin', 'erythromycin'],
-    'levothyroxine': ['calcium', 'iron', 'antacids'],
+    'levothyroxine': ['calcium', 'iron'],
+    'amoxicillin': ['methotrexate'],
+    'methotrexate': ['ibuprofen', 'diclofenac', 'amoxicillin'],
   };
 
-  /// Severity levels for drug pairs
-  /// Format: 'drug1:drug2' -> severity
-  static const Map<String, InteractionSeverity> _severityLevels = {
-    // Severe interactions
+  static const Map<String, InteractionSeverity> _knownSeverities = {
     'warfarin:aspirin': InteractionSeverity.severe,
     'warfarin:ibuprofen': InteractionSeverity.major,
     'warfarin:naproxen': InteractionSeverity.major,
-    'metformin:alcohol': InteractionSeverity.major,
-    'insulin:alcohol': InteractionSeverity.major,
-
-    // Major interactions
-    'atorvastatin:clarithromycin': InteractionSeverity.major,
-    'simvastatin:amlodipine': InteractionSeverity.major,
-    'lisinopril:potassium': InteractionSeverity.major,
     'tramadol:sertraline': InteractionSeverity.major,
-
-    // Moderate interactions
-    'aspirin:ibuprofen': InteractionSeverity.moderate,
+    'tramadol:fluoxetine': InteractionSeverity.major,
+    'simvastatin:amlodipine': InteractionSeverity.major,
+    'atorvastatin:clarithromycin': InteractionSeverity.major,
+    'lisinopril:potassium': InteractionSeverity.major,
     'levothyroxine:calcium': InteractionSeverity.moderate,
-    'atenolol:insulin': InteractionSeverity.moderate,
-
-    // Default to moderate for unlisted pairs
+    'aspirin:ibuprofen': InteractionSeverity.moderate,
   };
 
-  /// Detailed descriptions for common interactions
-  static const Map<String, String> _interactionDescriptions = {
-    'warfarin:aspirin': 'Increased risk of bleeding. Both medications thin the blood.',
-    'warfarin:ibuprofen': 'NSAIDs can increase bleeding risk when combined with warfarin.',
-    'metformin:alcohol': 'Alcohol can increase risk of lactic acidosis with metformin.',
-    'lisinopril:potassium': 'ACE inhibitors can increase potassium levels, leading to hyperkalemia.',
-    'atorvastatin:clarithromycin': 'Clarithromycin increases statin levels, raising risk of muscle damage.',
-    'simvastatin:amlodipine': 'Amlodipine increases simvastatin levels, raising muscle damage risk.',
-    'tramadol:sertraline': 'Increased risk of serotonin syndrome when combined.',
-    'levothyroxine:calcium': 'Calcium can reduce thyroid hormone absorption.',
-    'aspirin:ibuprofen': "Taking together may reduce aspirin's cardioprotective effects.",
-    'insulin:alcohol': 'Alcohol can cause dangerous blood sugar drops with insulin.',
-  };
-
-  /// Recommendations for common interactions
-  static const Map<String, String> _interactionRecommendations = {
-    'warfarin:aspirin': 'Consult your doctor immediately. This combination requires careful monitoring.',
-    'warfarin:ibuprofen': 'Consider acetaminophen as an alternative. If necessary, use lowest dose and monitor closely.',
-    'metformin:alcohol': 'Avoid alcohol or limit to small amounts. Discuss with your doctor.',
-    'lisinopril:potassium': 'Monitor potassium levels regularly. Avoid potassium supplements without doctor approval.',
-    'atorvastatin:clarithromycin': 'Consider suspending statin during antibiotic treatment. Consult your doctor.',
-    'tramadol:sertraline': 'Watch for symptoms of serotonin syndrome. Notify doctor if you experience confusion, fever, or rapid heart rate.',
-    'levothyroxine:calcium': 'Take calcium at least 4 hours apart from thyroid medication.',
-    'aspirin:ibuprofen': 'Take aspirin at least 2 hours before ibuprofen if both are needed.',
-    'insulin:alcohol': 'Monitor blood sugar closely if consuming alcohol. Have snacks available.',
-  };
-
-  /// Check for interactions between all user's medications
   Future<List<InteractionWarning>> checkAllInteractions() async {
     final medications = await _database.getAllMedications();
-    return checkInteractions(medications);
+    return _checkLocalInteractions(medications);
   }
 
-  /// Check for interactions in a list of medications
-  List<InteractionWarning> checkInteractions(List<Medication> medications) {
+  Future<List<InteractionWarning>> checkNewMedication(
+    String medicationName, {
+    String? activeIngredients,
+    String? drugCategory,
+  }) async {
+    final existing = await _database.getAllMedications();
     final warnings = <InteractionWarning>[];
 
-    // Check each pair of medications
-    for (var i = 0; i < medications.length; i++) {
-      for (var j = i + 1; j < medications.length; j++) {
-        final med1Name = medications[i].medicineName.toLowerCase();
-        final med2Name = medications[j].medicineName.toLowerCase();
+    final newIngredients = _parseIngredients(activeIngredients);
+    final newCategory = drugCategory?.toLowerCase().trim() ?? '';
 
-        final warning = _checkPairInteraction(
-          medications[i].medicineName,
-          medications[j].medicineName,
-          med1Name,
-          med2Name,
+    for (final med in existing) {
+      final existingIngredients = _parseIngredients(med.activeIngredients);
+      final existingCategory = med.drugCategory?.toLowerCase().trim() ?? '';
+
+      final categoryWarning = _checkCategoryConflict(
+        medicationName,
+        med.medicineName,
+        newCategory,
+        existingCategory,
+      );
+      if (categoryWarning != null) {
+        warnings.add(categoryWarning);
+        continue;
+      }
+
+      final ingredientWarning = _checkIngredientConflict(
+        medicationName,
+        med.medicineName,
+        newIngredients,
+        existingIngredients,
+      );
+      if (ingredientWarning != null) {
+        warnings.add(ingredientWarning);
+        continue;
+      }
+
+      final nameWarning = _checkNameConflict(
+        medicationName,
+        med.medicineName,
+      );
+      if (nameWarning != null) {
+        warnings.add(nameWarning);
+      }
+    }
+
+    // AI deep check for interactions missed by local rules
+    if (existing.isNotEmpty) {
+      final aiWarnings = await _checkWithAi(
+        medicationName,
+        existing,
+        activeIngredients,
+      );
+      for (final ai in aiWarnings) {
+        final alreadyFound = warnings.any(
+          (w) =>
+              w.medication2.toLowerCase() == ai.medication2.toLowerCase() ||
+              w.medication1.toLowerCase() == ai.medication2.toLowerCase(),
         );
+        if (!alreadyFound) warnings.add(ai);
+      }
+    }
 
-        if (warning != null) {
-          warnings.add(warning);
+    warnings.sort((a, b) => b.severity.index.compareTo(a.severity.index));
+    return warnings;
+  }
+
+  List<String> _parseIngredients(String? raw) {
+    if (raw == null || raw.isEmpty) return [];
+    return raw.split(',').map((e) => e.trim().toLowerCase()).toList();
+  }
+
+  InteractionWarning? _checkCategoryConflict(
+    String name1,
+    String name2,
+    String cat1,
+    String cat2,
+  ) {
+    if (cat1.isEmpty || cat2.isEmpty) return null;
+
+    final conflicts = _categoryConflicts[cat1];
+    if (conflicts == null) return null;
+
+    for (final conflict in conflicts) {
+      if (cat2.contains(conflict)) {
+        return InteractionWarning(
+          medication1: name1,
+          medication2: name2,
+          severity: InteractionSeverity.major,
+          description:
+              'Both medications belong to conflicting categories ($cat1 + $cat2). '
+              'Using them together increases risk of adverse effects.',
+          recommendation:
+              'Consult your doctor before taking these medications together.',
+        );
+      }
+    }
+    return null;
+  }
+
+  InteractionWarning? _checkIngredientConflict(
+    String name1,
+    String name2,
+    List<String> ingredients1,
+    List<String> ingredients2,
+  ) {
+    for (final ing1 in ingredients1) {
+      final conflicts = _ingredientConflicts[ing1];
+      if (conflicts == null) continue;
+      for (final ing2 in ingredients2) {
+        if (conflicts.contains(ing2)) {
+          final key1 = '$ing1:$ing2';
+          final key2 = '$ing2:$ing1';
+          final severity = _knownSeverities[key1] ??
+              _knownSeverities[key2] ??
+              InteractionSeverity.moderate;
+          return InteractionWarning(
+            medication1: name1,
+            medication2: name2,
+            severity: severity,
+            description:
+                'Active ingredient $ing1 interacts with $ing2.',
+            recommendation:
+                'Consult your doctor or pharmacist about this combination.',
+          );
         }
       }
     }
 
-    // Sort by severity (severe first)
-    warnings.sort((a, b) => b.severity.index.compareTo(a.severity.index));
-
-    return warnings;
-  }
-
-  /// Check if a specific medication would interact with existing medications
-  Future<List<InteractionWarning>> checkNewMedication(String medicationName) async {
-    final existingMedications = await _database.getAllMedications();
-    final warnings = <InteractionWarning>[];
-
-    final newMedName = medicationName.toLowerCase();
-
-    for (final existingMed in existingMedications) {
-      final existingMedName = existingMed.medicineName.toLowerCase();
-
-      final warning = _checkPairInteraction(
-        medicationName,
-        existingMed.medicineName,
-        newMedName,
-        existingMedName,
-      );
-
-      if (warning != null) {
-        warnings.add(warning);
+    // Same ingredient in both
+    for (final ing1 in ingredients1) {
+      if (ingredients2.contains(ing1)) {
+        return InteractionWarning(
+          medication1: name1,
+          medication2: name2,
+          severity: InteractionSeverity.major,
+          description:
+              'Both medications contain $ing1. Taking both may cause overdose.',
+          recommendation: 'Do not take both without doctor approval.',
+        );
       }
     }
 
-    warnings.sort((a, b) => b.severity.index.compareTo(a.severity.index));
+    return null;
+  }
 
+  InteractionWarning? _checkNameConflict(String name1, String name2) {
+    final n1 = name1.toLowerCase().trim();
+    final n2 = name2.toLowerCase().trim();
+    final conflicts = _ingredientConflicts[n1];
+    if (conflicts != null && conflicts.contains(n2)) {
+      final key1 = '$n1:$n2';
+      final key2 = '$n2:$n1';
+      final severity = _knownSeverities[key1] ??
+          _knownSeverities[key2] ??
+          InteractionSeverity.moderate;
+      return InteractionWarning(
+        medication1: name1,
+        medication2: name2,
+        severity: severity,
+        description: '$name1 may interact with $name2.',
+        recommendation:
+            'Consult your doctor or pharmacist about this combination.',
+      );
+    }
+    return null;
+  }
+
+  Future<List<InteractionWarning>> _checkWithAi(
+    String newDrug,
+    List<Medication> existing,
+    String? newIngredients,
+  ) async {
+    try {
+      final drugNames = existing.map((m) => m.medicineName).toList();
+      final ingredientMap = <String, String>{};
+      for (final m in existing) {
+        if (m.activeIngredients != null) {
+          ingredientMap[m.medicineName] = m.activeIngredients!;
+        }
+      }
+      if (newIngredients != null) {
+        ingredientMap[newDrug] = newIngredients;
+      }
+
+      final results = await AiDrugInfoService().checkInteractions(
+        newDrug: newDrug,
+        existingDrugs: drugNames,
+        drugIngredients: ingredientMap,
+      );
+
+      return results.map((r) {
+        final severity = _parseSeverity(r.severity);
+        return InteractionWarning(
+          medication1: r.drug1.isNotEmpty ? r.drug1 : newDrug,
+          medication2: r.drug2,
+          severity: severity,
+          description: r.description,
+          recommendation: r.recommendation,
+        );
+      }).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  InteractionSeverity _parseSeverity(String value) {
+    switch (value.toLowerCase()) {
+      case 'minor':
+        return InteractionSeverity.minor;
+      case 'major':
+        return InteractionSeverity.major;
+      case 'severe':
+        return InteractionSeverity.severe;
+      default:
+        return InteractionSeverity.moderate;
+    }
+  }
+
+  List<InteractionWarning> _checkLocalInteractions(List<Medication> meds) {
+    final warnings = <InteractionWarning>[];
+    for (var i = 0; i < meds.length; i++) {
+      for (var j = i + 1; j < meds.length; j++) {
+        final ing1 = _parseIngredients(meds[i].activeIngredients);
+        final ing2 = _parseIngredients(meds[j].activeIngredients);
+        final cat1 = meds[i].drugCategory?.toLowerCase().trim() ?? '';
+        final cat2 = meds[j].drugCategory?.toLowerCase().trim() ?? '';
+
+        final catW = _checkCategoryConflict(
+          meds[i].medicineName,
+          meds[j].medicineName,
+          cat1,
+          cat2,
+        );
+        if (catW != null) {
+          warnings.add(catW);
+          continue;
+        }
+
+        final ingW = _checkIngredientConflict(
+          meds[i].medicineName,
+          meds[j].medicineName,
+          ing1,
+          ing2,
+        );
+        if (ingW != null) {
+          warnings.add(ingW);
+          continue;
+        }
+
+        final nameW = _checkNameConflict(
+          meds[i].medicineName,
+          meds[j].medicineName,
+        );
+        if (nameW != null) warnings.add(nameW);
+      }
+    }
+    warnings.sort((a, b) => b.severity.index.compareTo(a.severity.index));
     return warnings;
   }
 
-  /// Check interaction between two medication names
-  InteractionWarning? _checkPairInteraction(
-    String med1Display,
-    String med2Display,
-    String med1Lower,
-    String med2Lower,
-  ) {
-    // Check if med1 interacts with med2
-    final interactsWithMed1 = _interactionPairs[med1Lower];
-    final interactsWithMed2 = _interactionPairs[med2Lower];
-
-    var hasInteraction = false;
-    String? pairKey;
-
-    if (interactsWithMed1 != null && interactsWithMed1.contains(med2Lower)) {
-      hasInteraction = true;
-      pairKey = '$med1Lower:$med2Lower';
-    } else if (interactsWithMed2 != null && interactsWithMed2.contains(med1Lower)) {
-      hasInteraction = true;
-      pairKey = '$med2Lower:$med1Lower';
-    }
-
-    if (!hasInteraction) return null;
-
-    // Get severity (default to moderate if not specified)
-    final severity = _severityLevels[pairKey] ?? InteractionSeverity.moderate;
-
-    // Get description (or use generic)
-    final description = _interactionDescriptions[pairKey] ??
-        'These medications may interact. Monitor for side effects.';
-
-    // Get recommendation (or use generic)
-    final recommendation = _interactionRecommendations[pairKey] ??
-        'Consult your doctor or pharmacist about this combination.';
-
-    return InteractionWarning(
-      medication1: med1Display,
-      medication2: med2Display,
-      severity: severity,
-      description: description,
-      recommendation: recommendation,
+  Future<bool> hasSevereInteractions() async {
+    final warnings = await checkAllInteractions();
+    return warnings.any(
+      (w) =>
+          w.severity == InteractionSeverity.severe ||
+          w.severity == InteractionSeverity.major,
     );
   }
 
-  /// Get severity color for UI display
-  static String getSeverityColor(InteractionSeverity severity) {
-    switch (severity) {
-      case InteractionSeverity.minor:
-        return '#4CAF50'; // Green
-      case InteractionSeverity.moderate:
-        return '#FF9800'; // Orange
-      case InteractionSeverity.major:
-        return '#FF5722'; // Deep Orange
-      case InteractionSeverity.severe:
-        return '#F44336'; // Red
+  Future<Map<InteractionSeverity, int>> getInteractionCounts() async {
+    final warnings = await checkAllInteractions();
+    final counts = <InteractionSeverity, int>{
+      for (final s in InteractionSeverity.values) s: 0,
+    };
+    for (final w in warnings) {
+      counts[w.severity] = (counts[w.severity] ?? 0) + 1;
     }
+    return counts;
   }
 
-  /// Get severity label for UI display
   static String getSeverityLabel(InteractionSeverity severity) {
     switch (severity) {
       case InteractionSeverity.minor:
@@ -269,7 +380,6 @@ class DrugInteractionService {
     }
   }
 
-  /// Get severity description
   static String getSeverityDescription(InteractionSeverity severity) {
     switch (severity) {
       case InteractionSeverity.minor:
@@ -281,30 +391,5 @@ class DrugInteractionService {
       case InteractionSeverity.severe:
         return 'Do not combine';
     }
-  }
-
-  /// Check if any severe interactions exist
-  Future<bool> hasSevereInteractions() async {
-    final warnings = await checkAllInteractions();
-    return warnings.any((w) =>
-        w.severity == InteractionSeverity.severe ||
-        w.severity == InteractionSeverity.major);
-  }
-
-  /// Get count of interactions by severity
-  Future<Map<InteractionSeverity, int>> getInteractionCounts() async {
-    final warnings = await checkAllInteractions();
-    final counts = <InteractionSeverity, int>{
-      InteractionSeverity.minor: 0,
-      InteractionSeverity.moderate: 0,
-      InteractionSeverity.major: 0,
-      InteractionSeverity.severe: 0,
-    };
-
-    for (final warning in warnings) {
-      counts[warning.severity] = (counts[warning.severity] ?? 0) + 1;
-    }
-
-    return counts;
   }
 }

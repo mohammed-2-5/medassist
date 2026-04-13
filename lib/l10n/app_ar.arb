@@ -32,6 +32,15 @@
   "inhaler": "بخاخ",
   "cream": "كريم",
   "other": "أخرى",
+  "pill": "حبة دواء",
+  "suppository": "تحميلة",
+  "ivSolution": "محلول وريدي",
+  "medTypePillDesc": "قرص أو كبسولة",
+  "medTypeInjectionDesc": "دواء قابل للحقن",
+  "medTypeSuppositoryDesc": "شرجي أو مهبلي",
+  "medTypeIvSolutionDesc": "تنقيط وريدي",
+  "medTypeSyrupDesc": "دواء سائل",
+  "medTypeDropsDesc": "قطرة عين أو أذن",
 
   "timesPerDay": "مرات في اليوم",
   "dosePerTime": "الجرعة لكل مرة",
@@ -1306,5 +1315,98 @@
       "end": { "type": "String" }
     }
   },
-  "medAssistAnalyticsReport": "تقرير تحليلات MedAssist"
+  "medAssistAnalyticsReport": "تقرير تحليلات MedAssist",
+  "encryptBackupTitle": "تشفير النسخة الاحتياطية؟",
+  "encryptBackupMessage": "أدخل كلمة مرور لتشفير النسخة الاحتياطية باستخدام AES-256. اتركها فارغة للحفظ بدون تشفير. ستحتاج إلى كلمة المرور للاستعادة.",
+  "enterPassphraseTitle": "أدخل كلمة المرور",
+  "enterPassphraseMessage": "هذه النسخة الاحتياطية مشفرة. أدخل كلمة المرور لفك التشفير واستعادتها.",
+  "passphrase": "كلمة المرور",
+  "encrypt": "تشفير",
+  "decrypt": "فك التشفير",
+
+  "interactionWarningTitle": "تحذير تفاعل دوائي",
+  "interactionWarningMessage": "قد يتفاعل هذا الدواء مع الأدوية التي تتناولها بالفعل:",
+  "addAnyway": "إضافة على أي حال",
+  "interactionCheckFailed": "تعذر التحقق من التفاعلات الدوائية",
+
+  "drugInformation": "معلومات الدواء",
+  "genericName": "الاسم العلمي",
+  "activeIngredients": "المواد الفعالة",
+  "drugCategory": "التصنيف",
+  "purpose": "الاستخدام",
+  "drugRoute": "طريقة الاستخدام",
+  "sideEffects": "الآثار الجانبية",
+  "drugWarnings": "التحذيرات",
+  "medicationSavedTitle": "تم حفظ الدواء",
+  "medicationSavedMessage": "تمت إضافة الدواء بنجاح.",
+  "drugInfoAddedHint": "تم إضافة تفاصيل الدواء والآثار الجانبية والتحذيرات تلقائياً. افتح تفاصيل الدواء للمراجعة.",
+  "interactionsFoundHint": "تم العثور على {count} تفاعل(ات) مع أدويتك الحالية. افتح تفاصيل الدواء للمراجعة.",
+  "@interactionsFoundHint": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "viewDetails": "عرض التفاصيل",
+  "gotIt": "فهمت",
+  "done": "تم",
+
+  "chatHistory": "سجل المحادثات",
+  "newChat": "محادثة جديدة",
+  "deleteChat": "حذف المحادثة",
+  "deleteChatConfirm": "حذف هذه المحادثة؟",
+  "noChatHistory": "لا توجد محادثات بعد",
+  "noChatHistorySubtitle": "ابدأ محادثة جديدة للحصول على نصائح الأدوية",
+  "chatSessionDeleted": "تم حذف المحادثة",
+  "deleteAllChats": "حذف الكل",
+  "deleteAllChatsConfirm": "حذف جميع المحادثات؟",
+  "allChatsDeleted": "تم حذف جميع المحادثات",
+  "today": "اليوم",
+  "yesterday": "أمس",
+  "thisWeek": "هذا الأسبوع",
+  "older": "أقدم",
+  "messagesCount": "{count} رسائل",
+  "@messagesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "shoppingList": "قائمة التسوق",
+  "shoppingListSubtitle": "الأدوية التي تحتاج إلى إعادة تعبئة",
+  "noItemsNeeded": "المخزون مكتمل!",
+  "noItemsNeededSubtitle": "أدويتك متوفرة بشكل جيد",
+  "lowStock": "مخزون منخفض",
+  "outOfStock": "نفد المخزون",
+  "expiringSoon": "ينتهي قريباً",
+  "expired": "منتهي الصلاحية",
+  "daysOfStockLeft": "{count} أيام متبقية",
+  "@daysOfStockLeft": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "expiresInDays": "ينتهي خلال {count} أيام",
+  "@expiresInDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "expiredAgo": "انتهت صلاحيته منذ {count} أيام",
+  "@expiredAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shareShoppingList": "مشاركة القائمة",
+  "copyShoppingList": "نسخ القائمة",
+  "shoppingListCopied": "تم نسخ قائمة التسوق",
+  "itemsToRefill": "{count} أدوية تحتاج إعادة تعبئة",
+  "@itemsToRefill": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "urgentRefill": "عاجل",
+  "soonRefill": "قريباً",
+  "planAhead": "خطط مسبقاً"
 }

@@ -138,7 +138,11 @@ class StockOverviewScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(32),
                   child: Column(
                     children: [
-                      Icon(Icons.error_outline, size: 48, color: colorScheme.error),
+                      Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: colorScheme.error,
+                      ),
                       const SizedBox(height: 16),
                       Text('${l10n.errorLoadingStock}: $error'),
                     ],
@@ -151,5 +155,4 @@ class StockOverviewScreen extends ConsumerWidget {
       ),
     );
   }
-
 }

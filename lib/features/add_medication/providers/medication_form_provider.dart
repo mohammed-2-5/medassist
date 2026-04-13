@@ -190,6 +190,27 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
   void setRecurringReminderInterval(int minutes) =>
       state = state.copyWith(recurringReminderInterval: minutes);
 
+  // Drug info methods
+  void setDrugInfo({
+    String? genericName,
+    String? activeIngredients,
+    String? drugCategory,
+    String? purpose,
+    String? sideEffects,
+    String? drugWarnings,
+    String? drugRoute,
+  }) {
+    state = state.copyWith(
+      genericName: genericName,
+      activeIngredients: activeIngredients,
+      drugCategory: drugCategory,
+      purpose: purpose,
+      sideEffects: sideEffects,
+      drugWarnings: drugWarnings,
+      drugRoute: drugRoute,
+    );
+  }
+
   // Draft operations (delegated to MedicationFormDraftService)
   Future<void> saveDraft() => MedicationFormDraftService.saveDraft(state);
 

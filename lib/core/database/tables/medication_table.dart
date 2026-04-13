@@ -14,6 +14,15 @@ class Medications extends Table {
   TextColumn get notes => text().nullable()();
   BoolColumn get isScanned => boolean().withDefault(const Constant(false))();
 
+  // AI-enriched drug info
+  TextColumn get genericName => text().nullable()();
+  TextColumn get activeIngredients => text().nullable()(); // comma-separated
+  TextColumn get drugCategory => text().nullable()(); // e.g. "NSAID", "antibiotic"
+  TextColumn get purpose => text().nullable()();
+  TextColumn get sideEffects => text().nullable()(); // comma-separated
+  TextColumn get warnings => text().nullable()();
+  TextColumn get route => text().nullable()(); // oral, topical, injection
+
   // Step 2: Schedule & Duration
   IntColumn get timesPerDay => integer().withDefault(const Constant(1))();
   RealColumn get dosePerTime => real().withDefault(const Constant(1))();

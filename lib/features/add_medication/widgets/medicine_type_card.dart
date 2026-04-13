@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:med_assist/core/theme/app_colors.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
+import 'package:med_assist/features/add_medication/utils/medicine_type_style.dart';
+import 'package:med_assist/features/add_medication/widgets/medicine_type_checkmark.dart';
+import 'package:med_assist/features/add_medication/widgets/medicine_type_icon_badge.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
-/// Beautiful animated medicine type selection card
+/// Animated medicine type selection card. Highlights with a gradient fill,
+/// scaling emoji badge, and checkmark when selected.
 class MedicineTypeCard extends StatefulWidget {
-
   const MedicineTypeCard({
     required this.type,
     required this.isSelected,
     required this.onTap,
     super.key,
   });
+
   final MedicineType type;
   final bool isSelected;
   final VoidCallback onTap;
@@ -22,8 +25,8 @@ class MedicineTypeCard extends StatefulWidget {
 
 class _MedicineTypeCardState extends State<MedicineTypeCard>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -32,14 +35,9 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -48,47 +46,18 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
-  }
-
-  void _handleTapCancel() {
-    _controller.reverse();
-  }
-
-  LinearGradient _getGradientForType(MedicineType type) {
-    return switch (type) {
-      MedicineType.pill => AppColors.primaryGradient,
-      MedicineType.injection => AppColors.pinkGradient,
-      MedicineType.suppository => AppColors.warningGradient,
-      MedicineType.ivSolution => const LinearGradient(
-          colors: [Color(0xFF42A5F5), Color(0xFF4DD0CE)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      MedicineType.syrup => AppColors.successGradient,
-      MedicineType.drops => const LinearGradient(
-          colors: [Color(0xFF66BB6A), Color(0xFF81C784)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final gradient = _getGradientForType(widget.type);
+    final l10n = AppLocalizations.of(context)!;
+    final gradient = widget.type.gradient;
+    final isSelected = widget.isSelected;
 
     return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) => _controller.reverse(),
+      onTapCancel: _controller.reverse,
       onTap: widget.onTap,
       child: ScaleTransition(
         scale: _scaleAnimation,
@@ -97,25 +66,25 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
           curve: Curves.easeInOut,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: widget.isSelected ? gradient : null,
-            color: widget.isSelected ? null : colorScheme.surface,
+            gradient: isSelected ? gradient : null,
+            color: isSelected ? null : colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: widget.isSelected
+              color: isSelected
                   ? Colors.transparent
-                  : colorScheme.outlineVariant.withOpacity(0.3),
+                  : colorScheme.outlineVariant.withValues(alpha: 0.3),
               width: 2,
             ),
             boxShadow: [
-              if (widget.isSelected)
+              if (isSelected)
                 BoxShadow(
-                  color: gradient.colors.first.withOpacity(0.4),
+                  color: gradient.colors.first.withValues(alpha: 0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
-                ),
-              if (!widget.isSelected)
+                )
+              else
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -124,66 +93,29 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon with animation and glow effect
-              TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 400),
-                tween: Tween(
-                  begin: 0,
-                  end: widget.isSelected ? 1.0 : 0.0,
-                ),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: 1.0 + (value * 0.15),
-                    child: child,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: widget.isSelected
-                        ? colorScheme.onPrimary.withOpacity(0.2)
-                        : colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      if (widget.isSelected)
-                        BoxShadow(
-                          color: colorScheme.onPrimary.withOpacity(0.5),
-                          blurRadius: 15,
-                          spreadRadius: 2,
-                        ),
-                    ],
-                  ),
-                  child: Text(
-                    widget.type.label.split(' ')[0], // Get emoji
-                    style: const TextStyle(fontSize: 36),
-                  ),
-                ),
+              MedicineTypeIconBadge(
+                emoji: widget.type.emoji,
+                isSelected: isSelected,
+                colorScheme: colorScheme,
               ),
-
               const SizedBox(height: 10),
-
-              // Type name
               Text(
-                widget.type.label.substring(2), // Remove emoji
+                widget.type.localizedLabel(l10n),
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: widget.isSelected
+                  color: isSelected
                       ? colorScheme.onPrimary
                       : colorScheme.onSurface,
                   letterSpacing: 0.5,
                 ),
                 textAlign: TextAlign.center,
               ),
-
               const SizedBox(height: 4),
-
-              // Description
               Text(
-                widget.type.description,
+                widget.type.localizedDescription(l10n),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: widget.isSelected
-                      ? colorScheme.onPrimary.withOpacity(0.9)
+                  color: isSelected
+                      ? colorScheme.onPrimary.withValues(alpha: 0.9)
                       : colorScheme.onSurfaceVariant,
                   height: 1.2,
                 ),
@@ -191,32 +123,12 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-
-              // Checkmark for selected with animation
-              if (widget.isSelected) ...[
+              if (isSelected) ...[
                 const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: colorScheme.onPrimary,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.onPrimary.withOpacity(0.5),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: gradient.colors.first,
-                    size: 16,
-                  ),
-                )
-                    .animate()
-                    .scale(duration: 300.ms, curve: Curves.elasticOut)
-                    .fadeIn(),
+                MedicineTypeCheckmark(
+                  iconColor: gradient.colors.first,
+                  bgColor: colorScheme.onPrimary,
+                ),
               ],
             ],
           ),

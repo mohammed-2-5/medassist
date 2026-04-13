@@ -162,7 +162,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           takenToday: adherence?.takenToday ?? 0,
           totalToday: adherence?.totalToday ?? 0,
           currentStreak: adherence?.currentStreak ?? 0,
-          onTap: () => context.push('/analytics'),
+          onTap: () => context.push(AppConstants.routeAnalytics),
         ),
       ),
       const SliverToBoxAdapter(child: InteractionWarningsSection()),

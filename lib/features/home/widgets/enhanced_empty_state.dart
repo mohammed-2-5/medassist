@@ -89,7 +89,7 @@ class EnhancedEmptyState extends StatelessWidget {
             // Add button
             Container(
               width: double.infinity,
-              height: 56,
+              constraints: const BoxConstraints(minHeight: 56),
               decoration: BoxDecoration(
                 gradient: AppColors.primaryGradient,
                 borderRadius: BorderRadius.circular(28),
@@ -106,6 +106,10 @@ class EnhancedEmptyState extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
                   ),
@@ -113,10 +117,12 @@ class EnhancedEmptyState extends StatelessWidget {
                 icon: const Icon(Icons.add_rounded, color: Colors.white),
                 label: Text(
                   l10n.addYourFirstMedication,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    height: 1.3,
                   ),
                 ),
               ),

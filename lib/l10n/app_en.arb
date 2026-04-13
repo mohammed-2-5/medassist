@@ -34,6 +34,15 @@
   "inhaler": "Inhaler",
   "cream": "Cream",
   "other": "Other",
+  "pill": "Pill",
+  "suppository": "Suppository",
+  "ivSolution": "IV Solution",
+  "medTypePillDesc": "Tablet or capsule",
+  "medTypeInjectionDesc": "Injectable medicine",
+  "medTypeSuppositoryDesc": "Rectal or vaginal",
+  "medTypeIvSolutionDesc": "Intravenous drip",
+  "medTypeSyrupDesc": "Liquid medicine",
+  "medTypeDropsDesc": "Eye or ear drops",
 
   "timesPerDay": "Times Per Day",
   "dosePerTime": "Dose Per Time",
@@ -1331,5 +1340,98 @@
       "end": { "type": "String" }
     }
   },
-  "medAssistAnalyticsReport": "MedAssist Analytics Report"
+  "medAssistAnalyticsReport": "MedAssist Analytics Report",
+  "encryptBackupTitle": "Encrypt Backup?",
+  "encryptBackupMessage": "Enter a passphrase to encrypt your backup with AES-256. Leave empty to save unencrypted. You will need the passphrase to restore.",
+  "enterPassphraseTitle": "Enter Passphrase",
+  "enterPassphraseMessage": "This backup is encrypted. Enter the passphrase to decrypt and restore it.",
+  "passphrase": "Passphrase",
+  "encrypt": "Encrypt",
+  "decrypt": "Decrypt",
+
+  "interactionWarningTitle": "Drug Interaction Warning",
+  "interactionWarningMessage": "This medication may interact with medications you are already taking:",
+  "addAnyway": "Add Anyway",
+  "interactionCheckFailed": "Could not check drug interactions",
+
+  "drugInformation": "Drug Information",
+  "genericName": "Generic Name",
+  "activeIngredients": "Ingredients",
+  "drugCategory": "Category",
+  "purpose": "Purpose",
+  "drugRoute": "Route",
+  "sideEffects": "Side Effects",
+  "drugWarnings": "Warnings",
+  "medicationSavedTitle": "Medication Saved",
+  "medicationSavedMessage": "Your medication has been added successfully.",
+  "drugInfoAddedHint": "Drug details, side effects and warnings have been added automatically. Check the medication details to review.",
+  "interactionsFoundHint": "{count} interaction(s) found with your existing medications. Open medication details to review.",
+  "@interactionsFoundHint": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "viewDetails": "View Details",
+  "gotIt": "Got It",
+  "done": "Done",
+
+  "chatHistory": "Chat History",
+  "newChat": "New Chat",
+  "deleteChat": "Delete Chat",
+  "deleteChatConfirm": "Delete this conversation?",
+  "noChatHistory": "No conversations yet",
+  "noChatHistorySubtitle": "Start a new chat to get medication advice",
+  "chatSessionDeleted": "Conversation deleted",
+  "deleteAllChats": "Delete All",
+  "deleteAllChatsConfirm": "Delete all conversations?",
+  "allChatsDeleted": "All conversations deleted",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "thisWeek": "This Week",
+  "older": "Older",
+  "messagesCount": "{count} messages",
+  "@messagesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "shoppingList": "Shopping List",
+  "shoppingListSubtitle": "Medications you need to refill",
+  "noItemsNeeded": "All stocked up!",
+  "noItemsNeededSubtitle": "Your medications are well-stocked",
+  "lowStock": "Low Stock",
+  "outOfStock": "Out of Stock",
+  "expiringSoon": "Expiring Soon",
+  "expired": "Expired",
+  "daysOfStockLeft": "{count} days left",
+  "@daysOfStockLeft": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "expiresInDays": "Expires in {count} days",
+  "@expiresInDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "expiredAgo": "Expired {count} days ago",
+  "@expiredAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shareShoppingList": "Share List",
+  "copyShoppingList": "Copy List",
+  "shoppingListCopied": "Shopping list copied to clipboard",
+  "itemsToRefill": "{count} items to refill",
+  "@itemsToRefill": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "urgentRefill": "Urgent",
+  "soonRefill": "Soon",
+  "planAhead": "Plan Ahead"
 }

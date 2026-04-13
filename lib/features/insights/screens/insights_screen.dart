@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:med_assist/core/constants/app_constants.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
 import 'package:med_assist/core/widgets/empty_state_widget.dart';
 import 'package:med_assist/core/widgets/skeleton_loader.dart';
@@ -35,23 +36,32 @@ class InsightsScreen extends ConsumerWidget {
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.healthInsights,
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+                              AppLocalizations.of(context)!.healthInsights,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                            .animate()
+                            .fadeIn(duration: 600.ms)
+                            .slideY(begin: -0.2),
                         const SizedBox(height: 4),
                         Text(
                           AppLocalizations.of(context)!.aiPoweredAnalysis,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.white.withOpacity(0.9),
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ).animate(delay: 200.ms).fadeIn(duration: 600.ms),
                       ],
                     ),
@@ -63,7 +73,7 @@ class InsightsScreen extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.bar_chart_rounded),
                 tooltip: AppLocalizations.of(context)!.viewAnalytics,
-                onPressed: () => context.push('/analytics'),
+                onPressed: () => context.push(AppConstants.routeAnalytics),
               ),
             ],
           ),
@@ -87,57 +97,65 @@ class InsightsScreen extends ConsumerWidget {
                       children: [
                         // Insights header
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                gradient: AppColors.purpleGradient,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.auto_awesome_rounded,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                AppLocalizations.of(context)!.yourHealthJourney,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Flexible(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.successGreen.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: AppColors.successGreen.withOpacity(0.3),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    gradient: AppColors.purpleGradient,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(
+                                    Icons.auto_awesome_rounded,
+                                    color: Colors.white,
+                                    size: 20,
                                   ),
                                 ),
-                                child: Text(
-                                  AppLocalizations.of(context)!.insightsCount(insights.length),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: AppColors.successGreen,
-                                    fontWeight: FontWeight.bold,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.yourHealthJourney,
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ),
-                          ],
-                        )
+                                const SizedBox(width: 12),
+                                Flexible(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.successGreen.withOpacity(
+                                        0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: AppColors.successGreen
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.insightsCount(insights.length),
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            color: AppColors.successGreen,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                             .animate()
                             .fadeIn(duration: 600.ms)
                             .slideX(begin: -0.2),
@@ -179,7 +197,9 @@ class InsightsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          AppLocalizations.of(context)!.errorLoadingInsightsMessage,
+                          AppLocalizations.of(
+                            context,
+                          )!.errorLoadingInsightsMessage,
                           style: theme.textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
@@ -265,7 +285,7 @@ class InsightsScreen extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: () => context.push('/analytics'),
+              onPressed: () => context.push(AppConstants.routeAnalytics),
               icon: const Icon(Icons.analytics_rounded),
               label: Text(AppLocalizations.of(context)!.viewAnalytics),
               style: FilledButton.styleFrom(
@@ -279,12 +299,4 @@ class InsightsScreen extends ConsumerWidget {
   }
 }
 
-extension on LinearGradient {
-  LinearGradient withOpacity(double opacity) {
-    return LinearGradient(
-      colors: colors.map((color) => color.withOpacity(opacity)).toList(),
-      begin: begin,
-      end: end,
-    );
-  }
-}
+extension on LinearGradient {}

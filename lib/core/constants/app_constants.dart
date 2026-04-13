@@ -18,6 +18,9 @@ class AppConstants {
   static const String routeHome = '/home';
   static const String routeAddReminder = '/add-reminder';
   static const String routeSettings = '/settings';
+  static const String routeAnalytics = '/analytics';
+  static const String routeChatbot = '/chatbot';
+  static const String routeShoppingList = '/shopping-list';
 
   // Notification
   static const String notificationChannelId = 'med_assist_reminders';

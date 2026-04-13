@@ -15,7 +15,8 @@
       "Bash(wc -l /c/Users/moham/StudioProjects/med_assist/lib/features/add_medication/**/*.dart)",
       "Bash(wc:*)",
       "Bash(python3:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(flutter pub:*)"
     ],
     "deny": [],
     "ask": []

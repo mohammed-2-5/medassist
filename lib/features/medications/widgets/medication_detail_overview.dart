@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/features/medications/widgets/medication_detail_drug_info_card.dart';
 import 'package:med_assist/features/medications/widgets/medication_detail_stock_card.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
@@ -61,6 +62,10 @@ class MedicationDetailOverview extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           MedicationDetailStockCard(medication: medication),
+          if (_hasDrugInfo) ...[
+            const SizedBox(height: 12),
+            MedicationDetailDrugInfoCard(medication: medication),
+          ],
           if (medication.notes != null && medication.notes!.isNotEmpty) ...[
             const SizedBox(height: 12),
             _InfoCard(
@@ -75,6 +80,12 @@ class MedicationDetailOverview extends StatelessWidget {
       ),
     );
   }
+
+  bool get _hasDrugInfo =>
+      medication.purpose != null ||
+      medication.activeIngredients != null ||
+      medication.sideEffects != null ||
+      medication.warnings != null;
 }
 
 class _InfoCard extends StatelessWidget {

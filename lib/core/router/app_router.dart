@@ -15,6 +15,7 @@ import 'package:med_assist/features/settings/screens/backup_restore_screen.dart'
 import 'package:med_assist/features/settings/screens/notification_debug_screen.dart';
 import 'package:med_assist/features/settings/screens/settings_screen.dart';
 import 'package:med_assist/features/splash/screens/splash_screen.dart';
+import 'package:med_assist/features/shopping_list/screens/shopping_list_screen.dart';
 import 'package:med_assist/features/stock/screens/stock_overview_screen.dart';
 
 class AppRouter {
@@ -58,6 +59,11 @@ class AppRouter {
         path: '/stock',
         name: 'stock',
         builder: (context, state) => const StockOverviewScreen(),
+      ),
+      GoRoute(
+        path: AppConstants.routeShoppingList,
+        name: 'shopping-list',
+        builder: (context, state) => const ShoppingListScreen(),
       ),
       GoRoute(
         path: '/chatbot',
@@ -104,7 +110,6 @@ class AppRouter {
         name: 'insights',
         builder: (context, state) => const InsightsScreen(),
       ),
-
 
       // Settings & Diagnostics
       GoRoute(

@@ -123,15 +123,6 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
                     strengthController: _strengthController,
                     onUnitChanged: (u) => setState(() => _selectedUnit = u),
                   ),
-                  onScanBarcode: () => Step1Actions.scanBarcode(
-                    context: context,
-                    ref: ref,
-                    nameController: _nameController,
-                    strengthController: _strengthController,
-                    notesController: _notesController,
-                    strengthUnits: _strengthUnits,
-                    onUnitChanged: (u) => setState(() => _selectedUnit = u),
-                  ),
                 ),
                 const SizedBox(height: 24),
 

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/constants/api_constants.dart';
+import 'package:med_assist/services/ai/ai_prompt_sanitizer.dart';
 
 /// Groq API Service - Ultra-fast LLM inference
 /// Uses Llama 3 8B model for medical assistance
@@ -72,7 +73,7 @@ Always end with a helpful follow-up question when appropriate.''';
         initialize();
       }
 
-      final userMessage = message.trim();
+      final userMessage = AiPromptSanitizer.sanitizeUserMessage(message);
       if (userMessage.isEmpty) {
         return 'Please enter a message.';
       }
@@ -81,7 +82,9 @@ Always end with a helpful follow-up question when appropriate.''';
 
       // If medication context provided, inject it into system prompt
       if (medicationContext != null && medicationContext.isNotEmpty) {
-        _updateSystemPromptWithContext(medicationContext);
+        _updateSystemPromptWithContext(
+          AiPromptSanitizer.sanitizeContext(medicationContext),
+        );
       }
 
       // Add user message to history
@@ -199,6 +202,29 @@ IMPORTANT: Use this context to provide personalized advice. Reference their spec
     }
 
     return e.message ?? 'Network error. Please check your connection.';
+  }
+
+  Future<String> sendRawCompletion(String prompt) async {
+    if (!_initialized) initialize();
+
+    final response = await _dio.post(
+      '/chat/completions',
+      data: {
+        'model': ApiConstants.groqModel,
+        'messages': [
+          {'role': 'user', 'content': prompt},
+        ],
+        'temperature': 0.3,
+        'max_tokens': 600,
+        'stream': false,
+      },
+    );
+
+    final choices = response.data['choices'] as List?;
+    if (choices == null || choices.isEmpty) {
+      throw GroqException('No response from Groq');
+    }
+    return choices.first['message']['content']?.toString().trim() ?? '';
   }
 
   /// Clear chat history and start fresh

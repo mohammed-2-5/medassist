@@ -3,6 +3,7 @@ import 'package:med_assist/core/database/providers/database_providers.dart';
 import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
 import 'package:med_assist/features/analytics/providers/analytics_providers.dart';
 import 'package:med_assist/features/home/providers/home_providers.dart';
+import 'package:med_assist/features/shopping_list/providers/shopping_list_providers.dart';
 import 'package:med_assist/features/stock/providers/stock_providers.dart';
 
 /// Utility class for refreshing providers after data changes
@@ -52,7 +53,11 @@ class ProviderRefreshUtils {
     ref.invalidate(stockStatisticsProvider);
     ref.invalidate(expiringMedicationsProvider);
     ref.invalidate(expiredMedicationsProvider);
-    ref.invalidate(medicationsProvider); // Stock changes affect medications list
+    ref.invalidate(shoppingListItemsProvider);
+    ref.invalidate(shoppingListGroupsProvider);
+    ref.invalidate(
+      medicationsProvider,
+    ); // Stock changes affect medications list
     ref.invalidate(lowStockMedicationsProvider);
   }
 
