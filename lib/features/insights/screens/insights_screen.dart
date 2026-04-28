@@ -31,8 +31,8 @@ class InsightsScreen extends ConsumerWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: const BoxDecoration(
-                  gradient: AppColors.primaryGradient,
+                decoration: BoxDecoration(
+                  gradient: colorScheme.primaryGradient,
                 ),
                 child: SafeArea(
                   child: Padding(
@@ -102,7 +102,7 @@ class InsightsScreen extends ConsumerWidget {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    gradient: AppColors.purpleGradient,
+                                    gradient: colorScheme.tertiaryGradient,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: const Icon(
@@ -135,7 +135,7 @@ class InsightsScreen extends ConsumerWidget {
                                       color: AppColors.successGreen.withOpacity(
                                         0.1,
                                       ),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
                                         color: AppColors.successGreen
                                             .withOpacity(0.3),
@@ -242,7 +242,7 @@ class InsightsScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: AppColors.pinkGradient.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.accentPink.withOpacity(0.3),
           width: 2,
@@ -256,7 +256,7 @@ class InsightsScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  gradient: AppColors.pinkGradient,
+                  gradient: colorScheme.secondaryGradient,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(

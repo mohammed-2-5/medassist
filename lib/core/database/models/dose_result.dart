@@ -1,4 +1,5 @@
-import 'package:med_assist/core/database/repositories/medication_repository.dart' show MedicationRepository;
+import 'package:med_assist/core/database/repositories/medication_repository.dart'
+    show MedicationRepository;
 
 /// Result of a dose recording operation.
 ///

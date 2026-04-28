@@ -6,7 +6,8 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// Expiry date row shown inside StockCard when a medication has an expiry date.
 class StockExpiryInfo extends StatelessWidget {
   const StockExpiryInfo({
-    required this.stock, super.key,
+    required this.stock,
+    super.key,
   });
 
   final MedicationStock stock;
@@ -20,17 +21,20 @@ class StockExpiryInfo extends StatelessWidget {
     final expiryColor = stock.isExpired
         ? Colors.red
         : stock.isExpiringSoon
-            ? Colors.orange
-            : Colors.green;
+        ? Colors.orange
+        : Colors.green;
 
     final expiryIcon = stock.isExpired
         ? Icons.error
         : stock.isExpiringSoon
-            ? Icons.warning_amber
-            : Icons.check_circle;
+        ? Icons.warning_amber
+        : Icons.check_circle;
 
-    final statusText =
-        getExpiryStatusText(stock.isExpired, stock.daysUntilExpiry, context);
+    final statusText = getExpiryStatusText(
+      stock.isExpired,
+      stock.daysUntilExpiry,
+      context,
+    );
 
     return Container(
       padding: const EdgeInsets.all(12),

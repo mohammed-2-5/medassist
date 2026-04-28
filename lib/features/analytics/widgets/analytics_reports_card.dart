@@ -51,7 +51,9 @@ class AnalyticsReportsCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: colorScheme.surfaceContainerHigh.withValues(
+                        alpha: 0.9,
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -67,9 +69,7 @@ class AnalyticsReportsCard extends StatelessWidget {
                       children: [
                         Text(
                           l10n.reportsExport,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
+                          style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: colorScheme.onSecondaryContainer,
@@ -78,17 +78,19 @@ class AnalyticsReportsCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           l10n.exportYourDataDescription,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSecondaryContainer
-                                        .withOpacity(0.8),
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: colorScheme.onSecondaryContainer
+                                    .withOpacity(0.8),
+                              ),
                         ),
                       ],
                     ),
                   ),
                   Icon(
-                    Icons.arrow_forward_ios,
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Icons.arrow_back_ios
+                        : Icons.arrow_forward_ios,
                     color: colorScheme.onSecondaryContainer,
                     size: 20,
                   ),
@@ -138,12 +140,12 @@ class _QuickExportChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(20),
+          color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

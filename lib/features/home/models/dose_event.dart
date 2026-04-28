@@ -2,7 +2,6 @@
 ///
 /// Represents a scheduled medication dose
 class DoseEvent {
-
   const DoseEvent({
     required this.id,
     required this.medicationId,
@@ -47,16 +46,15 @@ class DoseEvent {
 
 /// Dose Status Enum
 enum DoseStatus {
-  pending,  // Not yet taken
-  taken,    // Marked as taken
-  missed,   // Missed the dose time
-  skipped,  // Intentionally skipped
-  snoozed,  // Snoozed for later
+  pending, // Not yet taken
+  taken, // Marked as taken
+  missed, // Missed the dose time
+  skipped, // Intentionally skipped
+  snoozed, // Snoozed for later
 }
 
 /// Adherence Summary Model
 class AdherenceSummary {
-
   const AdherenceSummary({
     required this.takenToday,
     required this.totalToday,

@@ -256,7 +256,8 @@ void main() {
     test('Handles long medication names', () {
       final insight = MedicationInsight(
         medicationId: 5,
-        medicationName: 'Very Long Medication Name With Multiple Words And Details',
+        medicationName:
+            'Very Long Medication Name With Multiple Words And Details',
         adherenceRate: 80,
         totalDoses: 10,
         takenDoses: 8,
@@ -489,7 +490,10 @@ void main() {
 
       expect(stats.totalDoses, equals(100));
       expect(
-        stats.takenDoses + stats.missedDoses + stats.skippedDoses + stats.snoozedDoses,
+        stats.takenDoses +
+            stats.missedDoses +
+            stats.skippedDoses +
+            stats.snoozedDoses,
         equals(stats.totalDoses),
       );
     });

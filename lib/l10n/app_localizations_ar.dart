@@ -27,6 +27,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
+  String get savingMedicine => 'بنحفظ الدواء...';
+
+  @override
+  String get drugInfoRefresh => 'تحديث معلومات الدواء';
+
+  @override
   String get addMedication => 'إضافة دواء';
 
   @override
@@ -1219,7 +1225,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String dosesTakenOf(int taken, int total) {
-    return '$taken من $total جرعات تم تناولها';
+    return '$taken من $total جرعات';
   }
 
   @override
@@ -1360,6 +1366,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get customSound => 'صوت مخصص';
+
+  @override
+  String get soundPickFromDevice => 'اختر من الجهاز…';
+
+  @override
+  String get soundPickFromDeviceHint => 'اختر نغمة من هاتفك';
+
+  @override
+  String get soundTapToChange => 'اضغط للتغيير';
+
+  @override
+  String get soundPickerHint =>
+      'اضغط افتراضي لاستخدام نغمة النظام، أو اختر نغمة من جهازك';
+
+  @override
+  String get soundPreviewUnavailable => 'المعاينة غير متاحة لهذا الصوت';
 
   @override
   String get advancedSettings => 'إعدادات متقدمة';
@@ -1769,6 +1791,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get draftSaved => 'تم حفظ المسودة!';
 
   @override
+  String get duplicateMedicineTitle => 'الدواء موجود بالفعل';
+
+  @override
+  String get duplicateMedicineMessage =>
+      'يوجد دواء بنفس الاسم والتركيز والوحدة. هل تريد تعديل الدواء الموجود بدلاً من ذلك؟';
+
+  @override
+  String get editExistingMedicine => 'تعديل الموجود';
+
+  @override
+  String get showMore => 'المزيد';
+
+  @override
+  String get showLess => 'أقل';
+
+  @override
+  String get highFrequencyWarning => 'تكرار مرتفع. يُرجى التأكد من طبيبك.';
+
+  @override
+  String get highDosePerTimeWarning => 'جرعة مرتفعة لكل مرة. تأكد من صحتها.';
+
+  @override
   String get noData => 'لا توجد بيانات';
 
   @override
@@ -1800,6 +1844,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get last30Days => 'آخر 30 يوم';
+
+  @override
+  String get partial => 'جزئي';
 
   @override
   String get last3Months => 'آخر 3 أشهر';
@@ -1992,6 +2039,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scanMedicationLabel => 'مسح بطاقة الدواء';
+
+  @override
+  String get scanPrescription => 'مسح الوصفة الطبية';
+
+  @override
+  String get scanPrescriptionHint =>
+      'الكاميرا تقرأ اسم الدواء والجرعة تلقائياً';
 
   @override
   String get autoFillFromPhoto => 'ملء التفاصيل تلقائياً من الصورة';
@@ -2205,6 +2259,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get stockInformation => 'معلومات المخزون';
+
+  @override
+  String treatmentDaysRemaining(int count) {
+    return 'العلاج: متبقي $count أيام';
+  }
+
+  @override
+  String get treatmentCompleted => 'اكتمل العلاج';
 
   @override
   String xTimesPerDay(int count) {
@@ -2443,6 +2505,49 @@ class AppLocalizationsAr extends AppLocalizations {
   String get interactionCheckFailed => 'تعذر التحقق من التفاعلات الدوائية';
 
   @override
+  String interactionWarningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تم العثور على $count تعارضات',
+      one: 'تم العثور على تعارض واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get interactionDoctorAdvice =>
+      'لا تغيّر أدويتك من غير ما تستشير دكتورك الأول.';
+
+  @override
+  String get seeYourDoctor => 'راجع دكتورك';
+
+  @override
+  String get conflictBetween => 'تعارض بين';
+
+  @override
+  String get and => 'و';
+
+  @override
+  String get whatHappens => 'إيه اللي ممكن يحصل؟';
+
+  @override
+  String get whatToDo => 'إيه اللي لازم تعمله؟';
+
+  @override
+  String get drugInfoFetch => 'اجلب معلومات الدواء بالذكاء الاصطناعي';
+
+  @override
+  String get drugInfoFetching => 'جاري جلب معلومات الدواء...';
+
+  @override
+  String get drugInfoFetchError =>
+      'تعذر تحميل معلومات الدواء. اضغط للمحاولة مرة أخرى.';
+
+  @override
+  String get drugInfoDidYouMean => 'اسم الدواء مش معروف. تقصد واحد من دول؟';
+
+  @override
   String get drugInformation => 'معلومات الدواء';
 
   @override
@@ -2465,6 +2570,63 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get drugWarnings => 'التحذيرات';
+
+  @override
+  String get howToTake => 'طريقة الاستخدام';
+
+  @override
+  String get watchOut => 'انتبه';
+
+  @override
+  String get foodsToAvoid => 'أطعمة ومشروبات يُفضّل تجنبها';
+
+  @override
+  String get drowsinessWarning => 'تحذير النعاس';
+
+  @override
+  String get mayCauseDrowsiness => 'قد يسبب النعاس. تجنب القيادة بعد تناوله.';
+
+  @override
+  String get missedDoseAdvice => 'لو نسيت الجرعة';
+
+  @override
+  String get storageInstructions => 'طريقة الحفظ';
+
+  @override
+  String get alcoholWarning => 'الكحول';
+
+  @override
+  String get contraindications => 'ميتاخدش لو';
+
+  @override
+  String get requiresMonitoring => 'متابعة وتحاليل';
+
+  @override
+  String get otcOrPrescription => 'بيتصرف إزاي';
+
+  @override
+  String get severityMinor => 'بسيط';
+
+  @override
+  String get severityModerate => 'متوسط';
+
+  @override
+  String get severityMajor => 'كبير';
+
+  @override
+  String get severitySevere => 'خطير';
+
+  @override
+  String get severityMinorDesc => 'راقب الأعراض الجانبية';
+
+  @override
+  String get severityModerateDesc => 'خد بالك';
+
+  @override
+  String get severityMajorDesc => 'تجنبه لو ينفع';
+
+  @override
+  String get severitySevereDesc => 'ميتاخدوش مع بعض';
 
   @override
   String get medicationSavedTitle => 'تم حفظ الدواء';
@@ -2578,4 +2740,147 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get planAhead => 'خطط مسبقاً';
+
+  @override
+  String get toBuy => 'للشراء';
+
+  @override
+  String get inCart => 'في السلة';
+
+  @override
+  String get scheduleSectionTitle => 'الجدول';
+
+  @override
+  String get scheduleSectionDesc => 'اختر عدد مرات تناول الدواء';
+
+  @override
+  String get modeDaily => 'يومياً';
+
+  @override
+  String get modeWeekly => 'أسبوعياً';
+
+  @override
+  String get modeMonthly => 'شهرياً';
+
+  @override
+  String get modeAsNeeded => 'عند الحاجة';
+
+  @override
+  String get everyNDays => 'كل عدة أيام';
+
+  @override
+  String get everyLabel => 'كل';
+
+  @override
+  String get daysUnit => 'أيام';
+
+  @override
+  String get weekSingular => 'أسبوع';
+
+  @override
+  String get weekPlural => 'أسابيع';
+
+  @override
+  String get monthSingular => 'شهر';
+
+  @override
+  String get monthPlural => 'أشهر';
+
+  @override
+  String get weekdaysPreset => 'أيام العمل';
+
+  @override
+  String get weekendsPreset => 'عطلة الأسبوع';
+
+  @override
+  String get allDaysPreset => 'كل الأيام';
+
+  @override
+  String get dayOfMonthLabel => 'يوم الشهر';
+
+  @override
+  String get monthlyShortMonthHint => 'ينتقل لآخر يوم إذا كان الشهر أقصر';
+
+  @override
+  String get asNeededInfo => 'يؤخذ عند الحاجة فقط. لن يتم جدولة تذكيرات.';
+
+  @override
+  String get nextDose => 'الجرعة التالية';
+
+  @override
+  String get overdue => 'متأخرة';
+
+  @override
+  String get laterToday => 'لاحقاً اليوم';
+
+  @override
+  String get allCaughtUp => 'اكتملت كل الجرعات';
+
+  @override
+  String get noMoreDosesToday => 'لا توجد جرعات أخرى اليوم';
+
+  @override
+  String get dueNow => 'حان الوقت';
+
+  @override
+  String dueInMinutes(int minutes) {
+    return 'خلال $minutes د';
+  }
+
+  @override
+  String dueInHours(int hours, int minutes) {
+    return 'خلال $hoursس $minutesد';
+  }
+
+  @override
+  String overdueByMinutes(int minutes) {
+    return 'متأخرة $minutes د';
+  }
+
+  @override
+  String overdueByHours(int hours, int minutes) {
+    return 'متأخرة $hoursس $minutesد';
+  }
+
+  @override
+  String get noNotes => 'لا توجد ملاحظات';
+
+  @override
+  String get dosageInfo => 'الجرعة';
+
+  @override
+  String get mostMissed => 'الأكثر تفويتاً';
+
+  @override
+  String get bestTime => 'أفضل وقت';
+
+  @override
+  String get dayStreak => 'تتابع الأيام';
+
+  @override
+  String get goodMorning => 'صباح الخير';
+
+  @override
+  String get goodAfternoon => 'نهارك سعيد';
+
+  @override
+  String get goodEvening => 'مساء الخير';
+
+  @override
+  String get goodNight => 'مساء الخير';
+
+  @override
+  String get todaysProgress => 'تقدم اليوم';
+
+  @override
+  String get upcoming => 'القادمة';
+
+  @override
+  String get stayOnTrack => 'حافظ على المسار';
+
+  @override
+  String get greatJobToday => 'عمل رائع اليوم';
+
+  @override
+  String get letsStartDay => 'لنبدأ اليوم';
 }

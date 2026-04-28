@@ -180,7 +180,8 @@ class PermissionsService {
       results['exactAlarms'] = await requestExactAlarmPermission();
 
       // Request battery optimization exemption (CRITICAL for notifications)
-      results['batteryOptimization'] = await requestDisableBatteryOptimization();
+      results['batteryOptimization'] =
+          await requestDisableBatteryOptimization();
     } else {
       results['exactAlarms'] = true;
       results['batteryOptimization'] = true;

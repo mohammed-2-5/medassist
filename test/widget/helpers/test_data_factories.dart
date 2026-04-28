@@ -58,7 +58,8 @@ class TestDataFactory {
     DateTime? expiryDate,
     int? daysUntilExpiry,
   }) {
-    final med = medication ??
+    final med =
+        medication ??
         TestDataFactory.medication(
           id: 99,
           stockQuantity: currentStock,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /// Container with subtle gradient for visual depth
 /// Adds modern, professional appearance
 class GradientContainer extends StatelessWidget {
-
   const GradientContainer({
     required this.child,
     this.colors,
@@ -25,7 +24,8 @@ class GradientContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final gradientColors = colors ??
+    final gradientColors =
+        colors ??
         [
           colorScheme.primaryContainer,
           colorScheme.primaryContainer.withValues(alpha: 0.7),

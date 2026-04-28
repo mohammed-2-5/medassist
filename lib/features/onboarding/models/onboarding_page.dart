@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class OnboardingPage {
-
   const OnboardingPage({
     required this.title,
     required this.description,

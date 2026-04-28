@@ -4,7 +4,6 @@ import 'package:med_assist/core/theme/app_animations.dart';
 /// Modern shimmer loading effect for skeleton screens
 /// Creates professional loading state
 class ShimmerLoading extends StatefulWidget {
-
   const ShimmerLoading({
     required this.child,
     this.isLoading = true,
@@ -48,7 +47,8 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
     final colorScheme = Theme.of(context).colorScheme;
     final baseColor = widget.baseColor ?? colorScheme.surfaceContainerHighest;
-    final highlightColor = widget.highlightColor ??
+    final highlightColor =
+        widget.highlightColor ??
         colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
 
     return AnimatedBuilder(
@@ -80,7 +80,6 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
 /// Pre-built shimmer skeleton widgets
 class ShimmerBox extends StatelessWidget {
-
   const ShimmerBox({
     this.width,
     this.height,

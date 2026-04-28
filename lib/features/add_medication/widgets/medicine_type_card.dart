@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
 import 'package:med_assist/features/add_medication/utils/medicine_type_style.dart';
 import 'package:med_assist/features/add_medication/widgets/medicine_type_checkmark.dart';
@@ -58,7 +59,10 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) => _controller.reverse(),
       onTapCancel: _controller.reverse,
-      onTap: widget.onTap,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        widget.onTap();
+      },
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: AnimatedContainer(
@@ -68,7 +72,7 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
           decoration: BoxDecoration(
             gradient: isSelected ? gradient : null,
             color: isSelected ? null : colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected
                   ? Colors.transparent
@@ -98,7 +102,7 @@ class _MedicineTypeCardState extends State<MedicineTypeCard>
                 isSelected: isSelected,
                 colorScheme: colorScheme,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 widget.type.localizedLabel(l10n),
                 style: theme.textTheme.titleSmall?.copyWith(

@@ -64,8 +64,12 @@ class MedicationSavedDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.auto_awesome, color: colorScheme.primary, size: 20),
-                  const SizedBox(width: 10),
+                  Icon(
+                    Icons.auto_awesome,
+                    color: colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.drugInfoAddedHint,
@@ -89,8 +93,12 @@ class MedicationSavedDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.warning_amber, color: Colors.orange, size: 20),
-                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.warning_amber,
+                    color: Colors.orange,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.interactionsFoundHint(interactionCount),

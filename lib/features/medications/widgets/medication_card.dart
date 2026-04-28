@@ -27,106 +27,110 @@ class MedicationCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Dismissible(
-      key: Key('med_${medication.id}'),
-      background: MedicationCardSwipeBackground(
-        colorScheme: colorScheme,
-        isEdit: true,
-      ),
-      secondaryBackground: MedicationCardSwipeBackground(
-        colorScheme: colorScheme,
-        isEdit: false,
-      ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          onDelete();
-          return false; // Don't dismiss, let the dialog handle it
-        } else {
-          onEdit();
-          return false;
-        }
-      },
-      child: Card(
-        margin: const EdgeInsets.all(0),
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: medication.isActive
-              ? BorderSide.none
-              : BorderSide(
-                  color: colorScheme.outline.withOpacity(0.5),
-                  width: 2,
-                ),
+    return Semantics(
+      label:
+          '${medication.medicineName}, ${medication.isActive ? "active" : "paused"}',
+      button: true,
+      child: Dismissible(
+        key: Key('med_${medication.id}'),
+        background: MedicationCardSwipeBackground(
+          colorScheme: colorScheme,
+          isEdit: true,
         ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: medication.isActive
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        colorScheme.primaryContainer.withOpacity(0.1),
-                        colorScheme.surface,
-                        colorScheme.secondaryContainer.withOpacity(0.05),
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
-                    )
-                  : LinearGradient(
-                      colors: [
-                        colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                        colorScheme.surface,
-                      ],
-                    ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header row
-                Row(
-                  children: [
-                    MedicationCardIcon(
-                      medication: medication,
-                      colorScheme: colorScheme,
-                    ),
-                    const SizedBox(width: 12),
-                    MedicationCardHeader(
-                      medication: medication,
-                      theme: theme,
-                      colorScheme: colorScheme,
-                    ),
-                    MedicationStatusChip(
-                      isActive: medication.isActive,
-                      theme: theme,
-                    ),
-                  ],
-                ),
+        secondaryBackground: MedicationCardSwipeBackground(
+          colorScheme: colorScheme,
+          isEdit: false,
+        ),
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.endToStart) {
+            onDelete();
+            return false; // Don't dismiss, let the dialog handle it
+          } else {
+            onEdit();
+            return false;
+          }
+        },
+        child: Card(
+          margin: const EdgeInsets.all(0),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: medication.isActive
+                ? BorderSide.none
+                : BorderSide(
+                    color: colorScheme.outline.withOpacity(0.5),
+                    width: 2,
+                  ),
+          ),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: medication.isActive
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primaryContainer.withOpacity(0.1),
+                          colorScheme.surface,
+                          colorScheme.secondaryContainer.withOpacity(0.05),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      )
+                    : LinearGradient(
+                        colors: [
+                          colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                          colorScheme.surface,
+                        ],
+                      ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header row
+                  Row(
+                    children: [
+                      MedicationCardIcon(
+                        medication: medication,
+                        colorScheme: colorScheme,
+                      ),
+                      const SizedBox(width: 12),
+                      MedicationCardHeader(
+                        medication: medication,
+                        theme: theme,
+                        colorScheme: colorScheme,
+                      ),
+                      MedicationStatusChip(
+                        isActive: medication.isActive,
+                        theme: theme,
+                      ),
+                    ],
+                  ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                MedicationCardInfo(
-                  medication: medication,
-                  theme: theme,
-                  colorScheme: colorScheme,
-                ),
+                  MedicationCardInfo(
+                    medication: medication,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                MedicationCardFooter(
-                  isActive: medication.isActive,
-                  onEdit: onEdit,
-                  onToggleActive: onToggleActive,
-                ),
-              ],
+                  MedicationCardFooter(
+                    isActive: medication.isActive,
+                    onEdit: onEdit,
+                    onToggleActive: onToggleActive,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
 }

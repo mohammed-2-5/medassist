@@ -28,7 +28,11 @@ class MedicationEditProgressBar extends StatelessWidget {
         children: [
           _StepIndicator(step: 0, currentStep: currentStep, label: l10n.type),
           _StepConnector(isCompleted: currentStep >= 1),
-          _StepIndicator(step: 1, currentStep: currentStep, label: l10n.schedule),
+          _StepIndicator(
+            step: 1,
+            currentStep: currentStep,
+            label: l10n.schedule,
+          ),
           _StepConnector(isCompleted: currentStep >= 2),
           _StepIndicator(step: 2, currentStep: currentStep, label: l10n.stock),
         ],
@@ -85,7 +89,9 @@ class _StepIndicator extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: isActive ? colorScheme.primary : colorScheme.onSurfaceVariant,
+              color: isActive
+                  ? colorScheme.primary
+                  : colorScheme.onSurfaceVariant,
               fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
             ),
           ),

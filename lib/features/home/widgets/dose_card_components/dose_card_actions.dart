@@ -4,7 +4,6 @@ import 'package:med_assist/services/haptic/haptic_service.dart';
 
 /// Pending status actions
 class PendingActions extends StatelessWidget {
-
   const PendingActions({
     required this.onTake,
     required this.onSnooze,
@@ -87,7 +86,6 @@ class PendingActions extends StatelessWidget {
 
 /// Taken status display
 class TakenStatus extends StatelessWidget {
-
   const TakenStatus({
     required this.onUndo,
     super.key,
@@ -136,7 +134,6 @@ class TakenStatus extends StatelessWidget {
 
 /// Missed status display
 class MissedStatus extends StatelessWidget {
-
   const MissedStatus({
     required this.onLogNow,
     super.key,
@@ -192,7 +189,6 @@ class MissedStatus extends StatelessWidget {
 
 /// Skipped status display
 class SkippedStatus extends StatelessWidget {
-
   const SkippedStatus({
     required this.onUndo,
     super.key,
@@ -245,7 +241,6 @@ class SkippedStatus extends StatelessWidget {
 
 /// Snoozed status display
 class SnoozedStatus extends StatelessWidget {
-
   const SnoozedStatus({
     required this.onTakeNow,
     super.key,

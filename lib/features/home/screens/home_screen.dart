@@ -6,12 +6,15 @@ import 'package:med_assist/core/widgets/skeleton_loader.dart';
 import 'package:med_assist/features/home/providers/home_providers.dart';
 import 'package:med_assist/features/home/widgets/enhanced_empty_state.dart';
 import 'package:med_assist/features/home/widgets/gradient_stats_card.dart';
+import 'package:med_assist/features/home/widgets/greeting_header.dart';
 import 'package:med_assist/features/home/widgets/home_app_bar.dart';
 import 'package:med_assist/features/home/widgets/home_fab.dart';
-import 'package:med_assist/features/home/widgets/insights_card.dart';
 import 'package:med_assist/features/home/widgets/interaction_warnings_section.dart';
+import 'package:med_assist/features/home/widgets/next_dose_hero_card.dart';
+import 'package:med_assist/features/home/widgets/overdue_section.dart';
 import 'package:med_assist/features/home/widgets/permission_banner.dart';
 import 'package:med_assist/features/home/widgets/quick_actions_section.dart';
+import 'package:med_assist/features/home/widgets/status_pills_row.dart';
 import 'package:med_assist/features/home/widgets/timeline_section.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
@@ -28,7 +31,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  final GlobalKey<State<StatefulWidget>> _timelineSectionKey = GlobalKey();
 
   @override
   void initState() {
@@ -157,21 +159,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final adherence = adherenceAsync.value;
 
     return [
-      SliverToBoxAdapter(
-        child: GradientStatsCard(
-          takenToday: adherence?.takenToday ?? 0,
-          totalToday: adherence?.totalToday ?? 0,
-          currentStreak: adherence?.currentStreak ?? 0,
-          onTap: () => context.push(AppConstants.routeAnalytics),
-        ),
-      ),
+      // 1. Greeting header — time-aware hello + today adherence ring
+      const SliverToBoxAdapter(child: GreetingHeader()),
+      // 2. Status pills — at-a-glance counts (taken / overdue / upcoming)
+      const SliverToBoxAdapter(child: StatusPillsRow()),
+      // 3. Quick actions grid
+      const SliverToBoxAdapter(child: QuickActionsSection()),
+      // 4. Primary action — next dose + CTAs
+      const SliverToBoxAdapter(child: NextDoseHeroCard()),
+      // 4. Urgent — overdue doses need attention first
+      const SliverToBoxAdapter(child: OverdueSection()),
+      // 5. Warnings — drug interactions if any
       const SliverToBoxAdapter(child: InteractionWarningsSection()),
-      SliverToBoxAdapter(
-        child: QuickActionsSection(onTakeDoseTap: _scrollToTimeline),
-      ),
-      const SliverToBoxAdapter(child: InsightsCard()),
+      // 4. The actual schedule — primary content users come here for
       TimelineSection(
-        key: _timelineSectionKey,
         timeOfDay: l10n.morning,
         timeRange: '06:00 - 11:59',
         icon: Icons.wb_sunny,
@@ -195,6 +196,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         icon: Icons.bedtime,
         doses: groupedDoses['Night'] ?? [],
       ),
+      // 5. Summary stats — secondary, after the user sees their schedule
+      SliverToBoxAdapter(
+        child: GradientStatsCard(
+          takenToday: adherence?.takenToday ?? 0,
+          totalToday: adherence?.totalToday ?? 0,
+          currentStreak: adherence?.currentStreak ?? 0,
+          onTap: () => context.push(AppConstants.routeAnalytics),
+        ),
+      ),
       const SliverToBoxAdapter(child: SizedBox(height: 80)),
     ];
   }
@@ -202,17 +212,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   // ---------------------------------------------------------------------------
   // Helpers / callbacks
   // ---------------------------------------------------------------------------
-
-  void _scrollToTimeline() {
-    final ctx = _timelineSectionKey.currentContext;
-    if (ctx != null) {
-      Scrollable.ensureVisible(
-        ctx,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
 
   Future<void> _refreshData() async {
     await ref.read(todayDosesProvider.notifier).refresh();
@@ -236,5 +235,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       );
     }
   }
-
 }

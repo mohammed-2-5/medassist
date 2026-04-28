@@ -77,10 +77,10 @@ class _ReminderItem extends StatelessWidget {
     final period = reminder.hour >= 6 && reminder.hour < 12
         ? l10n.morning
         : reminder.hour >= 12 && reminder.hour < 18
-            ? l10n.afternoon
-            : reminder.hour >= 18 && reminder.hour < 23
-                ? l10n.evening
-                : l10n.night;
+        ? l10n.afternoon
+        : reminder.hour >= 18 && reminder.hour < 23
+        ? l10n.evening
+        : l10n.night;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -111,14 +111,16 @@ class _ReminderItem extends StatelessWidget {
               children: [
                 Text(
                   timeString,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   period,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -127,7 +129,7 @@ class _ReminderItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: colorScheme.primary,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               l10n.dose(index + 1),

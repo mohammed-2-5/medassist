@@ -78,3 +78,25 @@ class AppColors {
   static Color glassWhite = Colors.white.withOpacity(0.2);
   static Color glassBlack = Colors.black.withOpacity(0.1);
 }
+
+/// Theme-derived gradient tokens (Phase 12 A1.3).
+/// Use via `Theme.of(context).colorScheme.primaryGradient` etc.
+extension AppGradients on ColorScheme {
+  LinearGradient get primaryGradient => LinearGradient(
+    colors: [primary, secondary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  LinearGradient get secondaryGradient => LinearGradient(
+    colors: [secondary, tertiary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  LinearGradient get tertiaryGradient => LinearGradient(
+    colors: [tertiary, tertiaryContainer],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
+import 'package:med_assist/features/add_medication/utils/medicine_type_style.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 class MedicationCardHeader extends StatelessWidget {
@@ -64,7 +65,7 @@ class _MedicationTypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        _getMedicineTypeLabel(),
+        _getMedicineTypeLabel(context),
         style: theme.textTheme.labelSmall?.copyWith(
           color: colorScheme.onSecondaryContainer,
           fontWeight: FontWeight.w600,
@@ -73,14 +74,12 @@ class _MedicationTypeBadge extends StatelessWidget {
     );
   }
 
-  String _getMedicineTypeLabel() {
+  String _getMedicineTypeLabel(BuildContext context) {
     final medicineType = MedicineType.values.firstWhere(
       (type) => type.name == medication.medicineType,
       orElse: () => MedicineType.pill,
     );
-    return medicineType.label.length > 2
-        ? medicineType.label.substring(2)
-        : medicineType.label;
+    return medicineType.localizedLabel(AppLocalizations.of(context)!);
   }
 }
 
@@ -103,7 +102,7 @@ class MedicationStatusChip extends StatelessWidget {
           color: isActive
               ? Colors.green.withOpacity(0.1)
               : Colors.orange.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isActive ? Colors.green : Colors.orange,
             width: 1.5,
@@ -128,7 +127,9 @@ class MedicationStatusChip extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelSmall?.copyWith(
-                color: isActive ? Colors.green.shade700 : Colors.orange.shade700,
+                color: isActive
+                    ? Colors.green.shade700
+                    : Colors.orange.shade700,
                 fontWeight: FontWeight.bold,
               ),
             ),

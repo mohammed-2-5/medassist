@@ -60,15 +60,23 @@ class MissedDoseChecker {
 
           if (!wasDoseTaken) {
             // Calculate how many minutes have passed since the scheduled time
-            final minutesSinceScheduled = now.difference(lastScheduledTime).inMinutes;
+            final minutesSinceScheduled = now
+                .difference(lastScheduledTime)
+                .inMinutes;
 
             // Only trigger recurring reminders if it's been at least the configured interval
             // and less than 24 hours (to avoid triggering for very old missed doses)
             if (minutesSinceScheduled >= medication.recurringReminderInterval &&
                 minutesSinceScheduled < 1440) {
-              debugPrint('📱 Missed dose detected for ${medication.medicineName}');
-              debugPrint('   → Scheduled time: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}');
-              debugPrint('   → Minutes since scheduled: $minutesSinceScheduled');
+              debugPrint(
+                '📱 Missed dose detected for ${medication.medicineName}',
+              );
+              debugPrint(
+                '   → Scheduled time: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}',
+              );
+              debugPrint(
+                '   → Minutes since scheduled: $minutesSinceScheduled',
+              );
 
               // Schedule recurring reminders
               await _notificationService.scheduleRecurringReminders(
@@ -78,6 +86,8 @@ class MissedDoseChecker {
                 dose: '${medication.dosePerTime} ${medication.doseUnit}',
                 intervalMinutes: medication.recurringReminderInterval,
                 customSoundPath: medication.customSoundPath,
+                scheduledHour: reminderTime.hour,
+                scheduledMinute: reminderTime.minute,
               );
 
               missedDosesFound++;
@@ -87,7 +97,9 @@ class MissedDoseChecker {
       }
 
       if (missedDosesFound > 0) {
-        debugPrint('✅ Found $missedDosesFound missed doses and scheduled recurring reminders');
+        debugPrint(
+          '✅ Found $missedDosesFound missed doses and scheduled recurring reminders',
+        );
       } else {
         debugPrint('✅ No missed doses found');
       }

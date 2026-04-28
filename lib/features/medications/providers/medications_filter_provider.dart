@@ -18,7 +18,6 @@ const _sentinel = Object();
 
 /// Filter options for medications list
 class MedicationFilter {
-
   const MedicationFilter({
     this.searchQuery,
     this.medicineType,
@@ -104,17 +103,21 @@ class MedicationSortNotifier extends Notifier<MedicationSortOption> {
 }
 
 /// Provider for current filter state
-final medicationFilterProvider = NotifierProvider<MedicationFilterNotifier, MedicationFilter>(
-  MedicationFilterNotifier.new,
-);
+final medicationFilterProvider =
+    NotifierProvider<MedicationFilterNotifier, MedicationFilter>(
+      MedicationFilterNotifier.new,
+    );
 
 /// Provider for current sort option
-final medicationSortProvider = NotifierProvider<MedicationSortNotifier, MedicationSortOption>(
-  MedicationSortNotifier.new,
-);
+final medicationSortProvider =
+    NotifierProvider<MedicationSortNotifier, MedicationSortOption>(
+      MedicationSortNotifier.new,
+    );
 
 /// Provider for filtered and sorted medications
-final filteredMedicationsProvider = FutureProvider<List<Medication>>((ref) async {
+final filteredMedicationsProvider = FutureProvider<List<Medication>>((
+  ref,
+) async {
   final allMedications = await ref.watch(medicationsProvider.future);
   final filter = ref.watch(medicationFilterProvider);
   final sortOption = ref.watch(medicationSortProvider);
@@ -150,7 +153,8 @@ final filteredMedicationsProvider = FutureProvider<List<Medication>>((ref) async
       if (med.expiryDate == null) return false;
       final now = DateTime.now();
       final daysUntilExpiry = med.expiryDate!.difference(now).inDays;
-      if (daysUntilExpiry < 0 || daysUntilExpiry > med.reminderDaysBeforeExpiry) {
+      if (daysUntilExpiry < 0 ||
+          daysUntilExpiry > med.reminderDaysBeforeExpiry) {
         return false;
       }
     }

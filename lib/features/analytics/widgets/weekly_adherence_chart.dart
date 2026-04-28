@@ -4,7 +4,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Widget displaying weekly adherence as a bar chart
 class WeeklyAdherenceChart extends StatelessWidget {
-
   const WeeklyAdherenceChart({
     required this.dailyData,
     super.key,
@@ -47,7 +46,8 @@ class WeeklyAdherenceChart extends StatelessWidget {
                   barTouchData: BarTouchData(
                     enabled: true,
                     touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => colorScheme.surfaceContainerHighest,
+                      getTooltipColor: (_) =>
+                          colorScheme.surfaceContainerHighest,
                       tooltipPadding: const EdgeInsets.all(8),
                       tooltipMargin: 8,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -72,7 +72,8 @@ class WeeklyAdherenceChart extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          if (value.toInt() >= 0 && value.toInt() < sortedDays.length) {
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < sortedDays.length) {
                             return Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: Text(
@@ -98,12 +99,8 @@ class WeeklyAdherenceChart extends StatelessWidget {
                         },
                       ),
                     ),
-                    topTitles: const AxisTitles(
-                      
-                    ),
-                    rightTitles: const AxisTitles(
-                      
-                    ),
+                    topTitles: const AxisTitles(),
+                    rightTitles: const AxisTitles(),
                   ),
                   borderData: FlBorderData(
                     show: true,
@@ -117,7 +114,9 @@ class WeeklyAdherenceChart extends StatelessWidget {
                     horizontalInterval: 1,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                         strokeWidth: 1,
                       );
                     },
@@ -132,7 +131,10 @@ class WeeklyAdherenceChart extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> _buildBarGroups(List<String> sortedDays, ColorScheme colorScheme) {
+  List<BarChartGroupData> _buildBarGroups(
+    List<String> sortedDays,
+    ColorScheme colorScheme,
+  ) {
     return List.generate(sortedDays.length, (index) {
       final dayKey = sortedDays[index];
       final dayData = dailyData[dayKey]!;

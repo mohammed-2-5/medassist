@@ -48,13 +48,16 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
       curve: Curves.easeIn,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.3, 0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0.3, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _animationController.forward();
 
@@ -66,8 +69,10 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
       if (formData.strength != null) {
         _strengthController.text = formData.strength!;
       }
-      if (formData.unit != null) {
+      if (formData.unit != null && formData.unit!.isNotEmpty) {
         _selectedUnit = formData.unit!;
+      } else {
+        ref.read(medicationFormProvider.notifier).setUnit(_selectedUnit);
       }
       if (formData.notes != null) {
         _notesController.text = formData.notes!;
@@ -102,7 +107,18 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const TypeInfoHeader(),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+
+                _ScanPrescriptionBanner(
+                  onScan: () => Step1Actions.scanMedicineName(
+                    context: context,
+                    ref: ref,
+                    nameController: _nameController,
+                    strengthController: _strengthController,
+                    onUnitChanged: (u) => setState(() => _selectedUnit = u),
+                  ),
+                ),
+                const SizedBox(height: 24),
 
                 SectionTitle(l10n.chooseMedicineType),
                 const SizedBox(height: 16),
@@ -175,9 +191,8 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
                   ),
                   maxLines: 3,
                   textCapitalization: TextCapitalization.sentences,
-                  onChanged: (value) => ref
-                      .read(medicationFormProvider.notifier)
-                      .setNotes(value),
+                  onChanged: (value) =>
+                      ref.read(medicationFormProvider.notifier).setNotes(value),
                 ),
                 const SizedBox(height: 32),
 
@@ -189,6 +204,78 @@ class _Step1TypeInfoState extends ConsumerState<Step1TypeInfo>
                 const SizedBox(height: 100),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Prominent OCR scan banner — primary entry point for adding medication.
+/// Shown at the top of step 1 so new users discover scan-first flow.
+class _ScanPrescriptionBanner extends StatelessWidget {
+  const _ScanPrescriptionBanner({required this.onScan});
+
+  final VoidCallback onScan;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Material(
+      color: cs.primaryContainer,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onScan,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: cs.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.document_scanner_outlined,
+                  color: cs.primary,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.scanPrescription,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: cs.onPrimaryContainer,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.scanPrescriptionHint,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onPrimaryContainer.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Directionality.of(context) == TextDirection.rtl
+                    ? Icons.arrow_back_ios_rounded
+                    : Icons.arrow_forward_ios_rounded,
+                size: 16,
+                color: cs.onPrimaryContainer.withValues(alpha: 0.6),
+              ),
+            ],
           ),
         ),
       ),

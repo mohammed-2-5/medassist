@@ -69,7 +69,11 @@ class MainScaffoldAppBar {
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.medication, size: 24, color: Colors.white),
+              child: const Icon(
+                Icons.medication,
+                size: 24,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(width: 12),
             Text(l10n.medications),

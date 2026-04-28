@@ -56,15 +56,15 @@ class AddMedicationProgressIndicator extends StatelessWidget {
               color: isCompleted
                   ? colorScheme.secondary
                   : isActive
-                      ? colorScheme.primary
-                      : colorScheme.primary.withOpacity(0.15),
+                  ? colorScheme.primary
+                  : colorScheme.primary.withOpacity(0.15),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isActive
                     ? colorScheme.primary
                     : isCompleted
-                        ? colorScheme.secondary
-                        : colorScheme.primary.withOpacity(0.3),
+                    ? colorScheme.secondary
+                    : colorScheme.primary.withOpacity(0.3),
                 width: 2,
               ),
             ),

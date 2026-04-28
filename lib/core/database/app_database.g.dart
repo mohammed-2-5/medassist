@@ -111,17 +111,18 @@ class $MedicationsTable extends Medications
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _activeIngredientsMeta =
-      const VerificationMeta('activeIngredients');
+  static const VerificationMeta _activeIngredientsMeta = const VerificationMeta(
+    'activeIngredients',
+  );
   @override
   late final GeneratedColumn<String> activeIngredients =
       GeneratedColumn<String>(
-    'active_ingredients',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+        'active_ingredients',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _drugCategoryMeta = const VerificationMeta(
     'drugCategory',
   );
@@ -166,9 +167,7 @@ class $MedicationsTable extends Medications
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _routeMeta = const VerificationMeta(
-    'route',
-  );
+  static const VerificationMeta _routeMeta = const VerificationMeta('route');
   @override
   late final GeneratedColumn<String> route = GeneratedColumn<String>(
     'route',
@@ -199,7 +198,7 @@ class $MedicationsTable extends Medications
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
-    defaultValue: const Constant(1.0),
+    defaultValue: const Constant(1),
   );
   static const VerificationMeta _doseUnitMeta = const VerificationMeta(
     'doseUnit',
@@ -261,6 +260,50 @@ class $MedicationsTable extends Medications
         requiredDuringInsert: false,
         defaultValue: const Constant('1,2,3,4,5,6,7'),
       );
+  static const VerificationMeta _intervalDaysMeta = const VerificationMeta(
+    'intervalDays',
+  );
+  @override
+  late final GeneratedColumn<int> intervalDays = GeneratedColumn<int>(
+    'interval_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _intervalWeeksMeta = const VerificationMeta(
+    'intervalWeeks',
+  );
+  @override
+  late final GeneratedColumn<int> intervalWeeks = GeneratedColumn<int>(
+    'interval_weeks',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _intervalMonthsMeta = const VerificationMeta(
+    'intervalMonths',
+  );
+  @override
+  late final GeneratedColumn<int> intervalMonths = GeneratedColumn<int>(
+    'interval_months',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dayOfMonthMeta = const VerificationMeta(
+    'dayOfMonth',
+  );
+  @override
+  late final GeneratedColumn<int> dayOfMonth = GeneratedColumn<int>(
+    'day_of_month',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _stockQuantityMeta = const VerificationMeta(
     'stockQuantity',
   );
@@ -435,6 +478,10 @@ class $MedicationsTable extends Medications
     startDate,
     repetitionPattern,
     specificDaysOfWeek,
+    intervalDays,
+    intervalWeeks,
+    intervalMonths,
+    dayOfMonth,
     stockQuantity,
     remindBeforeRunOut,
     reminderDaysBeforeRunOut,
@@ -521,19 +568,28 @@ class $MedicationsTable extends Medications
     if (data.containsKey('generic_name')) {
       context.handle(
         _genericNameMeta,
-        genericName.isAcceptableOrUnknown(data['generic_name']!, _genericNameMeta),
+        genericName.isAcceptableOrUnknown(
+          data['generic_name']!,
+          _genericNameMeta,
+        ),
       );
     }
     if (data.containsKey('active_ingredients')) {
       context.handle(
         _activeIngredientsMeta,
-        activeIngredients.isAcceptableOrUnknown(data['active_ingredients']!, _activeIngredientsMeta),
+        activeIngredients.isAcceptableOrUnknown(
+          data['active_ingredients']!,
+          _activeIngredientsMeta,
+        ),
       );
     }
     if (data.containsKey('drug_category')) {
       context.handle(
         _drugCategoryMeta,
-        drugCategory.isAcceptableOrUnknown(data['drug_category']!, _drugCategoryMeta),
+        drugCategory.isAcceptableOrUnknown(
+          data['drug_category']!,
+          _drugCategoryMeta,
+        ),
       );
     }
     if (data.containsKey('purpose')) {
@@ -545,7 +601,10 @@ class $MedicationsTable extends Medications
     if (data.containsKey('side_effects')) {
       context.handle(
         _sideEffectsMeta,
-        sideEffects.isAcceptableOrUnknown(data['side_effects']!, _sideEffectsMeta),
+        sideEffects.isAcceptableOrUnknown(
+          data['side_effects']!,
+          _sideEffectsMeta,
+        ),
       );
     }
     if (data.containsKey('warnings')) {
@@ -616,6 +675,42 @@ class $MedicationsTable extends Medications
         specificDaysOfWeek.isAcceptableOrUnknown(
           data['specific_days_of_week']!,
           _specificDaysOfWeekMeta,
+        ),
+      );
+    }
+    if (data.containsKey('interval_days')) {
+      context.handle(
+        _intervalDaysMeta,
+        intervalDays.isAcceptableOrUnknown(
+          data['interval_days']!,
+          _intervalDaysMeta,
+        ),
+      );
+    }
+    if (data.containsKey('interval_weeks')) {
+      context.handle(
+        _intervalWeeksMeta,
+        intervalWeeks.isAcceptableOrUnknown(
+          data['interval_weeks']!,
+          _intervalWeeksMeta,
+        ),
+      );
+    }
+    if (data.containsKey('interval_months')) {
+      context.handle(
+        _intervalMonthsMeta,
+        intervalMonths.isAcceptableOrUnknown(
+          data['interval_months']!,
+          _intervalMonthsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('day_of_month')) {
+      context.handle(
+        _dayOfMonthMeta,
+        dayOfMonth.isAcceptableOrUnknown(
+          data['day_of_month']!,
+          _dayOfMonthMeta,
         ),
       );
     }
@@ -812,6 +907,22 @@ class $MedicationsTable extends Medications
         DriftSqlType.string,
         data['${effectivePrefix}specific_days_of_week'],
       )!,
+      intervalDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}interval_days'],
+      ),
+      intervalWeeks: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}interval_weeks'],
+      ),
+      intervalMonths: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}interval_months'],
+      ),
+      dayOfMonth: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}day_of_month'],
+      ),
       stockQuantity: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}stock_quantity'],
@@ -892,6 +1003,10 @@ class Medication extends DataClass implements Insertable<Medication> {
   final DateTime startDate;
   final String repetitionPattern;
   final String specificDaysOfWeek;
+  final int? intervalDays;
+  final int? intervalWeeks;
+  final int? intervalMonths;
+  final int? dayOfMonth;
   final int stockQuantity;
   final bool remindBeforeRunOut;
   final int reminderDaysBeforeRunOut;
@@ -927,6 +1042,10 @@ class Medication extends DataClass implements Insertable<Medication> {
     required this.startDate,
     required this.repetitionPattern,
     required this.specificDaysOfWeek,
+    this.intervalDays,
+    this.intervalWeeks,
+    this.intervalMonths,
+    this.dayOfMonth,
     required this.stockQuantity,
     required this.remindBeforeRunOut,
     required this.reminderDaysBeforeRunOut,
@@ -987,6 +1106,18 @@ class Medication extends DataClass implements Insertable<Medication> {
     map['start_date'] = Variable<DateTime>(startDate);
     map['repetition_pattern'] = Variable<String>(repetitionPattern);
     map['specific_days_of_week'] = Variable<String>(specificDaysOfWeek);
+    if (!nullToAbsent || intervalDays != null) {
+      map['interval_days'] = Variable<int>(intervalDays);
+    }
+    if (!nullToAbsent || intervalWeeks != null) {
+      map['interval_weeks'] = Variable<int>(intervalWeeks);
+    }
+    if (!nullToAbsent || intervalMonths != null) {
+      map['interval_months'] = Variable<int>(intervalMonths);
+    }
+    if (!nullToAbsent || dayOfMonth != null) {
+      map['day_of_month'] = Variable<int>(dayOfMonth);
+    }
     map['stock_quantity'] = Variable<int>(stockQuantity);
     map['remind_before_run_out'] = Variable<bool>(remindBeforeRunOut);
     map['reminder_days_before_run_out'] = Variable<int>(
@@ -1058,6 +1189,18 @@ class Medication extends DataClass implements Insertable<Medication> {
       startDate: Value(startDate),
       repetitionPattern: Value(repetitionPattern),
       specificDaysOfWeek: Value(specificDaysOfWeek),
+      intervalDays: intervalDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(intervalDays),
+      intervalWeeks: intervalWeeks == null && nullToAbsent
+          ? const Value.absent()
+          : Value(intervalWeeks),
+      intervalMonths: intervalMonths == null && nullToAbsent
+          ? const Value.absent()
+          : Value(intervalMonths),
+      dayOfMonth: dayOfMonth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dayOfMonth),
       stockQuantity: Value(stockQuantity),
       remindBeforeRunOut: Value(remindBeforeRunOut),
       reminderDaysBeforeRunOut: Value(reminderDaysBeforeRunOut),
@@ -1094,7 +1237,9 @@ class Medication extends DataClass implements Insertable<Medication> {
       notes: serializer.fromJson<String?>(json['notes']),
       isScanned: serializer.fromJson<bool>(json['isScanned']),
       genericName: serializer.fromJson<String?>(json['genericName']),
-      activeIngredients: serializer.fromJson<String?>(json['activeIngredients']),
+      activeIngredients: serializer.fromJson<String?>(
+        json['activeIngredients'],
+      ),
       drugCategory: serializer.fromJson<String?>(json['drugCategory']),
       purpose: serializer.fromJson<String?>(json['purpose']),
       sideEffects: serializer.fromJson<String?>(json['sideEffects']),
@@ -1109,6 +1254,10 @@ class Medication extends DataClass implements Insertable<Medication> {
       specificDaysOfWeek: serializer.fromJson<String>(
         json['specificDaysOfWeek'],
       ),
+      intervalDays: serializer.fromJson<int?>(json['intervalDays']),
+      intervalWeeks: serializer.fromJson<int?>(json['intervalWeeks']),
+      intervalMonths: serializer.fromJson<int?>(json['intervalMonths']),
+      dayOfMonth: serializer.fromJson<int?>(json['dayOfMonth']),
       stockQuantity: serializer.fromJson<int>(json['stockQuantity']),
       remindBeforeRunOut: serializer.fromJson<bool>(json['remindBeforeRunOut']),
       reminderDaysBeforeRunOut: serializer.fromJson<int>(
@@ -1157,6 +1306,10 @@ class Medication extends DataClass implements Insertable<Medication> {
       'startDate': serializer.toJson<DateTime>(startDate),
       'repetitionPattern': serializer.toJson<String>(repetitionPattern),
       'specificDaysOfWeek': serializer.toJson<String>(specificDaysOfWeek),
+      'intervalDays': serializer.toJson<int?>(intervalDays),
+      'intervalWeeks': serializer.toJson<int?>(intervalWeeks),
+      'intervalMonths': serializer.toJson<int?>(intervalMonths),
+      'dayOfMonth': serializer.toJson<int?>(dayOfMonth),
       'stockQuantity': serializer.toJson<int>(stockQuantity),
       'remindBeforeRunOut': serializer.toJson<bool>(remindBeforeRunOut),
       'reminderDaysBeforeRunOut': serializer.toJson<int>(
@@ -1203,6 +1356,10 @@ class Medication extends DataClass implements Insertable<Medication> {
     DateTime? startDate,
     String? repetitionPattern,
     String? specificDaysOfWeek,
+    Value<int?> intervalDays = const Value.absent(),
+    Value<int?> intervalWeeks = const Value.absent(),
+    Value<int?> intervalMonths = const Value.absent(),
+    Value<int?> dayOfMonth = const Value.absent(),
     int? stockQuantity,
     bool? remindBeforeRunOut,
     int? reminderDaysBeforeRunOut,
@@ -1227,7 +1384,9 @@ class Medication extends DataClass implements Insertable<Medication> {
     notes: notes.present ? notes.value : this.notes,
     isScanned: isScanned ?? this.isScanned,
     genericName: genericName.present ? genericName.value : this.genericName,
-    activeIngredients: activeIngredients.present ? activeIngredients.value : this.activeIngredients,
+    activeIngredients: activeIngredients.present
+        ? activeIngredients.value
+        : this.activeIngredients,
     drugCategory: drugCategory.present ? drugCategory.value : this.drugCategory,
     purpose: purpose.present ? purpose.value : this.purpose,
     sideEffects: sideEffects.present ? sideEffects.value : this.sideEffects,
@@ -1240,6 +1399,14 @@ class Medication extends DataClass implements Insertable<Medication> {
     startDate: startDate ?? this.startDate,
     repetitionPattern: repetitionPattern ?? this.repetitionPattern,
     specificDaysOfWeek: specificDaysOfWeek ?? this.specificDaysOfWeek,
+    intervalDays: intervalDays.present ? intervalDays.value : this.intervalDays,
+    intervalWeeks: intervalWeeks.present
+        ? intervalWeeks.value
+        : this.intervalWeeks,
+    intervalMonths: intervalMonths.present
+        ? intervalMonths.value
+        : this.intervalMonths,
+    dayOfMonth: dayOfMonth.present ? dayOfMonth.value : this.dayOfMonth,
     stockQuantity: stockQuantity ?? this.stockQuantity,
     remindBeforeRunOut: remindBeforeRunOut ?? this.remindBeforeRunOut,
     reminderDaysBeforeRunOut:
@@ -1275,11 +1442,19 @@ class Medication extends DataClass implements Insertable<Medication> {
       unit: data.unit.present ? data.unit.value : this.unit,
       notes: data.notes.present ? data.notes.value : this.notes,
       isScanned: data.isScanned.present ? data.isScanned.value : this.isScanned,
-      genericName: data.genericName.present ? data.genericName.value : this.genericName,
-      activeIngredients: data.activeIngredients.present ? data.activeIngredients.value : this.activeIngredients,
-      drugCategory: data.drugCategory.present ? data.drugCategory.value : this.drugCategory,
+      genericName: data.genericName.present
+          ? data.genericName.value
+          : this.genericName,
+      activeIngredients: data.activeIngredients.present
+          ? data.activeIngredients.value
+          : this.activeIngredients,
+      drugCategory: data.drugCategory.present
+          ? data.drugCategory.value
+          : this.drugCategory,
       purpose: data.purpose.present ? data.purpose.value : this.purpose,
-      sideEffects: data.sideEffects.present ? data.sideEffects.value : this.sideEffects,
+      sideEffects: data.sideEffects.present
+          ? data.sideEffects.value
+          : this.sideEffects,
       warnings: data.warnings.present ? data.warnings.value : this.warnings,
       route: data.route.present ? data.route.value : this.route,
       timesPerDay: data.timesPerDay.present
@@ -1299,6 +1474,18 @@ class Medication extends DataClass implements Insertable<Medication> {
       specificDaysOfWeek: data.specificDaysOfWeek.present
           ? data.specificDaysOfWeek.value
           : this.specificDaysOfWeek,
+      intervalDays: data.intervalDays.present
+          ? data.intervalDays.value
+          : this.intervalDays,
+      intervalWeeks: data.intervalWeeks.present
+          ? data.intervalWeeks.value
+          : this.intervalWeeks,
+      intervalMonths: data.intervalMonths.present
+          ? data.intervalMonths.value
+          : this.intervalMonths,
+      dayOfMonth: data.dayOfMonth.present
+          ? data.dayOfMonth.value
+          : this.dayOfMonth,
       stockQuantity: data.stockQuantity.present
           ? data.stockQuantity.value
           : this.stockQuantity,
@@ -1357,6 +1544,10 @@ class Medication extends DataClass implements Insertable<Medication> {
           ..write('startDate: $startDate, ')
           ..write('repetitionPattern: $repetitionPattern, ')
           ..write('specificDaysOfWeek: $specificDaysOfWeek, ')
+          ..write('intervalDays: $intervalDays, ')
+          ..write('intervalWeeks: $intervalWeeks, ')
+          ..write('intervalMonths: $intervalMonths, ')
+          ..write('dayOfMonth: $dayOfMonth, ')
           ..write('stockQuantity: $stockQuantity, ')
           ..write('remindBeforeRunOut: $remindBeforeRunOut, ')
           ..write('reminderDaysBeforeRunOut: $reminderDaysBeforeRunOut, ')
@@ -1397,6 +1588,10 @@ class Medication extends DataClass implements Insertable<Medication> {
     startDate,
     repetitionPattern,
     specificDaysOfWeek,
+    intervalDays,
+    intervalWeeks,
+    intervalMonths,
+    dayOfMonth,
     stockQuantity,
     remindBeforeRunOut,
     reminderDaysBeforeRunOut,
@@ -1436,6 +1631,10 @@ class Medication extends DataClass implements Insertable<Medication> {
           other.startDate == this.startDate &&
           other.repetitionPattern == this.repetitionPattern &&
           other.specificDaysOfWeek == this.specificDaysOfWeek &&
+          other.intervalDays == this.intervalDays &&
+          other.intervalWeeks == this.intervalWeeks &&
+          other.intervalMonths == this.intervalMonths &&
+          other.dayOfMonth == this.dayOfMonth &&
           other.stockQuantity == this.stockQuantity &&
           other.remindBeforeRunOut == this.remindBeforeRunOut &&
           other.reminderDaysBeforeRunOut == this.reminderDaysBeforeRunOut &&
@@ -1473,6 +1672,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   final Value<DateTime> startDate;
   final Value<String> repetitionPattern;
   final Value<String> specificDaysOfWeek;
+  final Value<int?> intervalDays;
+  final Value<int?> intervalWeeks;
+  final Value<int?> intervalMonths;
+  final Value<int?> dayOfMonth;
   final Value<int> stockQuantity;
   final Value<bool> remindBeforeRunOut;
   final Value<int> reminderDaysBeforeRunOut;
@@ -1508,6 +1711,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     this.startDate = const Value.absent(),
     this.repetitionPattern = const Value.absent(),
     this.specificDaysOfWeek = const Value.absent(),
+    this.intervalDays = const Value.absent(),
+    this.intervalWeeks = const Value.absent(),
+    this.intervalMonths = const Value.absent(),
+    this.dayOfMonth = const Value.absent(),
     this.stockQuantity = const Value.absent(),
     this.remindBeforeRunOut = const Value.absent(),
     this.reminderDaysBeforeRunOut = const Value.absent(),
@@ -1544,6 +1751,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     required DateTime startDate,
     this.repetitionPattern = const Value.absent(),
     this.specificDaysOfWeek = const Value.absent(),
+    this.intervalDays = const Value.absent(),
+    this.intervalWeeks = const Value.absent(),
+    this.intervalMonths = const Value.absent(),
+    this.dayOfMonth = const Value.absent(),
     this.stockQuantity = const Value.absent(),
     this.remindBeforeRunOut = const Value.absent(),
     this.reminderDaysBeforeRunOut = const Value.absent(),
@@ -1582,6 +1793,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Expression<DateTime>? startDate,
     Expression<String>? repetitionPattern,
     Expression<String>? specificDaysOfWeek,
+    Expression<int>? intervalDays,
+    Expression<int>? intervalWeeks,
+    Expression<int>? intervalMonths,
+    Expression<int>? dayOfMonth,
     Expression<int>? stockQuantity,
     Expression<bool>? remindBeforeRunOut,
     Expression<int>? reminderDaysBeforeRunOut,
@@ -1619,6 +1834,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       if (repetitionPattern != null) 'repetition_pattern': repetitionPattern,
       if (specificDaysOfWeek != null)
         'specific_days_of_week': specificDaysOfWeek,
+      if (intervalDays != null) 'interval_days': intervalDays,
+      if (intervalWeeks != null) 'interval_weeks': intervalWeeks,
+      if (intervalMonths != null) 'interval_months': intervalMonths,
+      if (dayOfMonth != null) 'day_of_month': dayOfMonth,
       if (stockQuantity != null) 'stock_quantity': stockQuantity,
       if (remindBeforeRunOut != null)
         'remind_before_run_out': remindBeforeRunOut,
@@ -1662,6 +1881,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     Value<DateTime>? startDate,
     Value<String>? repetitionPattern,
     Value<String>? specificDaysOfWeek,
+    Value<int?>? intervalDays,
+    Value<int?>? intervalWeeks,
+    Value<int?>? intervalMonths,
+    Value<int?>? dayOfMonth,
     Value<int>? stockQuantity,
     Value<bool>? remindBeforeRunOut,
     Value<int>? reminderDaysBeforeRunOut,
@@ -1698,6 +1921,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
       startDate: startDate ?? this.startDate,
       repetitionPattern: repetitionPattern ?? this.repetitionPattern,
       specificDaysOfWeek: specificDaysOfWeek ?? this.specificDaysOfWeek,
+      intervalDays: intervalDays ?? this.intervalDays,
+      intervalWeeks: intervalWeeks ?? this.intervalWeeks,
+      intervalMonths: intervalMonths ?? this.intervalMonths,
+      dayOfMonth: dayOfMonth ?? this.dayOfMonth,
       stockQuantity: stockQuantity ?? this.stockQuantity,
       remindBeforeRunOut: remindBeforeRunOut ?? this.remindBeforeRunOut,
       reminderDaysBeforeRunOut:
@@ -1786,6 +2013,18 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
     if (specificDaysOfWeek.present) {
       map['specific_days_of_week'] = Variable<String>(specificDaysOfWeek.value);
     }
+    if (intervalDays.present) {
+      map['interval_days'] = Variable<int>(intervalDays.value);
+    }
+    if (intervalWeeks.present) {
+      map['interval_weeks'] = Variable<int>(intervalWeeks.value);
+    }
+    if (intervalMonths.present) {
+      map['interval_months'] = Variable<int>(intervalMonths.value);
+    }
+    if (dayOfMonth.present) {
+      map['day_of_month'] = Variable<int>(dayOfMonth.value);
+    }
     if (stockQuantity.present) {
       map['stock_quantity'] = Variable<int>(stockQuantity.value);
     }
@@ -1858,6 +2097,10 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
           ..write('startDate: $startDate, ')
           ..write('repetitionPattern: $repetitionPattern, ')
           ..write('specificDaysOfWeek: $specificDaysOfWeek, ')
+          ..write('intervalDays: $intervalDays, ')
+          ..write('intervalWeeks: $intervalWeeks, ')
+          ..write('intervalMonths: $intervalMonths, ')
+          ..write('dayOfMonth: $dayOfMonth, ')
           ..write('stockQuantity: $stockQuantity, ')
           ..write('remindBeforeRunOut: $remindBeforeRunOut, ')
           ..write('reminderDaysBeforeRunOut: $reminderDaysBeforeRunOut, ')
@@ -3869,6 +4112,1088 @@ class SnoozeHistoryTableCompanion extends UpdateCompanion<SnoozeHistoryData> {
   }
 }
 
+class $MedicationDrugInfoTable extends MedicationDrugInfo
+    with TableInfo<$MedicationDrugInfoTable, MedicationDrugInfoData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MedicationDrugInfoTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _medicationIdMeta = const VerificationMeta(
+    'medicationId',
+  );
+  @override
+  late final GeneratedColumn<int> medicationId = GeneratedColumn<int>(
+    'medication_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES medications (id)',
+    ),
+  );
+  static const VerificationMeta _languageMeta = const VerificationMeta(
+    'language',
+  );
+  @override
+  late final GeneratedColumn<String> language = GeneratedColumn<String>(
+    'language',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _howToTakeMeta = const VerificationMeta(
+    'howToTake',
+  );
+  @override
+  late final GeneratedColumn<String> howToTake = GeneratedColumn<String>(
+    'how_to_take',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bestTimeOfDayMeta = const VerificationMeta(
+    'bestTimeOfDay',
+  );
+  @override
+  late final GeneratedColumn<String> bestTimeOfDay = GeneratedColumn<String>(
+    'best_time_of_day',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _drowsinessAffectsDrivingMeta =
+      const VerificationMeta('drowsinessAffectsDriving');
+  @override
+  late final GeneratedColumn<bool> drowsinessAffectsDriving =
+      GeneratedColumn<bool>(
+        'drowsiness_affects_driving',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("drowsiness_affects_driving" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _drowsinessWarningMeta = const VerificationMeta(
+    'drowsinessWarning',
+  );
+  @override
+  late final GeneratedColumn<String> drowsinessWarning =
+      GeneratedColumn<String>(
+        'drowsiness_warning',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _foodsToAvoidMeta = const VerificationMeta(
+    'foodsToAvoid',
+  );
+  @override
+  late final GeneratedColumn<String> foodsToAvoid = GeneratedColumn<String>(
+    'foods_to_avoid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _missedDoseAdviceMeta = const VerificationMeta(
+    'missedDoseAdvice',
+  );
+  @override
+  late final GeneratedColumn<String> missedDoseAdvice = GeneratedColumn<String>(
+    'missed_dose_advice',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _storageInstructionsMeta =
+      const VerificationMeta('storageInstructions');
+  @override
+  late final GeneratedColumn<String> storageInstructions =
+      GeneratedColumn<String>(
+        'storage_instructions',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _genericNameMeta = const VerificationMeta(
+    'genericName',
+  );
+  @override
+  late final GeneratedColumn<String> genericName = GeneratedColumn<String>(
+    'generic_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _purposeMeta = const VerificationMeta(
+    'purpose',
+  );
+  @override
+  late final GeneratedColumn<String> purpose = GeneratedColumn<String>(
+    'purpose',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sideEffectsMeta = const VerificationMeta(
+    'sideEffects',
+  );
+  @override
+  late final GeneratedColumn<String> sideEffects = GeneratedColumn<String>(
+    'side_effects',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _warningsMeta = const VerificationMeta(
+    'warnings',
+  );
+  @override
+  late final GeneratedColumn<String> warnings = GeneratedColumn<String>(
+    'warnings',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _drugCategoryMeta = const VerificationMeta(
+    'drugCategory',
+  );
+  @override
+  late final GeneratedColumn<String> drugCategory = GeneratedColumn<String>(
+    'drug_category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeIngredientsMeta = const VerificationMeta(
+    'activeIngredients',
+  );
+  @override
+  late final GeneratedColumn<String> activeIngredients =
+      GeneratedColumn<String>(
+        'active_ingredients',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _routeMeta = const VerificationMeta('route');
+  @override
+  late final GeneratedColumn<String> route = GeneratedColumn<String>(
+    'route',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    medicationId,
+    language,
+    howToTake,
+    bestTimeOfDay,
+    drowsinessAffectsDriving,
+    drowsinessWarning,
+    foodsToAvoid,
+    missedDoseAdvice,
+    storageInstructions,
+    genericName,
+    purpose,
+    sideEffects,
+    warnings,
+    drugCategory,
+    activeIngredients,
+    route,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'medication_drug_info';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MedicationDrugInfoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('medication_id')) {
+      context.handle(
+        _medicationIdMeta,
+        medicationId.isAcceptableOrUnknown(
+          data['medication_id']!,
+          _medicationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_medicationIdMeta);
+    }
+    if (data.containsKey('language')) {
+      context.handle(
+        _languageMeta,
+        language.isAcceptableOrUnknown(data['language']!, _languageMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_languageMeta);
+    }
+    if (data.containsKey('how_to_take')) {
+      context.handle(
+        _howToTakeMeta,
+        howToTake.isAcceptableOrUnknown(data['how_to_take']!, _howToTakeMeta),
+      );
+    }
+    if (data.containsKey('best_time_of_day')) {
+      context.handle(
+        _bestTimeOfDayMeta,
+        bestTimeOfDay.isAcceptableOrUnknown(
+          data['best_time_of_day']!,
+          _bestTimeOfDayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('drowsiness_affects_driving')) {
+      context.handle(
+        _drowsinessAffectsDrivingMeta,
+        drowsinessAffectsDriving.isAcceptableOrUnknown(
+          data['drowsiness_affects_driving']!,
+          _drowsinessAffectsDrivingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('drowsiness_warning')) {
+      context.handle(
+        _drowsinessWarningMeta,
+        drowsinessWarning.isAcceptableOrUnknown(
+          data['drowsiness_warning']!,
+          _drowsinessWarningMeta,
+        ),
+      );
+    }
+    if (data.containsKey('foods_to_avoid')) {
+      context.handle(
+        _foodsToAvoidMeta,
+        foodsToAvoid.isAcceptableOrUnknown(
+          data['foods_to_avoid']!,
+          _foodsToAvoidMeta,
+        ),
+      );
+    }
+    if (data.containsKey('missed_dose_advice')) {
+      context.handle(
+        _missedDoseAdviceMeta,
+        missedDoseAdvice.isAcceptableOrUnknown(
+          data['missed_dose_advice']!,
+          _missedDoseAdviceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('storage_instructions')) {
+      context.handle(
+        _storageInstructionsMeta,
+        storageInstructions.isAcceptableOrUnknown(
+          data['storage_instructions']!,
+          _storageInstructionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('generic_name')) {
+      context.handle(
+        _genericNameMeta,
+        genericName.isAcceptableOrUnknown(
+          data['generic_name']!,
+          _genericNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('purpose')) {
+      context.handle(
+        _purposeMeta,
+        purpose.isAcceptableOrUnknown(data['purpose']!, _purposeMeta),
+      );
+    }
+    if (data.containsKey('side_effects')) {
+      context.handle(
+        _sideEffectsMeta,
+        sideEffects.isAcceptableOrUnknown(
+          data['side_effects']!,
+          _sideEffectsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('warnings')) {
+      context.handle(
+        _warningsMeta,
+        warnings.isAcceptableOrUnknown(data['warnings']!, _warningsMeta),
+      );
+    }
+    if (data.containsKey('drug_category')) {
+      context.handle(
+        _drugCategoryMeta,
+        drugCategory.isAcceptableOrUnknown(
+          data['drug_category']!,
+          _drugCategoryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active_ingredients')) {
+      context.handle(
+        _activeIngredientsMeta,
+        activeIngredients.isAcceptableOrUnknown(
+          data['active_ingredients']!,
+          _activeIngredientsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('route')) {
+      context.handle(
+        _routeMeta,
+        route.isAcceptableOrUnknown(data['route']!, _routeMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MedicationDrugInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MedicationDrugInfoData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      medicationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}medication_id'],
+      )!,
+      language: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language'],
+      )!,
+      howToTake: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}how_to_take'],
+      ),
+      bestTimeOfDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}best_time_of_day'],
+      ),
+      drowsinessAffectsDriving: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}drowsiness_affects_driving'],
+      )!,
+      drowsinessWarning: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}drowsiness_warning'],
+      ),
+      foodsToAvoid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}foods_to_avoid'],
+      ),
+      missedDoseAdvice: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}missed_dose_advice'],
+      ),
+      storageInstructions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}storage_instructions'],
+      ),
+      genericName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}generic_name'],
+      ),
+      purpose: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}purpose'],
+      ),
+      sideEffects: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}side_effects'],
+      ),
+      warnings: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}warnings'],
+      ),
+      drugCategory: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}drug_category'],
+      ),
+      activeIngredients: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}active_ingredients'],
+      ),
+      route: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}route'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $MedicationDrugInfoTable createAlias(String alias) {
+    return $MedicationDrugInfoTable(attachedDatabase, alias);
+  }
+}
+
+class MedicationDrugInfoData extends DataClass
+    implements Insertable<MedicationDrugInfoData> {
+  final int id;
+  final int medicationId;
+  final String language;
+  final String? howToTake;
+  final String? bestTimeOfDay;
+  final bool drowsinessAffectsDriving;
+  final String? drowsinessWarning;
+  final String? foodsToAvoid;
+  final String? missedDoseAdvice;
+  final String? storageInstructions;
+  final String? genericName;
+  final String? purpose;
+  final String? sideEffects;
+  final String? warnings;
+  final String? drugCategory;
+  final String? activeIngredients;
+  final String? route;
+  final DateTime updatedAt;
+  const MedicationDrugInfoData({
+    required this.id,
+    required this.medicationId,
+    required this.language,
+    this.howToTake,
+    this.bestTimeOfDay,
+    required this.drowsinessAffectsDriving,
+    this.drowsinessWarning,
+    this.foodsToAvoid,
+    this.missedDoseAdvice,
+    this.storageInstructions,
+    this.genericName,
+    this.purpose,
+    this.sideEffects,
+    this.warnings,
+    this.drugCategory,
+    this.activeIngredients,
+    this.route,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['medication_id'] = Variable<int>(medicationId);
+    map['language'] = Variable<String>(language);
+    if (!nullToAbsent || howToTake != null) {
+      map['how_to_take'] = Variable<String>(howToTake);
+    }
+    if (!nullToAbsent || bestTimeOfDay != null) {
+      map['best_time_of_day'] = Variable<String>(bestTimeOfDay);
+    }
+    map['drowsiness_affects_driving'] = Variable<bool>(
+      drowsinessAffectsDriving,
+    );
+    if (!nullToAbsent || drowsinessWarning != null) {
+      map['drowsiness_warning'] = Variable<String>(drowsinessWarning);
+    }
+    if (!nullToAbsent || foodsToAvoid != null) {
+      map['foods_to_avoid'] = Variable<String>(foodsToAvoid);
+    }
+    if (!nullToAbsent || missedDoseAdvice != null) {
+      map['missed_dose_advice'] = Variable<String>(missedDoseAdvice);
+    }
+    if (!nullToAbsent || storageInstructions != null) {
+      map['storage_instructions'] = Variable<String>(storageInstructions);
+    }
+    if (!nullToAbsent || genericName != null) {
+      map['generic_name'] = Variable<String>(genericName);
+    }
+    if (!nullToAbsent || purpose != null) {
+      map['purpose'] = Variable<String>(purpose);
+    }
+    if (!nullToAbsent || sideEffects != null) {
+      map['side_effects'] = Variable<String>(sideEffects);
+    }
+    if (!nullToAbsent || warnings != null) {
+      map['warnings'] = Variable<String>(warnings);
+    }
+    if (!nullToAbsent || drugCategory != null) {
+      map['drug_category'] = Variable<String>(drugCategory);
+    }
+    if (!nullToAbsent || activeIngredients != null) {
+      map['active_ingredients'] = Variable<String>(activeIngredients);
+    }
+    if (!nullToAbsent || route != null) {
+      map['route'] = Variable<String>(route);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  MedicationDrugInfoCompanion toCompanion(bool nullToAbsent) {
+    return MedicationDrugInfoCompanion(
+      id: Value(id),
+      medicationId: Value(medicationId),
+      language: Value(language),
+      howToTake: howToTake == null && nullToAbsent
+          ? const Value.absent()
+          : Value(howToTake),
+      bestTimeOfDay: bestTimeOfDay == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bestTimeOfDay),
+      drowsinessAffectsDriving: Value(drowsinessAffectsDriving),
+      drowsinessWarning: drowsinessWarning == null && nullToAbsent
+          ? const Value.absent()
+          : Value(drowsinessWarning),
+      foodsToAvoid: foodsToAvoid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(foodsToAvoid),
+      missedDoseAdvice: missedDoseAdvice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(missedDoseAdvice),
+      storageInstructions: storageInstructions == null && nullToAbsent
+          ? const Value.absent()
+          : Value(storageInstructions),
+      genericName: genericName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(genericName),
+      purpose: purpose == null && nullToAbsent
+          ? const Value.absent()
+          : Value(purpose),
+      sideEffects: sideEffects == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sideEffects),
+      warnings: warnings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(warnings),
+      drugCategory: drugCategory == null && nullToAbsent
+          ? const Value.absent()
+          : Value(drugCategory),
+      activeIngredients: activeIngredients == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeIngredients),
+      route: route == null && nullToAbsent
+          ? const Value.absent()
+          : Value(route),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory MedicationDrugInfoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MedicationDrugInfoData(
+      id: serializer.fromJson<int>(json['id']),
+      medicationId: serializer.fromJson<int>(json['medicationId']),
+      language: serializer.fromJson<String>(json['language']),
+      howToTake: serializer.fromJson<String?>(json['howToTake']),
+      bestTimeOfDay: serializer.fromJson<String?>(json['bestTimeOfDay']),
+      drowsinessAffectsDriving: serializer.fromJson<bool>(
+        json['drowsinessAffectsDriving'],
+      ),
+      drowsinessWarning: serializer.fromJson<String?>(
+        json['drowsinessWarning'],
+      ),
+      foodsToAvoid: serializer.fromJson<String?>(json['foodsToAvoid']),
+      missedDoseAdvice: serializer.fromJson<String?>(json['missedDoseAdvice']),
+      storageInstructions: serializer.fromJson<String?>(
+        json['storageInstructions'],
+      ),
+      genericName: serializer.fromJson<String?>(json['genericName']),
+      purpose: serializer.fromJson<String?>(json['purpose']),
+      sideEffects: serializer.fromJson<String?>(json['sideEffects']),
+      warnings: serializer.fromJson<String?>(json['warnings']),
+      drugCategory: serializer.fromJson<String?>(json['drugCategory']),
+      activeIngredients: serializer.fromJson<String?>(
+        json['activeIngredients'],
+      ),
+      route: serializer.fromJson<String?>(json['route']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'medicationId': serializer.toJson<int>(medicationId),
+      'language': serializer.toJson<String>(language),
+      'howToTake': serializer.toJson<String?>(howToTake),
+      'bestTimeOfDay': serializer.toJson<String?>(bestTimeOfDay),
+      'drowsinessAffectsDriving': serializer.toJson<bool>(
+        drowsinessAffectsDriving,
+      ),
+      'drowsinessWarning': serializer.toJson<String?>(drowsinessWarning),
+      'foodsToAvoid': serializer.toJson<String?>(foodsToAvoid),
+      'missedDoseAdvice': serializer.toJson<String?>(missedDoseAdvice),
+      'storageInstructions': serializer.toJson<String?>(storageInstructions),
+      'genericName': serializer.toJson<String?>(genericName),
+      'purpose': serializer.toJson<String?>(purpose),
+      'sideEffects': serializer.toJson<String?>(sideEffects),
+      'warnings': serializer.toJson<String?>(warnings),
+      'drugCategory': serializer.toJson<String?>(drugCategory),
+      'activeIngredients': serializer.toJson<String?>(activeIngredients),
+      'route': serializer.toJson<String?>(route),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  MedicationDrugInfoData copyWith({
+    int? id,
+    int? medicationId,
+    String? language,
+    Value<String?> howToTake = const Value.absent(),
+    Value<String?> bestTimeOfDay = const Value.absent(),
+    bool? drowsinessAffectsDriving,
+    Value<String?> drowsinessWarning = const Value.absent(),
+    Value<String?> foodsToAvoid = const Value.absent(),
+    Value<String?> missedDoseAdvice = const Value.absent(),
+    Value<String?> storageInstructions = const Value.absent(),
+    Value<String?> genericName = const Value.absent(),
+    Value<String?> purpose = const Value.absent(),
+    Value<String?> sideEffects = const Value.absent(),
+    Value<String?> warnings = const Value.absent(),
+    Value<String?> drugCategory = const Value.absent(),
+    Value<String?> activeIngredients = const Value.absent(),
+    Value<String?> route = const Value.absent(),
+    DateTime? updatedAt,
+  }) => MedicationDrugInfoData(
+    id: id ?? this.id,
+    medicationId: medicationId ?? this.medicationId,
+    language: language ?? this.language,
+    howToTake: howToTake.present ? howToTake.value : this.howToTake,
+    bestTimeOfDay: bestTimeOfDay.present
+        ? bestTimeOfDay.value
+        : this.bestTimeOfDay,
+    drowsinessAffectsDriving:
+        drowsinessAffectsDriving ?? this.drowsinessAffectsDriving,
+    drowsinessWarning: drowsinessWarning.present
+        ? drowsinessWarning.value
+        : this.drowsinessWarning,
+    foodsToAvoid: foodsToAvoid.present ? foodsToAvoid.value : this.foodsToAvoid,
+    missedDoseAdvice: missedDoseAdvice.present
+        ? missedDoseAdvice.value
+        : this.missedDoseAdvice,
+    storageInstructions: storageInstructions.present
+        ? storageInstructions.value
+        : this.storageInstructions,
+    genericName: genericName.present ? genericName.value : this.genericName,
+    purpose: purpose.present ? purpose.value : this.purpose,
+    sideEffects: sideEffects.present ? sideEffects.value : this.sideEffects,
+    warnings: warnings.present ? warnings.value : this.warnings,
+    drugCategory: drugCategory.present ? drugCategory.value : this.drugCategory,
+    activeIngredients: activeIngredients.present
+        ? activeIngredients.value
+        : this.activeIngredients,
+    route: route.present ? route.value : this.route,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  MedicationDrugInfoData copyWithCompanion(MedicationDrugInfoCompanion data) {
+    return MedicationDrugInfoData(
+      id: data.id.present ? data.id.value : this.id,
+      medicationId: data.medicationId.present
+          ? data.medicationId.value
+          : this.medicationId,
+      language: data.language.present ? data.language.value : this.language,
+      howToTake: data.howToTake.present ? data.howToTake.value : this.howToTake,
+      bestTimeOfDay: data.bestTimeOfDay.present
+          ? data.bestTimeOfDay.value
+          : this.bestTimeOfDay,
+      drowsinessAffectsDriving: data.drowsinessAffectsDriving.present
+          ? data.drowsinessAffectsDriving.value
+          : this.drowsinessAffectsDriving,
+      drowsinessWarning: data.drowsinessWarning.present
+          ? data.drowsinessWarning.value
+          : this.drowsinessWarning,
+      foodsToAvoid: data.foodsToAvoid.present
+          ? data.foodsToAvoid.value
+          : this.foodsToAvoid,
+      missedDoseAdvice: data.missedDoseAdvice.present
+          ? data.missedDoseAdvice.value
+          : this.missedDoseAdvice,
+      storageInstructions: data.storageInstructions.present
+          ? data.storageInstructions.value
+          : this.storageInstructions,
+      genericName: data.genericName.present
+          ? data.genericName.value
+          : this.genericName,
+      purpose: data.purpose.present ? data.purpose.value : this.purpose,
+      sideEffects: data.sideEffects.present
+          ? data.sideEffects.value
+          : this.sideEffects,
+      warnings: data.warnings.present ? data.warnings.value : this.warnings,
+      drugCategory: data.drugCategory.present
+          ? data.drugCategory.value
+          : this.drugCategory,
+      activeIngredients: data.activeIngredients.present
+          ? data.activeIngredients.value
+          : this.activeIngredients,
+      route: data.route.present ? data.route.value : this.route,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MedicationDrugInfoData(')
+          ..write('id: $id, ')
+          ..write('medicationId: $medicationId, ')
+          ..write('language: $language, ')
+          ..write('howToTake: $howToTake, ')
+          ..write('bestTimeOfDay: $bestTimeOfDay, ')
+          ..write('drowsinessAffectsDriving: $drowsinessAffectsDriving, ')
+          ..write('drowsinessWarning: $drowsinessWarning, ')
+          ..write('foodsToAvoid: $foodsToAvoid, ')
+          ..write('missedDoseAdvice: $missedDoseAdvice, ')
+          ..write('storageInstructions: $storageInstructions, ')
+          ..write('genericName: $genericName, ')
+          ..write('purpose: $purpose, ')
+          ..write('sideEffects: $sideEffects, ')
+          ..write('warnings: $warnings, ')
+          ..write('drugCategory: $drugCategory, ')
+          ..write('activeIngredients: $activeIngredients, ')
+          ..write('route: $route, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    medicationId,
+    language,
+    howToTake,
+    bestTimeOfDay,
+    drowsinessAffectsDriving,
+    drowsinessWarning,
+    foodsToAvoid,
+    missedDoseAdvice,
+    storageInstructions,
+    genericName,
+    purpose,
+    sideEffects,
+    warnings,
+    drugCategory,
+    activeIngredients,
+    route,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MedicationDrugInfoData &&
+          other.id == this.id &&
+          other.medicationId == this.medicationId &&
+          other.language == this.language &&
+          other.howToTake == this.howToTake &&
+          other.bestTimeOfDay == this.bestTimeOfDay &&
+          other.drowsinessAffectsDriving == this.drowsinessAffectsDriving &&
+          other.drowsinessWarning == this.drowsinessWarning &&
+          other.foodsToAvoid == this.foodsToAvoid &&
+          other.missedDoseAdvice == this.missedDoseAdvice &&
+          other.storageInstructions == this.storageInstructions &&
+          other.genericName == this.genericName &&
+          other.purpose == this.purpose &&
+          other.sideEffects == this.sideEffects &&
+          other.warnings == this.warnings &&
+          other.drugCategory == this.drugCategory &&
+          other.activeIngredients == this.activeIngredients &&
+          other.route == this.route &&
+          other.updatedAt == this.updatedAt);
+}
+
+class MedicationDrugInfoCompanion
+    extends UpdateCompanion<MedicationDrugInfoData> {
+  final Value<int> id;
+  final Value<int> medicationId;
+  final Value<String> language;
+  final Value<String?> howToTake;
+  final Value<String?> bestTimeOfDay;
+  final Value<bool> drowsinessAffectsDriving;
+  final Value<String?> drowsinessWarning;
+  final Value<String?> foodsToAvoid;
+  final Value<String?> missedDoseAdvice;
+  final Value<String?> storageInstructions;
+  final Value<String?> genericName;
+  final Value<String?> purpose;
+  final Value<String?> sideEffects;
+  final Value<String?> warnings;
+  final Value<String?> drugCategory;
+  final Value<String?> activeIngredients;
+  final Value<String?> route;
+  final Value<DateTime> updatedAt;
+  const MedicationDrugInfoCompanion({
+    this.id = const Value.absent(),
+    this.medicationId = const Value.absent(),
+    this.language = const Value.absent(),
+    this.howToTake = const Value.absent(),
+    this.bestTimeOfDay = const Value.absent(),
+    this.drowsinessAffectsDriving = const Value.absent(),
+    this.drowsinessWarning = const Value.absent(),
+    this.foodsToAvoid = const Value.absent(),
+    this.missedDoseAdvice = const Value.absent(),
+    this.storageInstructions = const Value.absent(),
+    this.genericName = const Value.absent(),
+    this.purpose = const Value.absent(),
+    this.sideEffects = const Value.absent(),
+    this.warnings = const Value.absent(),
+    this.drugCategory = const Value.absent(),
+    this.activeIngredients = const Value.absent(),
+    this.route = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  MedicationDrugInfoCompanion.insert({
+    this.id = const Value.absent(),
+    required int medicationId,
+    required String language,
+    this.howToTake = const Value.absent(),
+    this.bestTimeOfDay = const Value.absent(),
+    this.drowsinessAffectsDriving = const Value.absent(),
+    this.drowsinessWarning = const Value.absent(),
+    this.foodsToAvoid = const Value.absent(),
+    this.missedDoseAdvice = const Value.absent(),
+    this.storageInstructions = const Value.absent(),
+    this.genericName = const Value.absent(),
+    this.purpose = const Value.absent(),
+    this.sideEffects = const Value.absent(),
+    this.warnings = const Value.absent(),
+    this.drugCategory = const Value.absent(),
+    this.activeIngredients = const Value.absent(),
+    this.route = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : medicationId = Value(medicationId),
+       language = Value(language);
+  static Insertable<MedicationDrugInfoData> custom({
+    Expression<int>? id,
+    Expression<int>? medicationId,
+    Expression<String>? language,
+    Expression<String>? howToTake,
+    Expression<String>? bestTimeOfDay,
+    Expression<bool>? drowsinessAffectsDriving,
+    Expression<String>? drowsinessWarning,
+    Expression<String>? foodsToAvoid,
+    Expression<String>? missedDoseAdvice,
+    Expression<String>? storageInstructions,
+    Expression<String>? genericName,
+    Expression<String>? purpose,
+    Expression<String>? sideEffects,
+    Expression<String>? warnings,
+    Expression<String>? drugCategory,
+    Expression<String>? activeIngredients,
+    Expression<String>? route,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (medicationId != null) 'medication_id': medicationId,
+      if (language != null) 'language': language,
+      if (howToTake != null) 'how_to_take': howToTake,
+      if (bestTimeOfDay != null) 'best_time_of_day': bestTimeOfDay,
+      if (drowsinessAffectsDriving != null)
+        'drowsiness_affects_driving': drowsinessAffectsDriving,
+      if (drowsinessWarning != null) 'drowsiness_warning': drowsinessWarning,
+      if (foodsToAvoid != null) 'foods_to_avoid': foodsToAvoid,
+      if (missedDoseAdvice != null) 'missed_dose_advice': missedDoseAdvice,
+      if (storageInstructions != null)
+        'storage_instructions': storageInstructions,
+      if (genericName != null) 'generic_name': genericName,
+      if (purpose != null) 'purpose': purpose,
+      if (sideEffects != null) 'side_effects': sideEffects,
+      if (warnings != null) 'warnings': warnings,
+      if (drugCategory != null) 'drug_category': drugCategory,
+      if (activeIngredients != null) 'active_ingredients': activeIngredients,
+      if (route != null) 'route': route,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  MedicationDrugInfoCompanion copyWith({
+    Value<int>? id,
+    Value<int>? medicationId,
+    Value<String>? language,
+    Value<String?>? howToTake,
+    Value<String?>? bestTimeOfDay,
+    Value<bool>? drowsinessAffectsDriving,
+    Value<String?>? drowsinessWarning,
+    Value<String?>? foodsToAvoid,
+    Value<String?>? missedDoseAdvice,
+    Value<String?>? storageInstructions,
+    Value<String?>? genericName,
+    Value<String?>? purpose,
+    Value<String?>? sideEffects,
+    Value<String?>? warnings,
+    Value<String?>? drugCategory,
+    Value<String?>? activeIngredients,
+    Value<String?>? route,
+    Value<DateTime>? updatedAt,
+  }) {
+    return MedicationDrugInfoCompanion(
+      id: id ?? this.id,
+      medicationId: medicationId ?? this.medicationId,
+      language: language ?? this.language,
+      howToTake: howToTake ?? this.howToTake,
+      bestTimeOfDay: bestTimeOfDay ?? this.bestTimeOfDay,
+      drowsinessAffectsDriving:
+          drowsinessAffectsDriving ?? this.drowsinessAffectsDriving,
+      drowsinessWarning: drowsinessWarning ?? this.drowsinessWarning,
+      foodsToAvoid: foodsToAvoid ?? this.foodsToAvoid,
+      missedDoseAdvice: missedDoseAdvice ?? this.missedDoseAdvice,
+      storageInstructions: storageInstructions ?? this.storageInstructions,
+      genericName: genericName ?? this.genericName,
+      purpose: purpose ?? this.purpose,
+      sideEffects: sideEffects ?? this.sideEffects,
+      warnings: warnings ?? this.warnings,
+      drugCategory: drugCategory ?? this.drugCategory,
+      activeIngredients: activeIngredients ?? this.activeIngredients,
+      route: route ?? this.route,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (medicationId.present) {
+      map['medication_id'] = Variable<int>(medicationId.value);
+    }
+    if (language.present) {
+      map['language'] = Variable<String>(language.value);
+    }
+    if (howToTake.present) {
+      map['how_to_take'] = Variable<String>(howToTake.value);
+    }
+    if (bestTimeOfDay.present) {
+      map['best_time_of_day'] = Variable<String>(bestTimeOfDay.value);
+    }
+    if (drowsinessAffectsDriving.present) {
+      map['drowsiness_affects_driving'] = Variable<bool>(
+        drowsinessAffectsDriving.value,
+      );
+    }
+    if (drowsinessWarning.present) {
+      map['drowsiness_warning'] = Variable<String>(drowsinessWarning.value);
+    }
+    if (foodsToAvoid.present) {
+      map['foods_to_avoid'] = Variable<String>(foodsToAvoid.value);
+    }
+    if (missedDoseAdvice.present) {
+      map['missed_dose_advice'] = Variable<String>(missedDoseAdvice.value);
+    }
+    if (storageInstructions.present) {
+      map['storage_instructions'] = Variable<String>(storageInstructions.value);
+    }
+    if (genericName.present) {
+      map['generic_name'] = Variable<String>(genericName.value);
+    }
+    if (purpose.present) {
+      map['purpose'] = Variable<String>(purpose.value);
+    }
+    if (sideEffects.present) {
+      map['side_effects'] = Variable<String>(sideEffects.value);
+    }
+    if (warnings.present) {
+      map['warnings'] = Variable<String>(warnings.value);
+    }
+    if (drugCategory.present) {
+      map['drug_category'] = Variable<String>(drugCategory.value);
+    }
+    if (activeIngredients.present) {
+      map['active_ingredients'] = Variable<String>(activeIngredients.value);
+    }
+    if (route.present) {
+      map['route'] = Variable<String>(route.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MedicationDrugInfoCompanion(')
+          ..write('id: $id, ')
+          ..write('medicationId: $medicationId, ')
+          ..write('language: $language, ')
+          ..write('howToTake: $howToTake, ')
+          ..write('bestTimeOfDay: $bestTimeOfDay, ')
+          ..write('drowsinessAffectsDriving: $drowsinessAffectsDriving, ')
+          ..write('drowsinessWarning: $drowsinessWarning, ')
+          ..write('foodsToAvoid: $foodsToAvoid, ')
+          ..write('missedDoseAdvice: $missedDoseAdvice, ')
+          ..write('storageInstructions: $storageInstructions, ')
+          ..write('genericName: $genericName, ')
+          ..write('purpose: $purpose, ')
+          ..write('sideEffects: $sideEffects, ')
+          ..write('warnings: $warnings, ')
+          ..write('drugCategory: $drugCategory, ')
+          ..write('activeIngredients: $activeIngredients, ')
+          ..write('route: $route, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3878,6 +5203,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StockHistoryTable stockHistory = $StockHistoryTable(this);
   late final $SnoozeHistoryTableTable snoozeHistoryTable =
       $SnoozeHistoryTableTable(this);
+  late final $MedicationDrugInfoTable medicationDrugInfo =
+      $MedicationDrugInfoTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3888,6 +5215,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     doseHistory,
     stockHistory,
     snoozeHistoryTable,
+    medicationDrugInfo,
   ];
 }
 
@@ -3901,6 +5229,13 @@ typedef $$MedicationsTableCreateCompanionBuilder =
       Value<String?> unit,
       Value<String?> notes,
       Value<bool> isScanned,
+      Value<String?> genericName,
+      Value<String?> activeIngredients,
+      Value<String?> drugCategory,
+      Value<String?> purpose,
+      Value<String?> sideEffects,
+      Value<String?> warnings,
+      Value<String?> route,
       Value<int> timesPerDay,
       Value<double> dosePerTime,
       Value<String> doseUnit,
@@ -3908,6 +5243,10 @@ typedef $$MedicationsTableCreateCompanionBuilder =
       required DateTime startDate,
       Value<String> repetitionPattern,
       Value<String> specificDaysOfWeek,
+      Value<int?> intervalDays,
+      Value<int?> intervalWeeks,
+      Value<int?> intervalMonths,
+      Value<int?> dayOfMonth,
       Value<int> stockQuantity,
       Value<bool> remindBeforeRunOut,
       Value<int> reminderDaysBeforeRunOut,
@@ -3931,6 +5270,13 @@ typedef $$MedicationsTableUpdateCompanionBuilder =
       Value<String?> unit,
       Value<String?> notes,
       Value<bool> isScanned,
+      Value<String?> genericName,
+      Value<String?> activeIngredients,
+      Value<String?> drugCategory,
+      Value<String?> purpose,
+      Value<String?> sideEffects,
+      Value<String?> warnings,
+      Value<String?> route,
       Value<int> timesPerDay,
       Value<double> dosePerTime,
       Value<String> doseUnit,
@@ -3938,6 +5284,10 @@ typedef $$MedicationsTableUpdateCompanionBuilder =
       Value<DateTime> startDate,
       Value<String> repetitionPattern,
       Value<String> specificDaysOfWeek,
+      Value<int?> intervalDays,
+      Value<int?> intervalWeeks,
+      Value<int?> intervalMonths,
+      Value<int?> dayOfMonth,
       Value<int> stockQuantity,
       Value<bool> remindBeforeRunOut,
       Value<int> reminderDaysBeforeRunOut,
@@ -4018,6 +5368,33 @@ final class $$MedicationsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $MedicationDrugInfoTable,
+    List<MedicationDrugInfoData>
+  >
+  _medicationDrugInfoRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.medicationDrugInfo,
+        aliasName: $_aliasNameGenerator(
+          db.medications.id,
+          db.medicationDrugInfo.medicationId,
+        ),
+      );
+
+  $$MedicationDrugInfoTableProcessedTableManager get medicationDrugInfoRefs {
+    final manager = $$MedicationDrugInfoTableTableManager(
+      $_db,
+      $_db.medicationDrugInfo,
+    ).filter((f) => f.medicationId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _medicationDrugInfoRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$MedicationsTableFilterComposer
@@ -4069,6 +5446,41 @@ class $$MedicationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get purpose => $composableBuilder(
+    column: $table.purpose,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get warnings => $composableBuilder(
+    column: $table.warnings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get route => $composableBuilder(
+    column: $table.route,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get timesPerDay => $composableBuilder(
     column: $table.timesPerDay,
     builder: (column) => ColumnFilters(column),
@@ -4101,6 +5513,26 @@ class $$MedicationsTableFilterComposer
 
   ColumnFilters<String> get specificDaysOfWeek => $composableBuilder(
     column: $table.specificDaysOfWeek,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get intervalDays => $composableBuilder(
+    column: $table.intervalDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get intervalMonths => $composableBuilder(
+    column: $table.intervalMonths,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dayOfMonth => $composableBuilder(
+    column: $table.dayOfMonth,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4238,6 +5670,31 @@ class $$MedicationsTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> medicationDrugInfoRefs(
+    Expression<bool> Function($$MedicationDrugInfoTableFilterComposer f) f,
+  ) {
+    final $$MedicationDrugInfoTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.medicationDrugInfo,
+      getReferencedColumn: (t) => t.medicationId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicationDrugInfoTableFilterComposer(
+            $db: $db,
+            $table: $db.medicationDrugInfo,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$MedicationsTableOrderingComposer
@@ -4289,6 +5746,41 @@ class $$MedicationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get purpose => $composableBuilder(
+    column: $table.purpose,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get warnings => $composableBuilder(
+    column: $table.warnings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get route => $composableBuilder(
+    column: $table.route,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get timesPerDay => $composableBuilder(
     column: $table.timesPerDay,
     builder: (column) => ColumnOrderings(column),
@@ -4321,6 +5813,26 @@ class $$MedicationsTableOrderingComposer
 
   ColumnOrderings<String> get specificDaysOfWeek => $composableBuilder(
     column: $table.specificDaysOfWeek,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get intervalDays => $composableBuilder(
+    column: $table.intervalDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get intervalMonths => $composableBuilder(
+    column: $table.intervalMonths,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dayOfMonth => $composableBuilder(
+    column: $table.dayOfMonth,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4424,6 +5936,35 @@ class $$MedicationsTableAnnotationComposer
   GeneratedColumn<bool> get isScanned =>
       $composableBuilder(column: $table.isScanned, builder: (column) => column);
 
+  GeneratedColumn<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get purpose =>
+      $composableBuilder(column: $table.purpose, builder: (column) => column);
+
+  GeneratedColumn<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get warnings =>
+      $composableBuilder(column: $table.warnings, builder: (column) => column);
+
+  GeneratedColumn<String> get route =>
+      $composableBuilder(column: $table.route, builder: (column) => column);
+
   GeneratedColumn<int> get timesPerDay => $composableBuilder(
     column: $table.timesPerDay,
     builder: (column) => column,
@@ -4452,6 +5993,26 @@ class $$MedicationsTableAnnotationComposer
 
   GeneratedColumn<String> get specificDaysOfWeek => $composableBuilder(
     column: $table.specificDaysOfWeek,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get intervalDays => $composableBuilder(
+    column: $table.intervalDays,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get intervalWeeks => $composableBuilder(
+    column: $table.intervalWeeks,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get intervalMonths => $composableBuilder(
+    column: $table.intervalMonths,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get dayOfMonth => $composableBuilder(
+    column: $table.dayOfMonth,
     builder: (column) => column,
   );
 
@@ -4583,6 +6144,32 @@ class $$MedicationsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> medicationDrugInfoRefs<T extends Object>(
+    Expression<T> Function($$MedicationDrugInfoTableAnnotationComposer a) f,
+  ) {
+    final $$MedicationDrugInfoTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.medicationDrugInfo,
+          getReferencedColumn: (t) => t.medicationId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$MedicationDrugInfoTableAnnotationComposer(
+                $db: $db,
+                $table: $db.medicationDrugInfo,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$MedicationsTableTableManager
@@ -4602,6 +6189,7 @@ class $$MedicationsTableTableManager
             bool reminderTimesRefs,
             bool doseHistoryRefs,
             bool stockHistoryRefs,
+            bool medicationDrugInfoRefs,
           })
         > {
   $$MedicationsTableTableManager(_$AppDatabase db, $MedicationsTable table)
@@ -4625,6 +6213,13 @@ class $$MedicationsTableTableManager
                 Value<String?> unit = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isScanned = const Value.absent(),
+                Value<String?> genericName = const Value.absent(),
+                Value<String?> activeIngredients = const Value.absent(),
+                Value<String?> drugCategory = const Value.absent(),
+                Value<String?> purpose = const Value.absent(),
+                Value<String?> sideEffects = const Value.absent(),
+                Value<String?> warnings = const Value.absent(),
+                Value<String?> route = const Value.absent(),
                 Value<int> timesPerDay = const Value.absent(),
                 Value<double> dosePerTime = const Value.absent(),
                 Value<String> doseUnit = const Value.absent(),
@@ -4632,6 +6227,10 @@ class $$MedicationsTableTableManager
                 Value<DateTime> startDate = const Value.absent(),
                 Value<String> repetitionPattern = const Value.absent(),
                 Value<String> specificDaysOfWeek = const Value.absent(),
+                Value<int?> intervalDays = const Value.absent(),
+                Value<int?> intervalWeeks = const Value.absent(),
+                Value<int?> intervalMonths = const Value.absent(),
+                Value<int?> dayOfMonth = const Value.absent(),
                 Value<int> stockQuantity = const Value.absent(),
                 Value<bool> remindBeforeRunOut = const Value.absent(),
                 Value<int> reminderDaysBeforeRunOut = const Value.absent(),
@@ -4653,6 +6252,13 @@ class $$MedicationsTableTableManager
                 unit: unit,
                 notes: notes,
                 isScanned: isScanned,
+                genericName: genericName,
+                activeIngredients: activeIngredients,
+                drugCategory: drugCategory,
+                purpose: purpose,
+                sideEffects: sideEffects,
+                warnings: warnings,
+                route: route,
                 timesPerDay: timesPerDay,
                 dosePerTime: dosePerTime,
                 doseUnit: doseUnit,
@@ -4660,6 +6266,10 @@ class $$MedicationsTableTableManager
                 startDate: startDate,
                 repetitionPattern: repetitionPattern,
                 specificDaysOfWeek: specificDaysOfWeek,
+                intervalDays: intervalDays,
+                intervalWeeks: intervalWeeks,
+                intervalMonths: intervalMonths,
+                dayOfMonth: dayOfMonth,
                 stockQuantity: stockQuantity,
                 remindBeforeRunOut: remindBeforeRunOut,
                 reminderDaysBeforeRunOut: reminderDaysBeforeRunOut,
@@ -4683,6 +6293,13 @@ class $$MedicationsTableTableManager
                 Value<String?> unit = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isScanned = const Value.absent(),
+                Value<String?> genericName = const Value.absent(),
+                Value<String?> activeIngredients = const Value.absent(),
+                Value<String?> drugCategory = const Value.absent(),
+                Value<String?> purpose = const Value.absent(),
+                Value<String?> sideEffects = const Value.absent(),
+                Value<String?> warnings = const Value.absent(),
+                Value<String?> route = const Value.absent(),
                 Value<int> timesPerDay = const Value.absent(),
                 Value<double> dosePerTime = const Value.absent(),
                 Value<String> doseUnit = const Value.absent(),
@@ -4690,6 +6307,10 @@ class $$MedicationsTableTableManager
                 required DateTime startDate,
                 Value<String> repetitionPattern = const Value.absent(),
                 Value<String> specificDaysOfWeek = const Value.absent(),
+                Value<int?> intervalDays = const Value.absent(),
+                Value<int?> intervalWeeks = const Value.absent(),
+                Value<int?> intervalMonths = const Value.absent(),
+                Value<int?> dayOfMonth = const Value.absent(),
                 Value<int> stockQuantity = const Value.absent(),
                 Value<bool> remindBeforeRunOut = const Value.absent(),
                 Value<int> reminderDaysBeforeRunOut = const Value.absent(),
@@ -4711,6 +6332,13 @@ class $$MedicationsTableTableManager
                 unit: unit,
                 notes: notes,
                 isScanned: isScanned,
+                genericName: genericName,
+                activeIngredients: activeIngredients,
+                drugCategory: drugCategory,
+                purpose: purpose,
+                sideEffects: sideEffects,
+                warnings: warnings,
+                route: route,
                 timesPerDay: timesPerDay,
                 dosePerTime: dosePerTime,
                 doseUnit: doseUnit,
@@ -4718,6 +6346,10 @@ class $$MedicationsTableTableManager
                 startDate: startDate,
                 repetitionPattern: repetitionPattern,
                 specificDaysOfWeek: specificDaysOfWeek,
+                intervalDays: intervalDays,
+                intervalWeeks: intervalWeeks,
+                intervalMonths: intervalMonths,
+                dayOfMonth: dayOfMonth,
                 stockQuantity: stockQuantity,
                 remindBeforeRunOut: remindBeforeRunOut,
                 reminderDaysBeforeRunOut: reminderDaysBeforeRunOut,
@@ -4744,6 +6376,7 @@ class $$MedicationsTableTableManager
                 reminderTimesRefs = false,
                 doseHistoryRefs = false,
                 stockHistoryRefs = false,
+                medicationDrugInfoRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4751,6 +6384,7 @@ class $$MedicationsTableTableManager
                     if (reminderTimesRefs) db.reminderTimes,
                     if (doseHistoryRefs) db.doseHistory,
                     if (stockHistoryRefs) db.stockHistory,
+                    if (medicationDrugInfoRefs) db.medicationDrugInfo,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -4818,6 +6452,27 @@ class $$MedicationsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (medicationDrugInfoRefs)
+                        await $_getPrefetchedData<
+                          Medication,
+                          $MedicationsTable,
+                          MedicationDrugInfoData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MedicationsTableReferences
+                              ._medicationDrugInfoRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MedicationsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).medicationDrugInfoRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.medicationId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4842,6 +6497,7 @@ typedef $$MedicationsTableProcessedTableManager =
         bool reminderTimesRefs,
         bool doseHistoryRefs,
         bool stockHistoryRefs,
+        bool medicationDrugInfoRefs,
       })
     >;
 typedef $$ReminderTimesTableCreateCompanionBuilder =
@@ -6217,6 +7873,605 @@ typedef $$SnoozeHistoryTableTableProcessedTableManager =
       SnoozeHistoryData,
       PrefetchHooks Function()
     >;
+typedef $$MedicationDrugInfoTableCreateCompanionBuilder =
+    MedicationDrugInfoCompanion Function({
+      Value<int> id,
+      required int medicationId,
+      required String language,
+      Value<String?> howToTake,
+      Value<String?> bestTimeOfDay,
+      Value<bool> drowsinessAffectsDriving,
+      Value<String?> drowsinessWarning,
+      Value<String?> foodsToAvoid,
+      Value<String?> missedDoseAdvice,
+      Value<String?> storageInstructions,
+      Value<String?> genericName,
+      Value<String?> purpose,
+      Value<String?> sideEffects,
+      Value<String?> warnings,
+      Value<String?> drugCategory,
+      Value<String?> activeIngredients,
+      Value<String?> route,
+      Value<DateTime> updatedAt,
+    });
+typedef $$MedicationDrugInfoTableUpdateCompanionBuilder =
+    MedicationDrugInfoCompanion Function({
+      Value<int> id,
+      Value<int> medicationId,
+      Value<String> language,
+      Value<String?> howToTake,
+      Value<String?> bestTimeOfDay,
+      Value<bool> drowsinessAffectsDriving,
+      Value<String?> drowsinessWarning,
+      Value<String?> foodsToAvoid,
+      Value<String?> missedDoseAdvice,
+      Value<String?> storageInstructions,
+      Value<String?> genericName,
+      Value<String?> purpose,
+      Value<String?> sideEffects,
+      Value<String?> warnings,
+      Value<String?> drugCategory,
+      Value<String?> activeIngredients,
+      Value<String?> route,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$MedicationDrugInfoTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $MedicationDrugInfoTable,
+          MedicationDrugInfoData
+        > {
+  $$MedicationDrugInfoTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $MedicationsTable _medicationIdTable(_$AppDatabase db) =>
+      db.medications.createAlias(
+        $_aliasNameGenerator(
+          db.medicationDrugInfo.medicationId,
+          db.medications.id,
+        ),
+      );
+
+  $$MedicationsTableProcessedTableManager get medicationId {
+    final $_column = $_itemColumn<int>('medication_id')!;
+
+    final manager = $$MedicationsTableTableManager(
+      $_db,
+      $_db.medications,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_medicationIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$MedicationDrugInfoTableFilterComposer
+    extends Composer<_$AppDatabase, $MedicationDrugInfoTable> {
+  $$MedicationDrugInfoTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get language => $composableBuilder(
+    column: $table.language,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get howToTake => $composableBuilder(
+    column: $table.howToTake,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bestTimeOfDay => $composableBuilder(
+    column: $table.bestTimeOfDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get drowsinessAffectsDriving => $composableBuilder(
+    column: $table.drowsinessAffectsDriving,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get drowsinessWarning => $composableBuilder(
+    column: $table.drowsinessWarning,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get foodsToAvoid => $composableBuilder(
+    column: $table.foodsToAvoid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get missedDoseAdvice => $composableBuilder(
+    column: $table.missedDoseAdvice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get storageInstructions => $composableBuilder(
+    column: $table.storageInstructions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get purpose => $composableBuilder(
+    column: $table.purpose,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get warnings => $composableBuilder(
+    column: $table.warnings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get route => $composableBuilder(
+    column: $table.route,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$MedicationsTableFilterComposer get medicationId {
+    final $$MedicationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.medicationId,
+      referencedTable: $db.medications,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicationsTableFilterComposer(
+            $db: $db,
+            $table: $db.medications,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MedicationDrugInfoTableOrderingComposer
+    extends Composer<_$AppDatabase, $MedicationDrugInfoTable> {
+  $$MedicationDrugInfoTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get language => $composableBuilder(
+    column: $table.language,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get howToTake => $composableBuilder(
+    column: $table.howToTake,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bestTimeOfDay => $composableBuilder(
+    column: $table.bestTimeOfDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get drowsinessAffectsDriving => $composableBuilder(
+    column: $table.drowsinessAffectsDriving,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get drowsinessWarning => $composableBuilder(
+    column: $table.drowsinessWarning,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get foodsToAvoid => $composableBuilder(
+    column: $table.foodsToAvoid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get missedDoseAdvice => $composableBuilder(
+    column: $table.missedDoseAdvice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get storageInstructions => $composableBuilder(
+    column: $table.storageInstructions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get purpose => $composableBuilder(
+    column: $table.purpose,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get warnings => $composableBuilder(
+    column: $table.warnings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get route => $composableBuilder(
+    column: $table.route,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$MedicationsTableOrderingComposer get medicationId {
+    final $$MedicationsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.medicationId,
+      referencedTable: $db.medications,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicationsTableOrderingComposer(
+            $db: $db,
+            $table: $db.medications,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MedicationDrugInfoTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MedicationDrugInfoTable> {
+  $$MedicationDrugInfoTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get language =>
+      $composableBuilder(column: $table.language, builder: (column) => column);
+
+  GeneratedColumn<String> get howToTake =>
+      $composableBuilder(column: $table.howToTake, builder: (column) => column);
+
+  GeneratedColumn<String> get bestTimeOfDay => $composableBuilder(
+    column: $table.bestTimeOfDay,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get drowsinessAffectsDriving => $composableBuilder(
+    column: $table.drowsinessAffectsDriving,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get drowsinessWarning => $composableBuilder(
+    column: $table.drowsinessWarning,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get foodsToAvoid => $composableBuilder(
+    column: $table.foodsToAvoid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get missedDoseAdvice => $composableBuilder(
+    column: $table.missedDoseAdvice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get storageInstructions => $composableBuilder(
+    column: $table.storageInstructions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get genericName => $composableBuilder(
+    column: $table.genericName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get purpose =>
+      $composableBuilder(column: $table.purpose, builder: (column) => column);
+
+  GeneratedColumn<String> get sideEffects => $composableBuilder(
+    column: $table.sideEffects,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get warnings =>
+      $composableBuilder(column: $table.warnings, builder: (column) => column);
+
+  GeneratedColumn<String> get drugCategory => $composableBuilder(
+    column: $table.drugCategory,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activeIngredients => $composableBuilder(
+    column: $table.activeIngredients,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get route =>
+      $composableBuilder(column: $table.route, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$MedicationsTableAnnotationComposer get medicationId {
+    final $$MedicationsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.medicationId,
+      referencedTable: $db.medications,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicationsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.medications,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MedicationDrugInfoTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MedicationDrugInfoTable,
+          MedicationDrugInfoData,
+          $$MedicationDrugInfoTableFilterComposer,
+          $$MedicationDrugInfoTableOrderingComposer,
+          $$MedicationDrugInfoTableAnnotationComposer,
+          $$MedicationDrugInfoTableCreateCompanionBuilder,
+          $$MedicationDrugInfoTableUpdateCompanionBuilder,
+          (MedicationDrugInfoData, $$MedicationDrugInfoTableReferences),
+          MedicationDrugInfoData,
+          PrefetchHooks Function({bool medicationId})
+        > {
+  $$MedicationDrugInfoTableTableManager(
+    _$AppDatabase db,
+    $MedicationDrugInfoTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MedicationDrugInfoTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MedicationDrugInfoTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MedicationDrugInfoTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> medicationId = const Value.absent(),
+                Value<String> language = const Value.absent(),
+                Value<String?> howToTake = const Value.absent(),
+                Value<String?> bestTimeOfDay = const Value.absent(),
+                Value<bool> drowsinessAffectsDriving = const Value.absent(),
+                Value<String?> drowsinessWarning = const Value.absent(),
+                Value<String?> foodsToAvoid = const Value.absent(),
+                Value<String?> missedDoseAdvice = const Value.absent(),
+                Value<String?> storageInstructions = const Value.absent(),
+                Value<String?> genericName = const Value.absent(),
+                Value<String?> purpose = const Value.absent(),
+                Value<String?> sideEffects = const Value.absent(),
+                Value<String?> warnings = const Value.absent(),
+                Value<String?> drugCategory = const Value.absent(),
+                Value<String?> activeIngredients = const Value.absent(),
+                Value<String?> route = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => MedicationDrugInfoCompanion(
+                id: id,
+                medicationId: medicationId,
+                language: language,
+                howToTake: howToTake,
+                bestTimeOfDay: bestTimeOfDay,
+                drowsinessAffectsDriving: drowsinessAffectsDriving,
+                drowsinessWarning: drowsinessWarning,
+                foodsToAvoid: foodsToAvoid,
+                missedDoseAdvice: missedDoseAdvice,
+                storageInstructions: storageInstructions,
+                genericName: genericName,
+                purpose: purpose,
+                sideEffects: sideEffects,
+                warnings: warnings,
+                drugCategory: drugCategory,
+                activeIngredients: activeIngredients,
+                route: route,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int medicationId,
+                required String language,
+                Value<String?> howToTake = const Value.absent(),
+                Value<String?> bestTimeOfDay = const Value.absent(),
+                Value<bool> drowsinessAffectsDriving = const Value.absent(),
+                Value<String?> drowsinessWarning = const Value.absent(),
+                Value<String?> foodsToAvoid = const Value.absent(),
+                Value<String?> missedDoseAdvice = const Value.absent(),
+                Value<String?> storageInstructions = const Value.absent(),
+                Value<String?> genericName = const Value.absent(),
+                Value<String?> purpose = const Value.absent(),
+                Value<String?> sideEffects = const Value.absent(),
+                Value<String?> warnings = const Value.absent(),
+                Value<String?> drugCategory = const Value.absent(),
+                Value<String?> activeIngredients = const Value.absent(),
+                Value<String?> route = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => MedicationDrugInfoCompanion.insert(
+                id: id,
+                medicationId: medicationId,
+                language: language,
+                howToTake: howToTake,
+                bestTimeOfDay: bestTimeOfDay,
+                drowsinessAffectsDriving: drowsinessAffectsDriving,
+                drowsinessWarning: drowsinessWarning,
+                foodsToAvoid: foodsToAvoid,
+                missedDoseAdvice: missedDoseAdvice,
+                storageInstructions: storageInstructions,
+                genericName: genericName,
+                purpose: purpose,
+                sideEffects: sideEffects,
+                warnings: warnings,
+                drugCategory: drugCategory,
+                activeIngredients: activeIngredients,
+                route: route,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$MedicationDrugInfoTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({medicationId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (medicationId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.medicationId,
+                                referencedTable:
+                                    $$MedicationDrugInfoTableReferences
+                                        ._medicationIdTable(db),
+                                referencedColumn:
+                                    $$MedicationDrugInfoTableReferences
+                                        ._medicationIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$MedicationDrugInfoTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MedicationDrugInfoTable,
+      MedicationDrugInfoData,
+      $$MedicationDrugInfoTableFilterComposer,
+      $$MedicationDrugInfoTableOrderingComposer,
+      $$MedicationDrugInfoTableAnnotationComposer,
+      $$MedicationDrugInfoTableCreateCompanionBuilder,
+      $$MedicationDrugInfoTableUpdateCompanionBuilder,
+      (MedicationDrugInfoData, $$MedicationDrugInfoTableReferences),
+      MedicationDrugInfoData,
+      PrefetchHooks Function({bool medicationId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6231,4 +8486,6 @@ class $AppDatabaseManager {
       $$StockHistoryTableTableManager(_db, _db.stockHistory);
   $$SnoozeHistoryTableTableTableManager get snoozeHistoryTable =>
       $$SnoozeHistoryTableTableTableManager(_db, _db.snoozeHistoryTable);
+  $$MedicationDrugInfoTableTableManager get medicationDrugInfo =>
+      $$MedicationDrugInfoTableTableManager(_db, _db.medicationDrugInfo);
 }

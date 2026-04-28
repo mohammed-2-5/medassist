@@ -49,10 +49,23 @@ class NotificationActionHandler {
 
       final safeDose = dose is String && dose.length <= 100 ? dose : '';
 
+      final scheduledHour = decoded['scheduledHour'];
+      final scheduledMinute = decoded['scheduledMinute'];
+      final safeHour =
+          scheduledHour is int && scheduledHour >= 0 && scheduledHour < 24
+          ? scheduledHour
+          : null;
+      final safeMinute =
+          scheduledMinute is int && scheduledMinute >= 0 && scheduledMinute < 60
+          ? scheduledMinute
+          : null;
+
       return {
         'medicationId': medicationId,
         'medicationName': medicationName,
         'dose': safeDose,
+        'scheduledHour': safeHour,
+        'scheduledMinute': safeMinute,
       };
     } catch (_) {
       return null;
@@ -79,19 +92,48 @@ class NotificationActionHandler {
       final medicationId = data['medicationId'] as int;
       final medicationName = data['medicationName'] as String;
       final dose = data['dose'] as String;
+      final now = DateTime.now();
+      final scheduledHour = (data['scheduledHour'] as int?) ?? now.hour;
+      final scheduledMinute = (data['scheduledMinute'] as int?) ?? now.minute;
 
       debugPrint(
-          'Processing action: $actionId for medication: $medicationName');
+        'Processing action: $actionId for medication: $medicationName',
+      );
 
       switch (actionId) {
         case 'take':
-          await _handleTakeAction(medicationId, medicationName, dose);
+          await _handleTakeAction(
+            medicationId,
+            medicationName,
+            dose,
+            scheduledHour,
+            scheduledMinute,
+          );
         case 'snooze_15':
-          await _handleSnoozeAction(medicationId, medicationName, dose, 15);
+          await _handleSnoozeAction(
+            medicationId,
+            medicationName,
+            dose,
+            15,
+            scheduledHour,
+            scheduledMinute,
+          );
         case 'snooze_30':
-          await _handleSnoozeAction(medicationId, medicationName, dose, 30);
+          await _handleSnoozeAction(
+            medicationId,
+            medicationName,
+            dose,
+            30,
+            scheduledHour,
+            scheduledMinute,
+          );
         case 'skip':
-          await _handleSkipAction(medicationId, medicationName);
+          await _handleSkipAction(
+            medicationId,
+            medicationName,
+            scheduledHour,
+            scheduledMinute,
+          );
         default:
           debugPrint('Unknown action: $actionId');
       }
@@ -106,6 +148,8 @@ class NotificationActionHandler {
     int medicationId,
     String medicationName,
     String dose,
+    int scheduledHour,
+    int scheduledMinute,
   ) async {
     try {
       final now = DateTime.now();
@@ -113,12 +157,13 @@ class NotificationActionHandler {
       final result = await _repository.takeDose(
         medicationId: medicationId,
         scheduledDate: now,
-        scheduledHour: now.hour,
-        scheduledMinute: now.minute,
+        scheduledHour: scheduledHour,
+        scheduledMinute: scheduledMinute,
       );
 
-      await _notificationService
-          .cancelAllRecurringRemindersForMedication(medicationId);
+      await _notificationService.cancelAllRecurringRemindersForMedication(
+        medicationId,
+      );
 
       debugPrint('Dose take result: ${result.runtimeType} for $medicationId');
 
@@ -138,6 +183,8 @@ class NotificationActionHandler {
     String medicationName,
     String dose,
     int minutes,
+    int scheduledHour,
+    int scheduledMinute,
   ) async {
     try {
       final now = DateTime.now();
@@ -151,14 +198,14 @@ class NotificationActionHandler {
       }
 
       // Enforce snooze limits
-      final snoozeHistory =
-          await _database.getTodaySnoozeHistory(medicationId);
+      final snoozeHistory = await _database.getTodaySnoozeHistory(medicationId);
       final currentSnoozeCount = snoozeHistory?.snoozeCount ?? 0;
       final maxSnoozes = medication.maxSnoozesPerDay;
 
       if (currentSnoozeCount >= maxSnoozes) {
         debugPrint(
-            'Snooze limit reached for $medicationId ($currentSnoozeCount/$maxSnoozes)');
+          'Snooze limit reached for $medicationId ($currentSnoozeCount/$maxSnoozes)',
+        );
         await _showErrorNotification(
           'Snooze limit reached ($maxSnoozes/$maxSnoozes). Please take your medication now.',
         );
@@ -175,8 +222,8 @@ class NotificationActionHandler {
       await _repository.snoozeDose(
         medicationId: medicationId,
         scheduledDate: now,
-        scheduledHour: now.hour,
-        scheduledMinute: now.minute,
+        scheduledHour: scheduledHour,
+        scheduledMinute: scheduledMinute,
         notes:
             'Snoozed for $minutes minutes until ${snoozeUntil.hour}:${snoozeUntil.minute.toString().padLeft(2, '0')} (${currentSnoozeCount + 1}/$maxSnoozes)',
       );
@@ -186,6 +233,8 @@ class NotificationActionHandler {
         medicationName: medicationName,
         dose: dose,
         minutes: minutes,
+        scheduledHour: scheduledHour,
+        scheduledMinute: scheduledMinute,
       );
 
       await _showSuccessNotification(
@@ -202,6 +251,8 @@ class NotificationActionHandler {
   Future<void> _handleSkipAction(
     int medicationId,
     String medicationName,
+    int scheduledHour,
+    int scheduledMinute,
   ) async {
     try {
       final now = DateTime.now();
@@ -209,12 +260,13 @@ class NotificationActionHandler {
       await _repository.skipDose(
         medicationId: medicationId,
         scheduledDate: now,
-        scheduledHour: now.hour,
-        scheduledMinute: now.minute,
+        scheduledHour: scheduledHour,
+        scheduledMinute: scheduledMinute,
       );
 
-      await _notificationService
-          .cancelAllRecurringRemindersForMedication(medicationId);
+      await _notificationService.cancelAllRecurringRemindersForMedication(
+        medicationId,
+      );
 
       await _showSuccessNotification(
         'Dose Skipped',

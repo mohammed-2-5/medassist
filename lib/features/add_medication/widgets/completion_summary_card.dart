@@ -58,7 +58,7 @@ class CompletionSummaryCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           if (isComplete) ...[
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(

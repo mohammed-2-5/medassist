@@ -84,7 +84,10 @@ class MultiAIService {
   }
 
   /// Send message with intelligent fallback
-  Future<String> sendMessage(String message, {String? medicationContext}) async {
+  Future<String> sendMessage(
+    String message, {
+    String? medicationContext,
+  }) async {
     if (!_initialized) {
       initialize();
     }
@@ -122,7 +125,10 @@ class MultiAIService {
   }
 
   /// Fallback to Gemini
-  Future<String> _tryGeminiFallback(String message, String? medicationContext) async {
+  Future<String> _tryGeminiFallback(
+    String message,
+    String? medicationContext,
+  ) async {
     if (_isBreakerOpen('gemini')) {
       debugPrint('MultiAI: Gemini breaker open, skipping to HuggingFace');
       return _tryHuggingFaceFallback(message, medicationContext);
@@ -134,7 +140,9 @@ class MultiAIService {
       // For context-aware, we'd need to update the prompt
       var enhancedMessage = message;
       if (medicationContext != null && medicationContext.isNotEmpty) {
-        final safeContext = AiPromptSanitizer.sanitizeContext(medicationContext);
+        final safeContext = AiPromptSanitizer.sanitizeContext(
+          medicationContext,
+        );
         enhancedMessage = '''$safeContext
 
 User Question: $message''';
@@ -156,7 +164,10 @@ User Question: $message''';
   }
 
   /// Fallback to HuggingFace
-  Future<String> _tryHuggingFaceFallback(String message, String? medicationContext) async {
+  Future<String> _tryHuggingFaceFallback(
+    String message,
+    String? medicationContext,
+  ) async {
     if (_isBreakerOpen('huggingface')) {
       debugPrint('MultiAI: HuggingFace breaker open, returning offline');
       return _getOfflineResponse(message);
@@ -209,7 +220,8 @@ Common medication side effects usually appear within the first few weeks. They o
 • Unexpected symptoms
 
 Please try again when you have an internet connection for personalized advice.''';
-    } else if (lowerMessage.contains('miss') || lowerMessage.contains('forgot')) {
+    } else if (lowerMessage.contains('miss') ||
+        lowerMessage.contains('forgot')) {
       return '''
 I'm currently offline, but here's what to do if you miss a dose:
 

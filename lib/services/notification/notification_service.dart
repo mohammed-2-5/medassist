@@ -61,7 +61,8 @@ class NotificationService {
 
   @pragma('vm:entry-point')
   static Future<void> _onNotificationResponse(
-      NotificationResponse response) async {
+    NotificationResponse response,
+  ) async {
     final actionId = response.actionId;
     if (actionId != null && actionId.isNotEmpty) {
       await NotificationActionHandler.handleAction(response);
@@ -96,7 +97,10 @@ class NotificationService {
   ) async {
     await initialize();
     await NotificationScheduler.scheduleForMedication(
-        _notifications, medication, reminderTimes);
+      _notifications,
+      medication,
+      reminderTimes,
+    );
   }
 
   @pragma('vm:entry-point')
@@ -105,6 +109,8 @@ class NotificationService {
     required String medicationName,
     required String dose,
     required int minutes,
+    required int scheduledHour,
+    required int scheduledMinute,
     String? customSoundPath,
   }) async {
     await initialize();
@@ -114,13 +120,18 @@ class NotificationService {
       medicationName: medicationName,
       dose: dose,
       minutes: minutes,
+      scheduledHour: scheduledHour,
+      scheduledMinute: scheduledMinute,
+      customSoundUri: customSoundPath,
     );
   }
 
   @pragma('vm:entry-point')
   Future<void> cancelMedicationReminders(int medicationId) async {
     await NotificationScheduler.cancelForMedication(
-        _notifications, medicationId);
+      _notifications,
+      medicationId,
+    );
   }
 
   Future<void> cancelAllNotifications() async {
@@ -152,6 +163,8 @@ class NotificationService {
     required String medicationName,
     required String dose,
     required int intervalMinutes,
+    required int scheduledHour,
+    required int scheduledMinute,
     int maxReminders = 4,
     String? customSoundPath,
   }) async {
@@ -164,19 +177,30 @@ class NotificationService {
       dose: dose,
       intervalMinutes: intervalMinutes,
       maxReminders: maxReminders,
+      scheduledHour: scheduledHour,
+      scheduledMinute: scheduledMinute,
+      customSoundUri: customSoundPath,
     );
   }
 
   Future<void> cancelRecurringReminders(
-      int medicationId, int reminderIndex) async {
+    int medicationId,
+    int reminderIndex,
+  ) async {
     await NotificationRecurring.cancelForReminderTime(
-        _notifications, medicationId, reminderIndex);
+      _notifications,
+      medicationId,
+      reminderIndex,
+    );
   }
 
   Future<void> cancelAllRecurringRemindersForMedication(
-      int medicationId) async {
+    int medicationId,
+  ) async {
     await NotificationRecurring.cancelForMedication(
-        _notifications, medicationId);
+      _notifications,
+      medicationId,
+    );
   }
 
   // ── Diagnostics & Settings ──────────────────────────────────────────
@@ -198,9 +222,9 @@ class NotificationService {
   Future<void> openExactAlarmSettings() =>
       NotificationDiagnostics.openExactAlarmSettings();
 
-  Future<void> openChannelSettings(
-          {String channelId = NotificationChannels.medicationChannelId}) =>
-      NotificationDiagnostics.openChannelSettings(channelId: channelId);
+  Future<void> openChannelSettings({
+    String channelId = NotificationChannels.medicationChannelId,
+  }) => NotificationDiagnostics.openChannelSettings(channelId: channelId);
 
   Future<void> openMedicationReminderSoundSettings() =>
       NotificationDiagnostics.openMedicationReminderSoundSettings();

@@ -17,8 +17,9 @@ class StockTimelineCard extends StatelessWidget {
     final runOutDate = formData.stockRunOutDate;
     final lowStockDate = formData.lowStockReminderDate;
     final dailyUsage = formData.dosePerTime * formData.timesPerDay;
-    final daysRemaining =
-        runOutDate != null ? runOutDate.difference(DateTime.now()).inDays : 0;
+    final daysRemaining = runOutDate != null
+        ? runOutDate.difference(DateTime.now()).inDays
+        : 0;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -50,7 +51,7 @@ class StockTimelineCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           _TimelineItem(
             icon: Icons.today,
             label: l10n.dailyUsageLabel,
@@ -66,8 +67,8 @@ class StockTimelineCard extends StatelessWidget {
             color: daysRemaining > 7
                 ? Colors.green
                 : daysRemaining > 3
-                    ? Colors.orange
-                    : Colors.red,
+                ? Colors.orange
+                : Colors.red,
           ),
           if (lowStockDate != null && formData.remindBeforeRunOut) ...[
             const SizedBox(height: 16),
@@ -98,8 +99,18 @@ class StockTimelineCard extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
@@ -141,7 +152,7 @@ class _TimelineItem extends StatelessWidget {
               Text(
                 label,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onPrimaryContainer.withOpacity(0.7),
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
               const SizedBox(height: 2),
@@ -175,8 +186,8 @@ class _StockProgressBar extends StatelessWidget {
     final color = daysRemaining > 7
         ? Colors.green
         : daysRemaining > 3
-            ? Colors.orange
-            : Colors.red;
+        ? Colors.orange
+        : Colors.red;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +198,7 @@ class _StockProgressBar extends StatelessWidget {
             Text(
               l10n.stockLevelLabel,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onPrimaryContainer.withOpacity(0.7),
+                color: colorScheme.onPrimaryContainer,
               ),
             ),
             Text(

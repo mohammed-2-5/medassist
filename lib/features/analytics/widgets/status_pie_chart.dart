@@ -14,7 +14,9 @@ class StatusPieChart extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    return ref.watch(monthAdherenceProvider).when(
+    return ref
+        .watch(monthAdherenceProvider)
+        .when(
           data: (stats) {
             if (stats.totalDoses == 0) {
               return Card(
@@ -35,68 +37,80 @@ class StatusPieChart extends ConsumerWidget {
             final sections = <PieChartSectionData>[];
 
             final takenColor = colorScheme.brightness == Brightness.dark
-                ? const Color(0xFF66BB6A) : Colors.green;
+                ? const Color(0xFF66BB6A)
+                : Colors.green;
             final missedColor = colorScheme.brightness == Brightness.dark
-                ? const Color(0xFFEF5350) : Colors.red;
+                ? const Color(0xFFEF5350)
+                : Colors.red;
             final skippedColor = colorScheme.brightness == Brightness.dark
-                ? const Color(0xFFFFA726) : Colors.orange;
+                ? const Color(0xFFFFA726)
+                : Colors.orange;
             final snoozedColor = colorScheme.brightness == Brightness.dark
-                ? const Color(0xFF42A5F5) : Colors.blue;
+                ? const Color(0xFF42A5F5)
+                : Colors.blue;
 
             if (stats.takenDoses > 0) {
-              sections.add(PieChartSectionData(
-                color: takenColor,
-                value: stats.takenDoses.toDouble(),
-                title: '${stats.takenDoses}',
-                radius: 100,
-                titleStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              sections.add(
+                PieChartSectionData(
+                  color: takenColor,
+                  value: stats.takenDoses.toDouble(),
+                  title: '${stats.takenDoses}',
+                  radius: 100,
+                  titleStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ));
+              );
             }
 
             if (stats.missedDoses > 0) {
-              sections.add(PieChartSectionData(
-                color: missedColor,
-                value: stats.missedDoses.toDouble(),
-                title: '${stats.missedDoses}',
-                radius: 100,
-                titleStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              sections.add(
+                PieChartSectionData(
+                  color: missedColor,
+                  value: stats.missedDoses.toDouble(),
+                  title: '${stats.missedDoses}',
+                  radius: 100,
+                  titleStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ));
+              );
             }
 
             if (stats.skippedDoses > 0) {
-              sections.add(PieChartSectionData(
-                color: skippedColor,
-                value: stats.skippedDoses.toDouble(),
-                title: '${stats.skippedDoses}',
-                radius: 100,
-                titleStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              sections.add(
+                PieChartSectionData(
+                  color: skippedColor,
+                  value: stats.skippedDoses.toDouble(),
+                  title: '${stats.skippedDoses}',
+                  radius: 100,
+                  titleStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ));
+              );
             }
 
             if (stats.snoozedDoses > 0) {
-              sections.add(PieChartSectionData(
-                color: snoozedColor,
-                value: stats.snoozedDoses.toDouble(),
-                title: '${stats.snoozedDoses}',
-                radius: 100,
-                titleStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              sections.add(
+                PieChartSectionData(
+                  color: snoozedColor,
+                  value: stats.snoozedDoses.toDouble(),
+                  title: '${stats.snoozedDoses}',
+                  radius: 100,
+                  titleStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ));
+              );
             }
 
             return Card(
@@ -113,12 +127,14 @@ class StatusPieChart extends ConsumerWidget {
                           color: colorScheme.primary,
                         ),
                         const SizedBox(width: 8),
-                        Expanded( // 👈 يجبر النص يلتزم بالعرض المتاح
+                        Expanded(
+                          // 👈 يجبر النص يلتزم بالعرض المتاح
                           child: Text(
                             l10n.doseStatusDistribution,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
@@ -129,7 +145,9 @@ class StatusPieChart extends ConsumerWidget {
                     const SizedBox(height: 24),
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        final chartHeight = constraints.maxWidth < 360 ? 160.0 : 200.0;
+                        final chartHeight = constraints.maxWidth < 360
+                            ? 160.0
+                            : 200.0;
                         return Center(
                           child: SizedBox(
                             height: chartHeight,
@@ -139,7 +157,8 @@ class StatusPieChart extends ConsumerWidget {
                                 centerSpaceRadius: 0,
                                 sectionsSpace: 2,
                                 pieTouchData: PieTouchData(
-                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {},
+                                  touchCallback:
+                                      (FlTouchEvent event, pieTouchResponse) {},
                                 ),
                               ),
                             ),
@@ -201,7 +220,6 @@ class StatusPieChart extends ConsumerWidget {
 }
 
 class _LegendItem extends StatelessWidget {
-
   const _LegendItem({
     required this.color,
     required this.label,

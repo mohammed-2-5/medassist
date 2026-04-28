@@ -34,8 +34,7 @@ class MedicationActions {
       if (medication.isActive) {
         await notificationService.cancelMedicationReminders(medication.id);
       } else {
-        final reminderTimes =
-            await database.getReminderTimes(medication.id);
+        final reminderTimes = await database.getReminderTimes(medication.id);
         await notificationService.scheduleRemindersForMedication(
           updated,
           reminderTimes,
@@ -106,7 +105,7 @@ class MedicationActions {
     if ((confirmed ?? false) && context.mounted) {
       try {
         final repository = ref.read(medicationRepositoryProvider);
-        await repository.deleteMedication(medicationId);
+        await repository.hardDeleteMedication(medicationId);
         if (context.mounted) {
           HapticService.success();
           ScaffoldMessenger.of(context).showSnackBar(

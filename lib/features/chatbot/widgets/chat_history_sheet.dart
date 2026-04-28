@@ -142,7 +142,11 @@ class ChatHistorySheet extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.chat_bubble_outline, size: 44, color: colorScheme.outline),
+              Icon(
+                Icons.chat_bubble_outline,
+                size: 44,
+                color: colorScheme.outline,
+              ),
               const SizedBox(height: 12),
               Text(l10n.noChatHistory, style: theme.textTheme.titleMedium),
               const SizedBox(height: 6),

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/models/dose_result.dart';
 import 'package:med_assist/core/models/meal_timing.dart';
+import 'package:med_assist/core/utils/drug_name_normalizer.dart';
 import 'package:med_assist/core/utils/repetition_pattern_utils.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
+import 'package:med_assist/services/health/drug_interaction_service.dart';
+import 'package:med_assist/services/health/persisted_interaction_service.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 
 /// Repository for medication data operations.
@@ -13,10 +16,11 @@ import 'package:med_assist/services/notification/notification_service.dart';
 /// both the UI layer and the background notification handler share a single,
 /// transactional code-path.
 class MedicationRepository {
-
-  MedicationRepository(this._database);
+  MedicationRepository(this._database)
+      : _persistedInteractions = PersistedInteractionService(_database);
   final AppDatabase _database;
   final NotificationService _notificationService = NotificationService();
+  final PersistedInteractionService _persistedInteractions;
 
   // ---------------------------------------------------------------------------
   // Medication CRUD
@@ -56,6 +60,81 @@ class MedicationRepository {
     return count > 0;
   }
 
+  Future<MedicationDrugInfoData?> getLocalizedDrugInfo({
+    required int medicationId,
+    required String language,
+  }) {
+    return _database.getMedicationDrugInfoByLanguage(medicationId, language);
+  }
+
+  Future<void> upsertLocalizedDrugInfo({
+    required int medicationId,
+    required String language,
+    String? genericName,
+    String? activeIngredients,
+    String? drugCategory,
+    String? purpose,
+    String? howToTake,
+    String? bestTimeOfDay,
+    bool? drowsinessAffectsDriving,
+    String? drowsinessWarning,
+    String? foodsToAvoid,
+    String? missedDoseAdvice,
+    String? storageInstructions,
+    String? sideEffects,
+    String? warnings,
+    String? route,
+  }) {
+    return _database.upsertMedicationDrugInfo(
+      medicationId: medicationId,
+      language: language,
+      genericName: genericName,
+      activeIngredients: activeIngredients,
+      drugCategory: drugCategory,
+      purpose: purpose,
+      howToTake: howToTake,
+      bestTimeOfDay: bestTimeOfDay,
+      drowsinessAffectsDriving: drowsinessAffectsDriving,
+      drowsinessWarning: drowsinessWarning,
+      foodsToAvoid: foodsToAvoid,
+      missedDoseAdvice: missedDoseAdvice,
+      storageInstructions: storageInstructions,
+      sideEffects: sideEffects,
+      warnings: warnings,
+      route: route,
+    );
+  }
+
+  /// Find an existing medication matching name+strength+unit (normalized).
+  /// Returns null if none found. Pass [excludeId] to ignore a specific row
+  /// (useful in edit flows).
+  Future<Medication?> findDuplicate({
+    required String name,
+    String? strength,
+    String? unit,
+    int? excludeId,
+  }) async {
+    final targetName = DrugNameNormalizer.canonicalName(name);
+    if (targetName.isEmpty) return null;
+    final targetStrength = DrugNameNormalizer.canonicalStrength(strength);
+    final targetUnit = DrugNameNormalizer.canonicalUnit(unit);
+
+    final all = await _database.getAllMedications();
+    for (final med in all) {
+      if (excludeId != null && med.id == excludeId) continue;
+      if (DrugNameNormalizer.canonicalName(med.medicineName) != targetName) {
+        continue;
+      }
+      if (DrugNameNormalizer.canonicalStrength(med.strength) !=
+          targetStrength) {
+        continue;
+      }
+      if (DrugNameNormalizer.canonicalUnit(med.unit) != targetUnit) continue;
+      return med;
+    }
+    return null;
+  }
+
   // ---------------------------------------------------------------------------
   // Save / Update / Delete medication
   // ---------------------------------------------------------------------------
@@ -75,8 +154,11 @@ class MedicationRepository {
       durationDays: drift.Value(formData.durationDays),
       startDate: formData.startDate ?? DateTime.now(),
       repetitionPattern: drift.Value(formData.repetitionPattern.name),
-      specificDaysOfWeek:
-          drift.Value(formData.specificDaysOfWeek.join(',')),
+      specificDaysOfWeek: drift.Value(formData.specificDaysOfWeek.join(',')),
+      intervalDays: drift.Value(formData.intervalDays),
+      intervalWeeks: drift.Value(formData.intervalWeeks),
+      intervalMonths: drift.Value(formData.intervalMonths),
+      dayOfMonth: drift.Value(formData.dayOfMonth),
       stockQuantity: drift.Value(formData.stockQuantity),
       remindBeforeRunOut: drift.Value(formData.remindBeforeRunOut),
       reminderDaysBeforeRunOut: drift.Value(formData.reminderDaysBeforeRunOut),
@@ -97,12 +179,14 @@ class MedicationRepository {
 
       if (formData.reminderTimes.isNotEmpty) {
         final times = formData.reminderTimes
-            .map((r) => (
-                  hour: r.time.hour,
-                  minute: r.time.minute,
-                  mealTiming: r.mealTiming.value,
-                  mealOffsetMinutes: r.mealOffsetMinutes,
-                ))
+            .map(
+              (r) => (
+                hour: r.time.hour,
+                minute: r.time.minute,
+                mealTiming: r.mealTiming.value,
+                mealOffsetMinutes: r.mealOffsetMinutes,
+              ),
+            )
             .toList();
         await _database.insertReminderTimes(id, times);
       }
@@ -137,6 +221,10 @@ class MedicationRepository {
       startDate: formData.startDate ?? DateTime.now(),
       repetitionPattern: formData.repetitionPattern.name,
       specificDaysOfWeek: formData.specificDaysOfWeek.join(','),
+      intervalDays: drift.Value(formData.intervalDays),
+      intervalWeeks: drift.Value(formData.intervalWeeks),
+      intervalMonths: drift.Value(formData.intervalMonths),
+      dayOfMonth: drift.Value(formData.dayOfMonth),
       stockQuantity: formData.stockQuantity,
       remindBeforeRunOut: formData.remindBeforeRunOut,
       reminderDaysBeforeRunOut: formData.reminderDaysBeforeRunOut,
@@ -160,12 +248,14 @@ class MedicationRepository {
 
     if (success) {
       final times = formData.reminderTimes
-          .map((r) => (
-                hour: r.time.hour,
-                minute: r.time.minute,
-                mealTiming: r.mealTiming.value,
-                mealOffsetMinutes: r.mealOffsetMinutes,
-              ))
+          .map(
+            (r) => (
+              hour: r.time.hour,
+              minute: r.time.minute,
+              mealTiming: r.mealTiming.value,
+              mealOffsetMinutes: r.mealOffsetMinutes,
+            ),
+          )
           .toList();
       await _database.updateReminderTimes(medicationId, times);
       _scheduleNotifications(medicationId);
@@ -182,6 +272,13 @@ class MedicationRepository {
       } catch (e) {
         debugPrint('Error cancelling notifications: $e');
       }
+      // Soft delete: FK cascade does not fire — clear interactions explicitly
+      // so the warning vanishes from the surviving med.
+      try {
+        await _persistedInteractions.removeForMedication(id);
+      } catch (e) {
+        debugPrint('Error removing persisted interactions: $e');
+      }
     }
     return result > 0;
   }
@@ -196,6 +293,17 @@ class MedicationRepository {
       }
     }
     return result > 0;
+  }
+
+  /// Persist interaction warnings the user accepted during the add flow.
+  Future<void> persistAcceptedInteractions({
+    required int newMedicationId,
+    required List<InteractionWarning> warnings,
+  }) async {
+    await _persistedInteractions.persistAccepted(
+      newMedicationId: newMedicationId,
+      warnings: warnings,
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -249,8 +357,9 @@ class MedicationRepository {
         final previousStock = medication.stockQuantity;
 
         if (previousStock > 0) {
-          final newStock =
-              (previousStock - medication.dosePerTime).floor().clamp(0, previousStock);
+          final newStock = (previousStock - medication.dosePerTime)
+              .floor()
+              .clamp(0, previousStock);
           await _updateStockWithLog(
             medicationId: medicationId,
             medication: medication,
@@ -377,8 +486,7 @@ class MedicationRepository {
 
         // Restore stock if the dose was taken
         if (existing.status == 'taken') {
-          final medication =
-              await _database.getMedicationById(medicationId);
+          final medication = await _database.getMedicationById(medicationId);
           if (medication != null) {
             final restoredStock =
                 (medication.stockQuantity + medication.dosePerTime).floor();
@@ -427,6 +535,9 @@ class MedicationRepository {
     final daysPerWeek = RepetitionPatternUtils.doseDaysPerWeek(
       pattern: medication.repetitionPattern,
       specificDaysOfWeek: medication.specificDaysOfWeek,
+      intervalDays: medication.intervalDays,
+      intervalWeeks: medication.intervalWeeks,
+      intervalMonths: medication.intervalMonths,
     );
     if (daysPerWeek <= 0) return 0;
     return baseUsage * daysPerWeek / 7;
@@ -474,12 +585,18 @@ class MedicationRepository {
       startDate: medication.startDate,
       repetitionPattern: repetitionPattern,
       specificDaysOfWeek: specificDays,
+      intervalDays: medication.intervalDays,
+      intervalWeeks: medication.intervalWeeks,
+      intervalMonths: medication.intervalMonths,
+      dayOfMonth: medication.dayOfMonth,
       reminderTimes: reminderTimes
-          .map((rt) => ReminderTimeData(
-                time: TimeOfDay(hour: rt.hour, minute: rt.minute),
-                mealTiming: MealTiming.fromString(rt.mealTiming),
-                mealOffsetMinutes: rt.mealOffsetMinutes,
-              ))
+          .map(
+            (rt) => ReminderTimeData(
+              time: TimeOfDay(hour: rt.hour, minute: rt.minute),
+              mealTiming: MealTiming.fromString(rt.mealTiming),
+              mealOffsetMinutes: rt.mealOffsetMinutes,
+            ),
+          )
           .toList(),
       stockQuantity: medication.stockQuantity,
       remindBeforeRunOut: medication.remindBeforeRunOut,

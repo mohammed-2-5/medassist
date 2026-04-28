@@ -4,7 +4,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Widget displaying adherence statistics for each medication
 class MedicationAdherenceList extends StatelessWidget {
-
   const MedicationAdherenceList({
     required this.medicationAnalytics,
     super.key,

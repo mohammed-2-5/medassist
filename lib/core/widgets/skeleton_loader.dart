@@ -10,10 +10,10 @@ class SkeletonLoader {
     required Widget child,
     required BuildContext context,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
     return Shimmer.fromColors(
-      baseColor: isDark ? Colors.grey[800]! : Colors.grey[300]!,
-      highlightColor: isDark ? Colors.grey[700]! : Colors.grey[100]!,
+      baseColor: cs.surfaceContainerHigh,
+      highlightColor: cs.surfaceContainerHighest,
       child: child,
     );
   }
@@ -31,7 +31,7 @@ class SkeletonLoader {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: borderRadius ?? BorderRadius.circular(8),
         ),
       ),
@@ -50,7 +50,7 @@ class SkeletonLoader {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(4),
         ),
       ),

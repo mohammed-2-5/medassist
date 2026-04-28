@@ -4,9 +4,10 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Widget for selecting meal timing for a medication reminder
 class MealTimingSelector extends StatelessWidget {
-
   const MealTimingSelector({
-    required this.selectedTiming, required this.onChanged, super.key,
+    required this.selectedTiming,
+    required this.onChanged,
+    super.key,
   });
   final MealTiming selectedTiming;
   final ValueChanged<MealTiming> onChanged;

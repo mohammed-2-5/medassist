@@ -71,8 +71,7 @@ class AnalyticsPeriodPill extends StatelessWidget {
                   curve: Curves.easeOutCubic,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight:
-                        isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: fg,
                     letterSpacing: 0.2,
                   ),

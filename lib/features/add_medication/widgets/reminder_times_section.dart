@@ -169,7 +169,9 @@ class _ReminderTimeCard extends ConsumerWidget {
     );
 
     if (picked != null) {
-      ref.read(medicationFormProvider.notifier).updateReminderTime(index, picked);
+      ref
+          .read(medicationFormProvider.notifier)
+          .updateReminderTime(index, picked);
     }
   }
 

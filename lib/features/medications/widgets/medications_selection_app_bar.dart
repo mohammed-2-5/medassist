@@ -26,13 +26,11 @@ class MedicationsSelectionAppBar extends StatelessWidget
         icon: const Icon(Icons.close),
         onPressed: onClose,
       ),
-      // ignore: prefer_if_null_operators
-      title: Text('$selectedCount ${l10n.selected ?? 'selected'}'),
+      title: Text('$selectedCount ${l10n.selected}'),
       actions: [
         IconButton(
           icon: const Icon(Icons.select_all),
-          // ignore: prefer_if_null_operators
-          tooltip: l10n.selectAll ?? 'Select all',
+          tooltip: l10n.selectAll,
           onPressed: onSelectAll,
         ),
       ],

@@ -8,7 +8,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Dialog for adjusting medication stock
 class StockAdjustmentDialog extends ConsumerStatefulWidget {
-
   const StockAdjustmentDialog({
     required this.medication,
     required this.currentStock,
@@ -20,7 +19,8 @@ class StockAdjustmentDialog extends ConsumerStatefulWidget {
   final VoidCallback onAdjusted;
 
   @override
-  ConsumerState<StockAdjustmentDialog> createState() => _StockAdjustmentDialogState();
+  ConsumerState<StockAdjustmentDialog> createState() =>
+      _StockAdjustmentDialogState();
 }
 
 class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
@@ -30,7 +30,9 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
   @override
   void initState() {
     super.initState();
-    _stockController = TextEditingController(text: widget.currentStock.toString());
+    _stockController = TextEditingController(
+      text: widget.currentStock.toString(),
+    );
   }
 
   @override
@@ -159,7 +161,8 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
   Widget _buildQuickButton(String label) {
     return OutlinedButton(
       onPressed: () {
-        final currentValue = int.tryParse(_stockController.text) ?? widget.currentStock;
+        final currentValue =
+            int.tryParse(_stockController.text) ?? widget.currentStock;
         final adjustment = int.parse(label);
         final newValue = (currentValue + adjustment).clamp(0, 9999);
         _stockController.text = newValue.toString();
@@ -201,7 +204,9 @@ class _StockAdjustmentDialogState extends ConsumerState<StockAdjustmentDialog> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.stockUpdatedTo(newStock, widget.medication.doseUnit)),
+          content: Text(
+            l10n.stockUpdatedTo(newStock, widget.medication.doseUnit),
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       );

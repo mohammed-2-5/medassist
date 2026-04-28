@@ -49,15 +49,15 @@ void main() {
           ),
           groupedDosesProvider.overrideWithValue({
             'Morning': [
-              TestDataFactory.doseEvent(
-                
-              ),
+              TestDataFactory.doseEvent(),
             ],
             'Afternoon': <DoseEvent>[],
             'Evening': <DoseEvent>[],
             'Night': <DoseEvent>[],
           }),
-          allInteractionsProvider.overrideWith((ref) async => <InteractionWarning>[]),
+          allInteractionsProvider.overrideWith(
+            (ref) async => <InteractionWarning>[],
+          ),
         ],
       );
 

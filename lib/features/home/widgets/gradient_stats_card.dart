@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 class GradientStatsCard extends StatelessWidget {
-
   const GradientStatsCard({
-    required this.takenToday, required this.totalToday, required this.currentStreak, super.key,
+    required this.takenToday,
+    required this.totalToday,
+    required this.currentStreak,
+    super.key,
     this.onTap,
   });
   final int takenToday;
@@ -17,20 +20,27 @@ class GradientStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final percentage =
-        totalToday > 0 ? (takenToday / totalToday * 100).round() : 0;
+    final cs = Theme.of(context).colorScheme;
+    final percentage = totalToday > 0
+        ? (takenToday / totalToday * 100).round()
+        : 0;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap == null
+          ? null
+          : () {
+              HapticFeedback.selectionClick();
+              onTap!();
+            },
       child: Container(
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(24),
+          gradient: cs.primaryGradient,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryBlue.withOpacity(0.3),
+              color: cs.primary.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -58,7 +68,7 @@ class GradientStatsCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '$percentage%',

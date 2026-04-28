@@ -4,7 +4,6 @@ import 'package:med_assist/core/theme/app_animations.dart';
 /// Modern card with smooth scale animation on tap
 /// Provides professional tactile feedback
 class AnimatedCard extends StatefulWidget {
-
   const AnimatedCard({
     required this.child,
     this.onTap,

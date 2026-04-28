@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 import 'package:med_assist/core/widgets/gradient_container.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
@@ -12,7 +13,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// - Tap to navigate to detailed analytics
 /// - Modern gradient background and smooth interactions
 class AdherenceSummaryCard extends StatefulWidget {
-
   const AdherenceSummaryCard({
     required this.takenToday,
     required this.totalToday,
@@ -90,10 +90,13 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
           onTapDown: _onTapDown,
           onTapUp: _onTapUp,
           onTapCancel: _onTapCancel,
-          onTap: widget.onTap,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            widget.onTap();
+          },
           child: GradientContainer(
-            borderRadius: BorderRadius.circular(20),
-            elevation: 4,
+            borderRadius: BorderRadius.circular(16),
+            elevation: 3,
             padding: const EdgeInsets.all(20),
             colors: [
               colorScheme.primaryContainer.withValues(alpha: 0.6),
@@ -109,7 +112,7 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
                   colorScheme,
                 ),
 
-                const SizedBox(width: 20),
+                const SizedBox(width: 16),
 
                 // Text content
                 Expanded(
@@ -181,7 +184,9 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
 
                 // Arrow indicator
                 Icon(
-                  Icons.arrow_forward_ios,
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.arrow_back_ios
+                      : Icons.arrow_forward_ios,
                   size: 16,
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -249,9 +254,9 @@ class _AdherenceSummaryCardState extends State<AdherenceSummaryCard>
               Text(
                 '$percentage%',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: statusColor,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: statusColor,
+                ),
               ),
             ],
           ),

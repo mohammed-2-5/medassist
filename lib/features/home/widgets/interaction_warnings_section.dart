@@ -25,7 +25,7 @@ class InteractionWarningsSection extends ConsumerWidget {
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Card(
-            elevation: 4,
+            elevation: 3,
             color: colorScheme.errorContainer,
             child: InkWell(
               onTap: () => _showAllInteractionsDialog(context, warnings),
@@ -54,31 +54,38 @@ class InteractionWarningsSection extends ConsumerWidget {
                           Text(
                             warnings.length == 1
                                 ? l10n.drugInteractionDetected
-                                : l10n.drugInteractionsDetected(warnings.length),
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onErrorContainer,
-                            ),
+                                : l10n.drugInteractionsDetected(
+                                    warnings.length,
+                                  ),
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onErrorContainer,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '${mostSevere.medication1} + ${mostSevere.medication2}',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onErrorContainer,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: colorScheme.onErrorContainer,
+                                ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             l10n.tapToViewDetails,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onErrorContainer.withOpacity(0.7),
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: colorScheme.onErrorContainer,
+                                ),
                           ),
                         ],
                       ),
                     ),
                     Icon(
-                      Icons.arrow_forward_ios,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.arrow_back_ios
+                          : Icons.arrow_forward_ios,
                       color: colorScheme.onErrorContainer,
                       size: 16,
                     ),

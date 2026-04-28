@@ -23,8 +23,8 @@ class MedicationSelectionState {
 
 final medicationSelectionProvider =
     NotifierProvider<MedicationSelectionNotifier, MedicationSelectionState>(
-  MedicationSelectionNotifier.new,
-);
+      MedicationSelectionNotifier.new,
+    );
 
 /// Manages selection mode state for bulk operations on medications.
 class MedicationSelectionNotifier extends Notifier<MedicationSelectionState> {

@@ -21,8 +21,9 @@ class AnalyticsComputationUtils {
       final dayHistory = rangeHistory
           .where(
             (h) =>
-                h.scheduledDate
-                    .isAfter(startOfDay.subtract(const Duration(seconds: 1))) &&
+                h.scheduledDate.isAfter(
+                  startOfDay.subtract(const Duration(seconds: 1)),
+                ) &&
                 h.scheduledDate.isBefore(endOfDay),
           )
           .toList();
@@ -125,8 +126,9 @@ class AnalyticsComputationUtils {
   ) {
     final insights = <MedicationInsight>[];
     for (final med in medications) {
-      final history =
-          allHistory.where((d) => d.medicationId == med.id).toList();
+      final history = allHistory
+          .where((d) => d.medicationId == med.id)
+          .toList();
       if (history.isEmpty) continue;
       final taken = history.where((d) => d.status == 'taken').length;
       final total = history.length;

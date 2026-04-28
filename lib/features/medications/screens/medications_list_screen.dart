@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/widgets/skeleton_loader.dart';
 import 'package:med_assist/features/medications/providers/medication_selection_provider.dart';
 import 'package:med_assist/features/medications/providers/medications_filter_provider.dart';
@@ -9,6 +10,7 @@ import 'package:med_assist/features/medications/widgets/medications_filter_chips
 import 'package:med_assist/features/medications/widgets/medications_list.dart';
 import 'package:med_assist/features/medications/widgets/medications_search_bar.dart';
 import 'package:med_assist/features/medications/widgets/medications_selection_app_bar.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Modern Medications List Screen
 class MedicationsListScreen extends ConsumerStatefulWidget {
@@ -19,8 +21,7 @@ class MedicationsListScreen extends ConsumerStatefulWidget {
       _MedicationsListScreenState();
 }
 
-class _MedicationsListScreenState
-    extends ConsumerState<MedicationsListScreen> {
+class _MedicationsListScreenState extends ConsumerState<MedicationsListScreen> {
   final _searchController = TextEditingController();
 
   @override
@@ -42,11 +43,9 @@ class _MedicationsListScreenState
               onClose: () =>
                   ref.read(medicationSelectionProvider.notifier).exit(),
               onSelectAll: () {
-                final ids = medicationsAsync.value?.map((m) => m.id).toList()
-                    ?? [];
-                ref
-                    .read(medicationSelectionProvider.notifier)
-                    .selectAll(ids);
+                final ids =
+                    medicationsAsync.value?.map((m) => m.id).toList() ?? [];
+                ref.read(medicationSelectionProvider.notifier).selectAll(ids);
               },
             )
           : null,
@@ -62,9 +61,8 @@ class _MedicationsListScreenState
                   medications: medications,
                   isSelectionMode: selection.isSelectionMode,
                   selectedIds: selection.selectedIds,
-                  onToggleSelection: (id) => ref
-                      .read(medicationSelectionProvider.notifier)
-                      .toggle(id),
+                  onToggleSelection: (id) =>
+                      ref.read(medicationSelectionProvider.notifier).toggle(id),
                 ),
                 loading: () => SkeletonLoader.list(context: context),
                 error: (error, _) => MedicationsErrorState(error: error),
@@ -73,6 +71,15 @@ class _MedicationsListScreenState
           ],
         ),
       ),
+      floatingActionButton: selection.isSelectionMode
+          ? null
+          : FloatingActionButton.extended(
+              heroTag: 'medications_list_fab',
+              onPressed: () => context.push('/add-reminder'),
+              icon: const Icon(Icons.add),
+              label: Text(AppLocalizations.of(context)!.addMedicine),
+              elevation: 3,
+            ),
       bottomNavigationBar: selection.isSelectionMode
           ? MedicationsBulkActionBar(
               selectedIds: selection.selectedIds,

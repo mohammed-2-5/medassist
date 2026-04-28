@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_assist/core/utils/dose_unit_localizer.dart';
 import 'package:med_assist/features/add_medication/models/medication_form_data.dart';
 import 'package:med_assist/features/add_medication/providers/medication_form_provider.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 class DosePerTimeSection extends ConsumerWidget {
-  const DosePerTimeSection({super.key, required this.formData});
+  const DosePerTimeSection({required this.formData, super.key});
 
   final MedicationFormData formData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    const doseUnits = ['tablet', 'capsule', 'ml', 'mg', 'drop', 'puff', 'unit'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.dosePerTime,
+          l10n.dosePerTime,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -31,10 +34,11 @@ class DosePerTimeSection extends ConsumerWidget {
               flex: 2,
               child: TextFormField(
                 initialValue: formData.dosePerTime.toString(),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.amount,
+                  labelText: l10n.amount,
                   hintText: '1.0',
                   prefixIcon: const Icon(Icons.medication),
                   border: OutlineInputBorder(
@@ -47,7 +51,9 @@ class DosePerTimeSection extends ConsumerWidget {
                 ),
                 onChanged: (value) {
                   final dose = double.tryParse(value) ?? 1.0;
-                  ref.read(medicationFormProvider.notifier).setDosePerTime(dose);
+                  ref
+                      .read(medicationFormProvider.notifier)
+                      .setDosePerTime(dose);
                 },
               ),
             ),
@@ -57,7 +63,7 @@ class DosePerTimeSection extends ConsumerWidget {
                 initialValue: formData.doseUnit,
                 isExpanded: true,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.unit,
+                  labelText: l10n.unit,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -65,27 +71,59 @@ class DosePerTimeSection extends ConsumerWidget {
                   fillColor: theme.brightness == Brightness.dark
                       ? Colors.grey[850]
                       : Colors.grey[100],
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'tablet', child: Text('tablet')),
-                  DropdownMenuItem(value: 'capsule', child: Text('capsule')),
-                  DropdownMenuItem(value: 'ml', child: Text('ml')),
-                  DropdownMenuItem(value: 'mg', child: Text('mg')),
-                  DropdownMenuItem(value: 'drop', child: Text('drop')),
-                  DropdownMenuItem(value: 'puff', child: Text('puff')),
-                  DropdownMenuItem(value: 'unit', child: Text('unit')),
-                ],
+                items: doseUnits
+                    .map(
+                      (unit) => DropdownMenuItem(
+                        value: unit,
+                        child: Text(localizeDoseUnit(l10n, unit)),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   if (value != null) {
-                    ref.read(medicationFormProvider.notifier).setDoseUnit(value);
+                    ref
+                        .read(medicationFormProvider.notifier)
+                        .setDoseUnit(value);
                   }
                 },
               ),
             ),
           ],
         ),
+        if (formData.dosePerTime > 3) ...[
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.orange.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.withOpacity(0.5)),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.highDosePerTimeWarning,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

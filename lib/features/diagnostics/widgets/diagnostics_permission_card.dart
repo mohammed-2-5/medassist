@@ -31,7 +31,7 @@ class DiagnosticsPermissionCard extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: _withGradientOpacity(statusGradient, 0.1),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: statusColor.withOpacity(0.3),
               width: 2,
@@ -79,7 +79,7 @@ class DiagnosticsPermissionCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   isGranted

@@ -9,8 +9,10 @@ class AnalyticsMedicationInsights extends ConsumerWidget {
 
   Color _getAdherenceColor(double percentage, ColorScheme colorScheme) {
     final isDark = colorScheme.brightness == Brightness.dark;
-    if (percentage >= 80) return isDark ? const Color(0xFF66BB6A) : Colors.green;
-    if (percentage >= 50) return isDark ? const Color(0xFFFFA726) : Colors.orange;
+    if (percentage >= 80)
+      return isDark ? const Color(0xFF66BB6A) : Colors.green;
+    if (percentage >= 50)
+      return isDark ? const Color(0xFFFFA726) : Colors.orange;
     return isDark ? const Color(0xFFEF5350) : Colors.red;
   }
 
@@ -19,7 +21,9 @@ class AnalyticsMedicationInsights extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return ref.watch(medicationInsightsProvider).when(
+    return ref
+        .watch(medicationInsightsProvider)
+        .when(
           data: (insights) {
             if (insights.isEmpty) {
               return Card(
@@ -29,8 +33,8 @@ class AnalyticsMedicationInsights extends ConsumerWidget {
                     child: Text(
                       l10n.noMedicationDataYet,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ),
@@ -63,15 +67,14 @@ class AnalyticsMedicationInsights extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Text(
-                      l10n.dosesTakenOf(
-                          insight.takenDoses, insight.totalDoses),
+                      l10n.dosesTakenOf(insight.takenDoses, insight.totalDoses),
                     ),
                     trailing: Icon(
                       insight.adherenceRate >= 80
                           ? Icons.check_circle
                           : insight.adherenceRate >= 50
-                              ? Icons.warning
-                              : Icons.error,
+                          ? Icons.warning
+                          : Icons.error,
                       color: _getAdherenceColor(
                         insight.adherenceRate,
                         colorScheme,

@@ -13,15 +13,17 @@ class GroqService {
   factory GroqService() => _instance;
 
   GroqService._internal() {
-    _dio = Dio(BaseOptions(
-      baseUrl: ApiConstants.groqBaseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${ApiConstants.groqApiKey}',
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.groqBaseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ApiConstants.groqApiKey}',
+        },
+      ),
+    );
   }
   static final GroqService _instance = GroqService._internal();
 
@@ -40,34 +42,35 @@ class GroqService {
     });
 
     _initialized = true;
-    debugPrint('Groq AI service initialized with model: ${ApiConstants.groqModel}');
+    debugPrint(
+      'Groq AI service initialized with model: ${ApiConstants.groqModel}',
+    );
   }
 
   /// Get system prompt for medical assistant
   String _getSystemPrompt() {
     return '''
-You are a helpful medical assistant AI for MedAssist, a medication reminder app.
+You are MedAssist, a personal medication assistant built into a medication reminder app.
 
-Your role is to provide accurate, helpful information about medications and health.
+You have access to the user's actual medication list, adherence history, and stock levels — use this context to give personalized, specific answers whenever relevant.
 
-IMPORTANT GUIDELINES:
-1. Always prioritize safety - remind users to consult healthcare professionals
-2. Provide clear, concise, easy-to-understand information
-3. Be empathetic and supportive
-4. NEVER diagnose conditions or prescribe medications
-5. Focus on:
-   - Medication information (uses, side effects, interactions)
-   - General health tips
-   - Medication adherence advice
-   - When to seek professional help
-
-Keep responses concise (2-3 paragraphs unless asked for detail).
-Use bullet points for lists.
-Always end with a helpful follow-up question when appropriate.''';
+RULES:
+1. Respond in the SAME language the user writes in — Arabic or English, never mix them. When the user writes Arabic, reply in everyday Egyptian colloquial (عامية مصرية) — not formal Modern Standard Arabic.
+2. NEVER diagnose, prescribe, or recommend changing a prescribed dose.
+3. If you are not sure about a fact, say so plainly ("مش متأكد، الأفضل تسأل الدكتور" / "I'm not certain — please ask your doctor or pharmacist"). Do NOT guess or invent drug names, doses, or interactions.
+4. For drug questions: give purpose, key side effects, and one practical tip.
+5. For missed dose questions: use the user's specific drug context if available, not generic advice.
+6. Emergency signals → tell the user to call emergency services or go to the ER immediately, before any other advice. Emergencies include: chest pain, difficulty breathing, severe allergic reaction (face/throat swelling), uncontrolled bleeding, sudden severe headache, and any FAST stroke sign — Face drooping, Arm weakness, Speech slurred.
+7. Always remind the user to consult their doctor or pharmacist for personal medical decisions, but in a calm tone — do not over-alarm.
+8. Use bullet points for lists. Keep answers under 120 words unless the user asks for more detail. Plain language only — no medical jargon.
+9. If the user's medication list is empty, briefly explain that they can add their medications from the Home tab using the "+" button so you can give personalized advice.''';
   }
 
   /// Send message and get AI response
-  Future<String> sendMessage(String message, {String? medicationContext}) async {
+  Future<String> sendMessage(
+    String message, {
+    String? medicationContext,
+  }) async {
     try {
       if (!_initialized) {
         initialize();
@@ -93,31 +96,11 @@ Always end with a helpful follow-up question when appropriate.''';
         'content': userMessage,
       });
 
-      // Prepare API request (OpenAI-compatible format)
-      final response = await _dio.post(
-        '/chat/completions',
-        data: {
-          'model': ApiConstants.groqModel,
-          'messages': _chatHistory,
-          'temperature': 0.7,
-          'max_tokens': 500,
-          'top_p': 1,
-          'stream': false,
-        },
+      final responseText = await _tryCompletion(
+        model: ApiConstants.groqModel,
+        messages: _chatHistory,
+        maxTokens: 800,
       );
-
-      // Extract response
-      final choices = response.data['choices'] as List?;
-      if (choices == null || choices.isEmpty) {
-        throw Exception('No response from Groq');
-      }
-
-      final assistantMessage = choices.first['message'];
-      final responseText = assistantMessage['content']?.toString().trim() ?? '';
-
-      if (responseText.isEmpty) {
-        throw Exception('Empty response from Groq');
-      }
 
       // Add AI response to history
       _chatHistory.add({
@@ -126,40 +109,93 @@ Always end with a helpful follow-up question when appropriate.''';
       });
 
       // Limit history to last 10 messages (prevent context overflow)
-      if (_chatHistory.length > 21) { // system + 10 exchanges
-        // Keep system prompt and last 10 exchanges
+      if (_chatHistory.length > 21) {
         final systemPrompt = _chatHistory.first;
-        final recentMessages = _chatHistory.skip(_chatHistory.length - 20).toList();
+        final recentMessages = _chatHistory
+            .skip(_chatHistory.length - 20)
+            .toList();
         _chatHistory.clear();
         _chatHistory.add(systemPrompt);
         _chatHistory.addAll(recentMessages);
       }
 
-      debugPrint('Received response from Groq: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...');
+      debugPrint(
+        'Received response from Groq: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+      );
 
       return responseText;
     } on DioException catch (e) {
       final errorMsg = _parseErrorMessage(e);
       debugPrint('Groq API Error: $errorMsg');
-      debugPrint('Status Code: ${e.response?.statusCode}');
 
-      // Remove last user message since it failed
       if (_chatHistory.isNotEmpty && _chatHistory.last['role'] == 'user') {
         _chatHistory.removeLast();
       }
 
-      // Rethrow with user-friendly message
       throw GroqException(errorMsg);
     } catch (e) {
       debugPrint('Error sending message to Groq: $e');
 
-      // Remove last user message since it failed
       if (_chatHistory.isNotEmpty && _chatHistory.last['role'] == 'user') {
         _chatHistory.removeLast();
       }
 
       throw GroqException('An unexpected error occurred. Please try again.');
     }
+  }
+
+  /// Try primary model, fall back to groqFallbackModel on failure.
+  Future<String> _tryCompletion({
+    required String model,
+    required List<Map<String, String>> messages,
+    double temperature = 0.7,
+    int maxTokens = 500,
+  }) async {
+    Future<String> call(String m) async {
+      debugPrint('Groq: trying model $m');
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/chat/completions',
+        data: {
+          'model': m,
+          'messages': messages,
+          'temperature': temperature,
+          'max_tokens': maxTokens,
+          'top_p': 1,
+          'stream': false,
+        },
+      );
+      final choices = response.data?['choices'] as List?;
+      if (choices == null || choices.isEmpty) throw Exception('No response');
+      final msg =
+          (choices.first as Map<String, dynamic>)['message']
+              as Map<String, dynamic>?;
+      final raw = msg?['content']?.toString().trim() ?? '';
+      if (raw.isEmpty) throw Exception('Empty response');
+      return _stripThinkTags(raw);
+    }
+
+    try {
+      return await call(model);
+    } on Object catch (e) {
+      if (model == ApiConstants.groqFallbackModel) rethrow;
+      debugPrint('Groq: primary model failed ($e), retrying with fallback');
+      return call(ApiConstants.groqFallbackModel);
+    }
+  }
+
+  // Strips reasoning blocks that Qwen3 prepends before its answer.
+  // Handles both well-formed <think>…</think> and truncated <think>… with no
+  // closing tag (which happens when max_tokens cuts the response mid-thought).
+  String _stripThinkTags(String text) {
+    var stripped = text.replaceAll(
+      RegExp(r'<think>[\s\S]*?</think>', caseSensitive: false),
+      '',
+    );
+    final openOnly = RegExp(r'<think>', caseSensitive: false).firstMatch(stripped);
+    if (openOnly != null) {
+      stripped = stripped.substring(0, openOnly.start);
+    }
+    return stripped.trim();
   }
 
   /// Update system prompt with medication context
@@ -169,12 +205,13 @@ Always end with a helpful follow-up question when appropriate.''';
     // Update system prompt with context
     _chatHistory[0] = {
       'role': 'system',
-      'content': '''${_getSystemPrompt()}
+      'content':
+          '''${_getSystemPrompt()}
 
 CURRENT USER CONTEXT:
 $medicationContext
 
-IMPORTANT: Use this context to provide personalized advice. Reference their specific medications when relevant.'''
+IMPORTANT: Use this context to provide personalized advice. Reference their specific medications when relevant.''',
     };
   }
 
@@ -207,24 +244,14 @@ IMPORTANT: Use this context to provide personalized advice. Reference their spec
   Future<String> sendRawCompletion(String prompt) async {
     if (!_initialized) initialize();
 
-    final response = await _dio.post(
-      '/chat/completions',
-      data: {
-        'model': ApiConstants.groqModel,
-        'messages': [
-          {'role': 'user', 'content': prompt},
-        ],
-        'temperature': 0.3,
-        'max_tokens': 600,
-        'stream': false,
-      },
+    return _tryCompletion(
+      model: ApiConstants.groqModel,
+      messages: [
+        {'role': 'user', 'content': prompt},
+      ],
+      temperature: 0.3,
+      maxTokens: 3000,
     );
-
-    final choices = response.data['choices'] as List?;
-    if (choices == null || choices.isEmpty) {
-      throw GroqException('No response from Groq');
-    }
-    return choices.first['message']['content']?.toString().trim() ?? '';
   }
 
   /// Clear chat history and start fresh

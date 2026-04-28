@@ -5,7 +5,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// Custom Date Range Picker Dialog
 /// Allows users to select custom date ranges for analytics
 class CustomDateRangePickerDialog extends StatefulWidget {
-
   const CustomDateRangePickerDialog({
     super.key,
     this.initialStartDate,
@@ -15,7 +14,8 @@ class CustomDateRangePickerDialog extends StatefulWidget {
   final DateTime? initialEndDate;
 
   @override
-  State<CustomDateRangePickerDialog> createState() => _CustomDateRangePickerDialogState();
+  State<CustomDateRangePickerDialog> createState() =>
+      _CustomDateRangePickerDialogState();
 
   /// Show the dialog and return selected date range
   static Future<DateTimeRange?> show(
@@ -33,7 +33,8 @@ class CustomDateRangePickerDialog extends StatefulWidget {
   }
 }
 
-class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialog> {
+class _CustomDateRangePickerDialogState
+    extends State<CustomDateRangePickerDialog> {
   late DateTime _startDate;
   late DateTime _endDate;
   final _dateFormat = DateFormat('MMM dd, yyyy');
@@ -41,7 +42,9 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
   @override
   void initState() {
     super.initState();
-    _startDate = widget.initialStartDate ?? DateTime.now().subtract(const Duration(days: 30));
+    _startDate =
+        widget.initialStartDate ??
+        DateTime.now().subtract(const Duration(days: 30));
     _endDate = widget.initialEndDate ?? DateTime.now();
   }
 
@@ -56,85 +59,85 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
       title: Text(l10n.selectDateRange),
       content: SingleChildScrollView(
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Quick Selection Chips
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildQuickSelectChip(
-                l10n.last7Days,
-                () => _setQuickRange(7),
-                colorScheme,
-              ),
-              _buildQuickSelectChip(
-                l10n.last30Days,
-                () => _setQuickRange(30),
-                colorScheme,
-              ),
-              _buildQuickSelectChip(
-                l10n.last3Months,
-                () => _setQuickRange(90),
-                colorScheme,
-              ),
-              _buildQuickSelectChip(
-                l10n.thisYear,
-                _setThisYear,
-                colorScheme,
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const Divider(),
-          const SizedBox(height: 16),
-
-          // Start Date Selector
-          _buildDateSelector(
-            label: l10n.startDate,
-            date: _startDate,
-            onTap: _selectStartDate,
-            colorScheme: colorScheme,
-          ),
-          const SizedBox(height: 16),
-
-          // End Date Selector
-          _buildDateSelector(
-            label: l10n.endDate,
-            date: _endDate,
-            onTap: _selectEndDate,
-            colorScheme: colorScheme,
-          ),
-          const SizedBox(height: 16),
-
-          // Summary
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Quick Selection Chips
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
-                  color: colorScheme.primary,
+                _buildQuickSelectChip(
+                  l10n.last7Days,
+                  () => _setQuickRange(7),
+                  colorScheme,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    l10n.daysSelected(_getDaysDifference()),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  ),
+                _buildQuickSelectChip(
+                  l10n.last30Days,
+                  () => _setQuickRange(30),
+                  colorScheme,
+                ),
+                _buildQuickSelectChip(
+                  l10n.last3Months,
+                  () => _setQuickRange(90),
+                  colorScheme,
+                ),
+                _buildQuickSelectChip(
+                  l10n.thisYear,
+                  _setThisYear,
+                  colorScheme,
                 ),
               ],
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 16),
+
+            // Start Date Selector
+            _buildDateSelector(
+              label: l10n.startDate,
+              date: _startDate,
+              onTap: _selectStartDate,
+              colorScheme: colorScheme,
+            ),
+            const SizedBox(height: 16),
+
+            // End Date Selector
+            _buildDateSelector(
+              label: l10n.endDate,
+              date: _endDate,
+              onTap: _selectEndDate,
+              colorScheme: colorScheme,
+            ),
+            const SizedBox(height: 16),
+
+            // Summary
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 16,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.daysSelected(_getDaysDifference()),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -262,9 +265,11 @@ class _CustomDateRangePickerDialogState extends State<CustomDateRangePickerDialo
   }
 
   void _confirmSelection() {
-    Navigator.of(context).pop(DateTimeRange(
-      start: _startDate,
-      end: _endDate,
-    ));
+    Navigator.of(context).pop(
+      DateTimeRange(
+        start: _startDate,
+        end: _endDate,
+      ),
+    );
   }
 }

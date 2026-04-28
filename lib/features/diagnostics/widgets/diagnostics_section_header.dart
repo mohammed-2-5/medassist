@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:med_assist/core/theme/app_colors.dart';
+import 'package:med_assist/core/theme/app_colors.dart' show AppGradients;
 
 class DiagnosticsSectionHeader extends StatelessWidget {
   const DiagnosticsSectionHeader({
@@ -20,8 +20,8 @@ class DiagnosticsSectionHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            gradient: AppColors.primaryGradient,
-            borderRadius: BorderRadius.circular(10),
+            gradient: theme.colorScheme.primaryGradient,
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: Colors.white, size: 20),
         ),

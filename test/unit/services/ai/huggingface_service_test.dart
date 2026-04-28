@@ -82,7 +82,10 @@ void main() {
 
       // Should not crash with empty context (returns error or throws exception)
       try {
-        final response = await hfService.sendMessage('test', medicationContext: '');
+        final response = await hfService.sendMessage(
+          'test',
+          medicationContext: '',
+        );
         expect(response, isNotEmpty);
       } on HuggingFaceException {
         // Expected if network is unavailable

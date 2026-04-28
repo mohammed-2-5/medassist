@@ -26,6 +26,6 @@ class SnoozeHistoryTable extends Table {
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
-      ];
+    'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
+  ];
 }

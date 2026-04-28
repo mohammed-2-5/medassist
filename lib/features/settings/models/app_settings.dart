@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// Application settings model
-class AppSettings { // Track if user has completed onboarding
+class AppSettings {
+  // Track if user has completed onboarding
 
   const AppSettings({
     this.themeMode = ThemeMode.system,

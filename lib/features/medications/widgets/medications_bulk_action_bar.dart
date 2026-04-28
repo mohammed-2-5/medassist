@@ -29,17 +29,23 @@ class MedicationsBulkActionBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton.icon(
-            onPressed: isEmpty ? null : () => _run(context, ref, (a) => a.delete()),
+            onPressed: isEmpty
+                ? null
+                : () => _run(context, ref, (a) => a.delete()),
             icon: const Icon(Icons.delete),
             label: Text(l10n.delete),
           ),
           TextButton.icon(
-            onPressed: isEmpty ? null : () => _run(context, ref, (a) => a.pause()),
+            onPressed: isEmpty
+                ? null
+                : () => _run(context, ref, (a) => a.pause()),
             icon: const Icon(Icons.pause),
             label: Text(l10n.pause),
           ),
           TextButton.icon(
-            onPressed: isEmpty ? null : () => _run(context, ref, (a) => a.resume()),
+            onPressed: isEmpty
+                ? null
+                : () => _run(context, ref, (a) => a.resume()),
             icon: const Icon(Icons.play_arrow),
             label: Text(l10n.resume),
           ),

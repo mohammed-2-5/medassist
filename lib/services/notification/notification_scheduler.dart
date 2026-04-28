@@ -21,17 +21,30 @@ class NotificationScheduler {
   ) async {
     if (!medication.isActive) {
       debugPrint(
-          'Medication ${medication.id} is not active, skipping reminders');
+        'Medication ${medication.id} is not active, skipping reminders',
+      );
       return;
     }
 
     await cancelForMedication(notifications, medication.id);
-    await _schedulePatternAware(notifications, medication, reminderTimes);
+    final channelId =
+        await NotificationChannels.ensureMedicationChannelForSound(
+          notifications,
+          medication.customSoundPath,
+        );
+    await _schedulePatternAware(
+      notifications,
+      medication,
+      reminderTimes,
+      channelId: channelId,
+      soundUri: medication.customSoundPath,
+    );
 
     final pending = await notifications.pendingNotificationRequests();
     debugPrint('Pending after scheduling dose reminder: ${pending.length}');
     debugPrint(
-        'Scheduled reminders for ${medication.medicineName} (pattern: ${medication.repetitionPattern})');
+      'Scheduled reminders for ${medication.medicineName} (pattern: ${medication.repetitionPattern})',
+    );
   }
 
   /// Schedule notifications only on days matching the repetition pattern.
@@ -40,16 +53,22 @@ class NotificationScheduler {
   static Future<void> _schedulePatternAware(
     FlutterLocalNotificationsPlugin notifications,
     Medication medication,
-    List<ReminderTime> reminderTimes,
-  ) async {
+    List<ReminderTime> reminderTimes, {
+    required String channelId,
+    required String? soundUri,
+  }) async {
     final now = DateTime.now();
-    final endDate =
-        medication.startDate.add(Duration(days: medication.durationDays));
+    final endDate = medication.startDate.add(
+      Duration(days: medication.durationDays),
+    );
     var scheduled = 0;
 
     for (var dayOffset = 0; dayOffset < 30 && scheduled < 7; dayOffset++) {
-      final date = DateTime(now.year, now.month, now.day)
-          .add(Duration(days: dayOffset));
+      final date = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).add(Duration(days: dayOffset));
       if (date.isAfter(endDate)) break;
 
       final isDoseDay = RepetitionPatternUtils.isDoseDay(
@@ -57,17 +76,29 @@ class NotificationScheduler {
         specificDaysOfWeek: medication.specificDaysOfWeek,
         startDate: medication.startDate,
         date: date,
+        intervalDays: medication.intervalDays,
+        intervalWeeks: medication.intervalWeeks,
+        intervalMonths: medication.intervalMonths,
+        dayOfMonth: medication.dayOfMonth,
       );
       if (!isDoseDay) continue;
 
       for (var i = 0; i < reminderTimes.length; i++) {
         final rt = reminderTimes[i];
-        final scheduledTime =
-            DateTime(date.year, date.month, date.day, rt.hour, rt.minute);
+        final scheduledTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          rt.hour,
+          rt.minute,
+        );
         if (scheduledTime.isBefore(now)) continue;
 
-        final notificationId =
-            NotificationIdGenerator.patternAware(medication.id, scheduled, i);
+        final notificationId = NotificationIdGenerator.patternAware(
+          medication.id,
+          scheduled,
+          i,
+        );
         final tzTime = tz.TZDateTime.from(scheduledTime, tz.local);
 
         final payload = json.encode({
@@ -75,6 +106,8 @@ class NotificationScheduler {
           'medicationId': medication.id,
           'medicationName': medication.medicineName,
           'dose': '${medication.dosePerTime} ${medication.doseUnit}',
+          'scheduledHour': rt.hour,
+          'scheduledMinute': rt.minute,
         });
 
         await notifications.zonedSchedule(
@@ -82,18 +115,23 @@ class NotificationScheduler {
           'Time to take ${medication.medicineName}',
           'Take ${medication.dosePerTime} ${medication.doseUnit} now',
           tzTime,
-          _medicationNotificationDetails(),
+          _medicationNotificationDetails(
+            channelId: channelId,
+            soundUri: soundUri,
+          ),
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           payload: payload,
         );
 
         debugPrint(
-            '⏰ Scheduled pattern reminder: ${medication.medicineName} on ${date.toIso8601String()} at ${rt.hour}:${rt.minute}');
+          '⏰ Scheduled pattern reminder: ${medication.medicineName} on ${date.toIso8601String()} at ${rt.hour}:${rt.minute}',
+        );
       }
       scheduled++;
     }
     debugPrint(
-        '✅ Scheduled $scheduled days of pattern-aware reminders for ${medication.medicineName}');
+      '✅ Scheduled $scheduled days of pattern-aware reminders for ${medication.medicineName}',
+    );
   }
 
   /// Schedule a snooze notification.
@@ -103,6 +141,9 @@ class NotificationScheduler {
     required String medicationName,
     required String dose,
     required int minutes,
+    required int scheduledHour,
+    required int scheduledMinute,
+    String? customSoundUri,
   }) async {
     final snoozeId = NotificationIdGenerator.snooze(medicationId);
     await notifications.cancel(snoozeId);
@@ -117,18 +158,28 @@ class NotificationScheduler {
       'medicationId': medicationId,
       'medicationName': medicationName,
       'dose': dose,
+      'scheduledHour': scheduledHour,
+      'scheduledMinute': scheduledMinute,
     });
 
-    const details = NotificationDetails(
+    final channelId =
+        await NotificationChannels.ensureMedicationChannelForSound(
+          notifications,
+          customSoundUri,
+        );
+    final details = NotificationDetails(
       android: AndroidNotificationDetails(
-        NotificationChannels.medicationChannelId,
+        channelId,
         'Medication Reminders',
         channelDescription: 'Notifications for scheduled medication doses',
         importance: Importance.high,
         priority: Priority.high,
         icon: 'ic_notification',
+        sound: customSoundUri != null && customSoundUri.isNotEmpty
+            ? UriAndroidNotificationSound(customSoundUri)
+            : null,
       ),
-      iOS: DarwinNotificationDetails(
+      iOS: const DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
@@ -155,8 +206,9 @@ class NotificationScheduler {
   ) async {
     // Cancel reminder time slots (0-5)
     for (var i = 0; i < 6; i++) {
-      await notifications
-          .cancel(NotificationIdGenerator.reminder(medicationId, i));
+      await notifications.cancel(
+        NotificationIdGenerator.reminder(medicationId, i),
+      );
     }
 
     // Cancel pattern-aware reminders (up to 7 days * 6 reminders)
@@ -165,49 +217,56 @@ class NotificationScheduler {
     }
 
     // Cancel low stock, expiry, snooze
-    await notifications
-        .cancel(NotificationIdGenerator.lowStock(medicationId));
-    await notifications
-        .cancel(NotificationIdGenerator.expiry(medicationId));
-    await notifications
-        .cancel(NotificationIdGenerator.snooze(medicationId));
+    await notifications.cancel(NotificationIdGenerator.lowStock(medicationId));
+    await notifications.cancel(NotificationIdGenerator.expiry(medicationId));
+    await notifications.cancel(NotificationIdGenerator.snooze(medicationId));
 
     // Cancel all recurring reminders
     for (var reminderIndex = 0; reminderIndex < 6; reminderIndex++) {
       for (var escalation = 1; escalation <= 10; escalation++) {
         await notifications.cancel(
-            NotificationIdGenerator.recurring(
-                medicationId, reminderIndex, escalation));
+          NotificationIdGenerator.recurring(
+            medicationId,
+            reminderIndex,
+            escalation,
+          ),
+        );
       }
     }
 
     debugPrint('Cancelled all reminders for medication $medicationId');
   }
 
-  static NotificationDetails _medicationNotificationDetails() {
-    return const NotificationDetails(
+  static NotificationDetails _medicationNotificationDetails({
+    required String channelId,
+    required String? soundUri,
+  }) {
+    return NotificationDetails(
       android: AndroidNotificationDetails(
-        NotificationChannels.medicationChannelId,
+        channelId,
         'Medication Reminders',
         channelDescription: 'Notifications for scheduled medication doses',
         importance: Importance.max,
         priority: Priority.max,
         icon: 'ic_notification',
         enableLights: true,
-        color: Color(0xFF2196F3),
-        ledColor: Color(0xFF2196F3),
+        color: const Color(0xFF2196F3),
+        ledColor: const Color(0xFF2196F3),
         ledOnMs: 1000,
         ledOffMs: 500,
         fullScreenIntent: true,
         category: AndroidNotificationCategory.alarm,
         visibility: NotificationVisibility.public,
-        actions: <AndroidNotificationAction>[
+        sound: soundUri != null && soundUri.isNotEmpty
+            ? UriAndroidNotificationSound(soundUri)
+            : null,
+        actions: const <AndroidNotificationAction>[
           AndroidNotificationAction('take', 'Take'),
           AndroidNotificationAction('snooze_15', 'Snooze 15m'),
           AndroidNotificationAction('skip', 'Skip'),
         ],
       ),
-      iOS: DarwinNotificationDetails(
+      iOS: const DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,

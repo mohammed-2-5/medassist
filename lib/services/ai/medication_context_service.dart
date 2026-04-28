@@ -17,7 +17,9 @@ Suggestion: Help user understand how to add their first medication.
     }
 
     final buffer = StringBuffer();
-    buffer.writeln('User is currently taking ${medications.length} medication(s):');
+    buffer.writeln(
+      'User is currently taking ${medications.length} medication(s):',
+    );
     buffer.writeln();
 
     for (final med in medications) {
@@ -27,14 +29,18 @@ Suggestion: Help user understand how to add their first medication.
         buffer.writeln('  - Strength: ${med.strength} ${med.unit}');
       }
       buffer.writeln('  - Frequency: ${med.timesPerDay} times per day');
-      buffer.writeln('  - Dose: ${med.dosePerTime} ${med.doseUnit ?? 'unit'}(s) per time');
+      buffer.writeln(
+        '  - Dose: ${med.dosePerTime} ${med.doseUnit ?? 'unit'}(s) per time',
+      );
 
       if (med.stockQuantity > 0) {
         buffer.writeln('  - Stock: ${med.stockQuantity} remaining');
       }
 
       if (med.expiryDate != null) {
-        final daysUntilExpiry = med.expiryDate!.difference(DateTime.now()).inDays;
+        final daysUntilExpiry = med.expiryDate!
+            .difference(DateTime.now())
+            .inDays;
         buffer.writeln('  - Expires in: $daysUntilExpiry days');
       }
 
@@ -56,7 +62,9 @@ Suggestion: Help user understand how to add their first medication.
 
     if (total > 0) {
       final adherence = ((taken / total) * 100).toStringAsFixed(1);
-      buffer.writeln('Recent Adherence (7 days): $adherence% ($taken taken, $skipped skipped)');
+      buffer.writeln(
+        'Recent Adherence (7 days): $adherence% ($taken taken, $skipped skipped)',
+      );
     }
 
     return buffer.toString();
@@ -65,9 +73,13 @@ Suggestion: Help user understand how to add their first medication.
   /// Get specific medication details
   Future<String?> getMedicationDetails(String medicationName) async {
     final medications = await _database.getAllMedications();
-    final med = medications.where(
-      (m) => m.medicineName.toLowerCase().contains(medicationName.toLowerCase()),
-    ).firstOrNull;
+    final med = medications
+        .where(
+          (m) => m.medicineName.toLowerCase().contains(
+            medicationName.toLowerCase(),
+          ),
+        )
+        .firstOrNull;
 
     if (med == null) return null;
 
@@ -84,7 +96,7 @@ Suggestion: Help user understand how to add their first medication.
 
     final daysSince = DateTime.now().difference(med.startDate).inDays;
     buffer.writeln('Taking since: $daysSince days ago');
-  
+
     if (med.stockQuantity > 0) {
       buffer.writeln('Stock remaining: ${med.stockQuantity}');
 
@@ -107,10 +119,15 @@ Suggestion: Help user understand how to add their first medication.
     final history = await _database.getDoseHistory(med.id);
     final recentHistory = history.take(7).toList();
     if (recentHistory.isNotEmpty) {
-      final recentTaken = recentHistory.where((d) => d.status == 'taken').length;
+      final recentTaken = recentHistory
+          .where((d) => d.status == 'taken')
+          .length;
       final recentTotal = recentHistory.length;
-      final recentAdherence = ((recentTaken / recentTotal) * 100).toStringAsFixed(1);
-      buffer.writeln('Recent adherence: $recentAdherence% ($recentTaken/$recentTotal)');
+      final recentAdherence = ((recentTaken / recentTotal) * 100)
+          .toStringAsFixed(1);
+      buffer.writeln(
+        'Recent adherence: $recentAdherence% ($recentTaken/$recentTotal)',
+      );
     }
 
     if (med.notes != null && med.notes!.isNotEmpty) {
@@ -134,7 +151,9 @@ Suggestion: Help user understand how to add their first medication.
 
     for (final med in lowStockMeds) {
       final dailyUsage = med.timesPerDay * med.dosePerTime;
-      final daysRemaining = dailyUsage > 0 ? (med.stockQuantity / dailyUsage).floor() : 0;
+      final daysRemaining = dailyUsage > 0
+          ? (med.stockQuantity / dailyUsage).floor()
+          : 0;
 
       buffer.writeln('${med.medicineName}:');
       buffer.writeln('  - Current stock: ${med.stockQuantity}');
@@ -148,7 +167,9 @@ Suggestion: Help user understand how to add their first medication.
 
   /// Get expiring medications
   Future<String> getExpiringMedications({int daysAhead = 30}) async {
-    final expiringMeds = await _database.getExpiringMedications(daysAhead: daysAhead);
+    final expiringMeds = await _database.getExpiringMedications(
+      daysAhead: daysAhead,
+    );
 
     if (expiringMeds.isEmpty) {
       return 'No medications expiring in the next $daysAhead days.';

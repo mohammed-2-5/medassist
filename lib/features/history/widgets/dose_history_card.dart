@@ -18,7 +18,6 @@ DateTime _getScheduledDateTime(DoseHistoryData dose) {
 
 /// Card displaying dose history details
 class DoseHistoryCard extends ConsumerWidget {
-
   const DoseHistoryCard({
     required this.dose,
     super.key,
@@ -30,7 +29,9 @@ class DoseHistoryCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    final medicationAsync = ref.watch(medicationByIdProvider(dose.medicationId));
+    final medicationAsync = ref.watch(
+      medicationByIdProvider(dose.medicationId),
+    );
 
     return medicationAsync.when(
       data: (medication) {
@@ -53,7 +54,9 @@ class DoseHistoryCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: (statusInfo['color'] as Color).withValues(alpha: 0.2),
+                        color: (statusInfo['color'] as Color).withValues(
+                          alpha: 0.2,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -92,7 +95,9 @@ class DoseHistoryCard extends ConsumerWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: (statusInfo['color'] as Color).withValues(alpha: 0.2),
+                        color: (statusInfo['color'] as Color).withValues(
+                          alpha: 0.2,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -125,7 +130,9 @@ class DoseHistoryCard extends ConsumerWidget {
                       child: _buildInfoItem(
                         context,
                         l10n.scheduled,
-                        DateFormat('h:mm a').format(_getScheduledDateTime(dose)),
+                        DateFormat(
+                          'h:mm a',
+                        ).format(_getScheduledDateTime(dose)),
                         Icons.schedule,
                       ),
                     ),

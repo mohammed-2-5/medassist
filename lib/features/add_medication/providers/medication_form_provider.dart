@@ -8,14 +8,15 @@ import 'package:med_assist/features/add_medication/providers/medication_form_dra
 /// Provider for medication form state
 final medicationFormProvider =
     NotifierProvider<MedicationFormNotifier, MedicationFormData>(
-  MedicationFormNotifier.new,
-);
+      MedicationFormNotifier.new,
+    );
 
 /// Notifier for managing medication form data
 class MedicationFormNotifier extends Notifier<MedicationFormData> {
   @override
   MedicationFormData build() {
     return MedicationFormData(
+      unit: 'mg',
       startDate: DateTime.now(),
       reminderTimes: const [
         ReminderTimeData(time: TimeOfDay(hour: 8, minute: 0)),
@@ -25,6 +26,7 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
 
   void reset() {
     state = MedicationFormData(
+      unit: 'mg',
       startDate: DateTime.now(),
       reminderTimes: const [
         ReminderTimeData(time: TimeOfDay(hour: 8, minute: 0)),
@@ -75,6 +77,10 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
       reminderTimes: s.reminderTimes,
       repetitionPattern: s.repetitionPattern,
       specificDaysOfWeek: s.specificDaysOfWeek,
+      intervalDays: s.intervalDays,
+      intervalWeeks: s.intervalWeeks,
+      intervalMonths: s.intervalMonths,
+      dayOfMonth: s.dayOfMonth,
       stockQuantity: s.stockQuantity,
       remindBeforeRunOut: s.remindBeforeRunOut,
       reminderDaysBeforeRunOut: s.reminderDaysBeforeRunOut,
@@ -84,6 +90,13 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
       maxSnoozesPerDay: s.maxSnoozesPerDay,
       enableRecurringReminders: s.enableRecurringReminders,
       recurringReminderInterval: s.recurringReminderInterval,
+      genericName: s.genericName,
+      activeIngredients: s.activeIngredients,
+      drugCategory: s.drugCategory,
+      purpose: s.purpose,
+      sideEffects: s.sideEffects,
+      drugWarnings: s.drugWarnings,
+      drugRoute: s.drugRoute,
     );
   }
 
@@ -100,8 +113,7 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
     if (state.reminderTimes.length != times) generateDefaultReminderTimes();
   }
 
-  void setDosePerTime(double dose) =>
-      state = state.copyWith(dosePerTime: dose);
+  void setDosePerTime(double dose) => state = state.copyWith(dosePerTime: dose);
   void setDoseUnit(String unit) => state = state.copyWith(doseUnit: unit);
   void setDurationDays(int days) => state = state.copyWith(durationDays: days);
   void setStartDate(DateTime date) => state = state.copyWith(startDate: date);
@@ -125,6 +137,27 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
       );
       state = state.copyWith(reminderTimes: newTimes);
     }
+  }
+
+  void applyMealTimingSuggestion(MealTiming mealTiming) {
+    if (mealTiming == MealTiming.anytime) return;
+    if (state.reminderTimes.isEmpty) return;
+
+    // Avoid overriding user-customized reminder meal timing.
+    final allAnytime = state.reminderTimes.every(
+      (reminder) => reminder.mealTiming == MealTiming.anytime,
+    );
+    if (!allAnytime) return;
+
+    final updatedTimes = state.reminderTimes
+        .map(
+          (reminder) => reminder.copyWith(
+            mealTiming: mealTiming,
+            mealOffsetMinutes: mealTiming.defaultOffsetMinutes,
+          ),
+        )
+        .toList();
+    state = state.copyWith(reminderTimes: updatedTimes);
   }
 
   void generateDefaultReminderTimes() {
@@ -163,10 +196,60 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
     );
   }
 
-  void setSpecificDaysOfWeek(List<int> days) =>
-      state = state.copyWith(
-        specificDaysOfWeek: days.where((d) => d >= 1 && d <= 7).toList(),
-      );
+  void setSpecificDaysOfWeek(List<int> days) => state = state.copyWith(
+    specificDaysOfWeek: days.where((d) => d >= 1 && d <= 7).toList(),
+  );
+
+  /// Apply a full smart schedule config in one call. Allows clearing interval
+  /// fields (copyWith `??` cannot set nulls).
+  void applySmartSchedule({
+    required RepetitionPattern pattern,
+    List<int>? specificDaysOfWeek,
+    int? intervalDays,
+    int? intervalWeeks,
+    int? intervalMonths,
+    int? dayOfMonth,
+  }) {
+    final s = state;
+    state = MedicationFormData(
+      id: s.id,
+      medicineType: s.medicineType,
+      medicineName: s.medicineName,
+      medicinePhotoPath: s.medicinePhotoPath,
+      strength: s.strength,
+      unit: s.unit,
+      notes: s.notes,
+      isScanned: s.isScanned,
+      timesPerDay: s.timesPerDay,
+      dosePerTime: s.dosePerTime,
+      doseUnit: s.doseUnit,
+      durationDays: s.durationDays,
+      startDate: s.startDate,
+      reminderTimes: s.reminderTimes,
+      repetitionPattern: pattern,
+      specificDaysOfWeek: specificDaysOfWeek ?? pattern.defaultDays,
+      intervalDays: intervalDays,
+      intervalWeeks: intervalWeeks,
+      intervalMonths: intervalMonths,
+      dayOfMonth: dayOfMonth,
+      stockQuantity: s.stockQuantity,
+      remindBeforeRunOut: s.remindBeforeRunOut,
+      reminderDaysBeforeRunOut: s.reminderDaysBeforeRunOut,
+      expiryDate: s.expiryDate,
+      reminderDaysBeforeExpiry: s.reminderDaysBeforeExpiry,
+      customSoundPath: s.customSoundPath,
+      maxSnoozesPerDay: s.maxSnoozesPerDay,
+      enableRecurringReminders: s.enableRecurringReminders,
+      recurringReminderInterval: s.recurringReminderInterval,
+      genericName: s.genericName,
+      activeIngredients: s.activeIngredients,
+      drugCategory: s.drugCategory,
+      purpose: s.purpose,
+      sideEffects: s.sideEffects,
+      drugWarnings: s.drugWarnings,
+      drugRoute: s.drugRoute,
+    );
+  }
 
   // Step 3 Methods
   void setStockQuantity(int quantity) =>
@@ -226,18 +309,23 @@ class MedicationFormNotifier extends Notifier<MedicationFormData> {
 
   /// Save medication (insert if new, update if editing)
   Future<bool> saveMedication() async {
-    if (!state.isComplete) return false;
+    final savedMedicationId = await saveMedicationAndGetId();
+    return savedMedicationId != null;
+  }
+
+  Future<int?> saveMedicationAndGetId() async {
+    if (!state.isComplete) return null;
     try {
       final repository = ref.read(medicationRepositoryProvider);
       if (state.isEdit) {
-        return repository.updateMedication(state.id!, state);
+        final success = await repository.updateMedication(state.id!, state);
+        return success ? state.id : null;
       } else {
-        await repository.saveMedication(state);
-        return true;
+        return repository.saveMedication(state);
       }
     } catch (e) {
       debugPrint('Error saving medication: $e');
-      return false;
+      return null;
     }
   }
 }

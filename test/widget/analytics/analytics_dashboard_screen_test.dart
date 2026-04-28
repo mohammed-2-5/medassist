@@ -10,7 +10,9 @@ import '../helpers/widget_test_helpers.dart';
 
 void main() {
   group('AnalyticsDashboardScreen', () {
-    testWidgets('renders key sections across common breakpoints', (tester) async {
+    testWidgets('renders key sections across common breakpoints', (
+      tester,
+    ) async {
       for (final device in TestDeviceConfig.defaults) {
         await pumpAppWidget(
           tester,
@@ -19,7 +21,11 @@ void main() {
           overrides: _buildAnalyticsOverrides(),
         );
 
-        expect(tester.takeException(), isNull, reason: 'No overflow on ${device.name}');
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'No overflow on ${device.name}',
+        );
         expect(find.textContaining('Trends'), findsWidgets);
         expect(find.textContaining('Insights'), findsWidgets);
         expect(find.textContaining('Time-of-Day Analysis'), findsWidgets);
@@ -87,9 +93,9 @@ List<Override> _buildAnalyticsOverrides() {
 
 class _FakeAnalyticsNotifier extends AnalyticsNotifier {
   _FakeAnalyticsNotifier()
-      : super(
-          AppDatabase.forTesting(NativeDatabase.memory()),
-        );
+    : super(
+        AppDatabase.forTesting(NativeDatabase.memory()),
+      );
 
   @override
   Future<List<TrendDataPoint>> getAdherenceTrend(int days) async {

@@ -11,7 +11,7 @@ import 'package:med_assist/features/analytics/widgets/analytics_export_helper.da
 import 'package:med_assist/features/analytics/widgets/analytics_medication_insights.dart';
 import 'package:med_assist/features/analytics/widgets/analytics_period_selector.dart';
 import 'package:med_assist/features/analytics/widgets/analytics_reports_card.dart';
-import 'package:med_assist/features/analytics/widgets/analytics_streak_card.dart';
+import 'package:med_assist/features/analytics/widgets/analytics_story_cards.dart';
 import 'package:med_assist/features/analytics/widgets/calendar_heatmap.dart';
 import 'package:med_assist/features/analytics/widgets/date_range_picker_dialog.dart'
     show CustomDateRangePickerDialog;
@@ -93,15 +93,24 @@ class _AnalyticsDashboardScreenState
               const SizedBox(height: 24),
               AnalyticsAdherenceCard(selectedPeriod: _selectedPeriod),
               const SizedBox(height: 16),
-              const AnalyticsStreakCard(),
+              const AnalyticsStoryCards(),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonalIcon(
+                  onPressed: _exportToPdf,
+                  icon: const Icon(Icons.picture_as_pdf),
+                  label: Text(l10n.exportPdf),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
               AnalyticsReportsCard(
                 onNavigateToReports: () => context.go('/reports'),
                 onExportPdf: _exportToPdf,
-              )
-                  .animate()
-                  .fadeIn(duration: 400.ms)
-                  .slideY(begin: 0.2, end: 0),
+              ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.2, end: 0),
               const SizedBox(height: 24),
               Text(
                 l10n.trendsInsights,
@@ -156,12 +165,11 @@ class _AnalyticsDashboardScreenState
   }
 
   Future<void> _exportToPdf() => AnalyticsExportHelper.exportToPdf(
-        context: context,
-        ref: ref,
-        selectedPeriod: _selectedPeriod,
-        customStartDate: _customStartDate,
-        customEndDate: _customEndDate,
-        exportService: _exportService,
-      );
-
+    context: context,
+    ref: ref,
+    selectedPeriod: _selectedPeriod,
+    customStartDate: _customStartDate,
+    customEndDate: _customEndDate,
+    exportService: _exportService,
+  );
 }

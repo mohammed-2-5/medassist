@@ -59,16 +59,17 @@ class AdherenceLineChart extends ConsumerWidget {
                     Text(
                       l10n.adherenceTrendChart,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    final chartHeight =
-                        constraints.maxWidth < 360 ? 160.0 : 200.0;
+                    final chartHeight = constraints.maxWidth < 360
+                        ? 160.0
+                        : 200.0;
                     return SizedBox(
                       height: chartHeight,
                       child: LineChart(
@@ -165,11 +166,11 @@ class AdherenceLineChart extends ConsumerWidget {
           dotData: FlDotData(
             getDotPainter: (spot, percent, barData, index) =>
                 FlDotCirclePainter(
-              radius: 4,
-              color: colorScheme.primary,
-              strokeWidth: 2,
-              strokeColor: colorScheme.surface,
-            ),
+                  radius: 4,
+                  color: colorScheme.primary,
+                  strokeWidth: 2,
+                  strokeColor: colorScheme.surface,
+                ),
           ),
           belowBarData: BarAreaData(
             show: true,

@@ -52,11 +52,13 @@ class BackupCrypto {
     final nonce = base64Decode(wrapper['nonce'] as String);
     final ciphertext = base64Decode(wrapper['ciphertext'] as String);
     final mac = base64Decode(wrapper['mac'] as String);
-    final iterations =
-        wrapper['iterations'] as int? ?? _pbkdf2Iterations;
+    final iterations = wrapper['iterations'] as int? ?? _pbkdf2Iterations;
 
-    final secretKey =
-        await _deriveKey(passphrase, salt, iterations: iterations);
+    final secretKey = await _deriveKey(
+      passphrase,
+      salt,
+      iterations: iterations,
+    );
     final algorithm = AesGcm.with256bits();
 
     final secretBox = SecretBox(

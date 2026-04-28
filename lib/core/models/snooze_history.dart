@@ -1,6 +1,5 @@
 /// Model for tracking snooze history and limits
 class SnoozeHistory {
-
   const SnoozeHistory({
     required this.id,
     required this.medicationId,
@@ -47,7 +46,6 @@ class SnoozeHistory {
 
 /// Smart snooze time suggestion model
 class SnoozeSuggestion {
-
   const SnoozeSuggestion({
     required this.minutes,
     required this.label,
@@ -87,10 +85,15 @@ class SnoozeSuggestion {
   /// Calculate smart suggestions based on next dose time
   static List<SnoozeSuggestion> getSmartSuggestions({
     required DateTime now,
-    required int maxSnoozes, required int currentSnoozeCount, DateTime? nextDoseTime,
+    required int maxSnoozes,
+    required int currentSnoozeCount,
+    DateTime? nextDoseTime,
   }) {
     final suggestions = <SnoozeSuggestion>[];
-    final remainingSnoozes = (maxSnoozes - currentSnoozeCount).clamp(0, maxSnoozes);
+    final remainingSnoozes = (maxSnoozes - currentSnoozeCount).clamp(
+      0,
+      maxSnoozes,
+    );
 
     if (remainingSnoozes == 0) {
       // No snoozes left, suggest taking now

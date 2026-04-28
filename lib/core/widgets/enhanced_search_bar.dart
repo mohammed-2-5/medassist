@@ -195,7 +195,7 @@ class _EnhancedSearchBarState extends State<EnhancedSearchBar> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: _onClear,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(

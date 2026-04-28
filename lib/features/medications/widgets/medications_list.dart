@@ -41,41 +41,42 @@ class MedicationsList extends ConsumerWidget {
           final isSelected = selectedIds.contains(med.id);
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: (isSelectionMode
-                    ? MedicationSelectableCard(
-                        medication: med,
-                        isSelected: isSelected,
-                        onToggle: () => onToggleSelection(med.id),
-                      )
-                    : MedicationCard(
-                        medication: med,
-                        onTap: () => context.push('/medication/${med.id}'),
-                        onEdit: () =>
-                            context.push('/medication/${med.id}/edit'),
-                        onDelete: () => MedicationActions.delete(
-                          context: context,
-                          ref: ref,
-                          medicationId: med.id,
-                        ),
-                        onToggleActive: () =>
-                            MedicationActions.toggleActive(
-                          context: context,
-                          ref: ref,
-                          medication: med,
-                        ),
-                      ))
-                .animate()
-                .fadeIn(
-                  duration: const Duration(milliseconds: 400),
-                  delay: Duration(milliseconds: 50 * index),
-                )
-                .slideY(
-                  begin: 0.2,
-                  end: 0,
-                  duration: const Duration(milliseconds: 400),
-                  delay: Duration(milliseconds: 50 * index),
-                  curve: Curves.easeOutCubic,
-                ),
+            child:
+                (isSelectionMode
+                        ? MedicationSelectableCard(
+                            medication: med,
+                            isSelected: isSelected,
+                            onToggle: () => onToggleSelection(med.id),
+                          )
+                        : MedicationCard(
+                            medication: med,
+                            onTap: () => context.push('/medication/${med.id}'),
+                            onEdit: () =>
+                                context.push('/medication/${med.id}/edit'),
+                            onDelete: () => MedicationActions.delete(
+                              context: context,
+                              ref: ref,
+                              medicationId: med.id,
+                            ),
+                            onToggleActive: () =>
+                                MedicationActions.toggleActive(
+                                  context: context,
+                                  ref: ref,
+                                  medication: med,
+                                ),
+                          ))
+                    .animate()
+                    .fadeIn(
+                      duration: const Duration(milliseconds: 400),
+                      delay: Duration(milliseconds: 50 * index),
+                    )
+                    .slideY(
+                      begin: 0.2,
+                      end: 0,
+                      duration: const Duration(milliseconds: 400),
+                      delay: Duration(milliseconds: 50 * index),
+                      curve: Curves.easeOutCubic,
+                    ),
           );
         },
       ),
@@ -97,6 +98,8 @@ class MedicationsList extends ConsumerWidget {
       icon: hasFilters ? Icons.search_off : Icons.medication_outlined,
       title: hasFilters ? l10n.noResultsFound : l10n.noMedicationsYet,
       subtitle: hasFilters ? l10n.tryAdjusting : l10n.startByAdding,
+      actionLabel: hasFilters ? null : l10n.addMedicine,
+      onAction: hasFilters ? null : () => context.push('/add-reminder'),
     );
   }
 }

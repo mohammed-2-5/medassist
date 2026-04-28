@@ -13,7 +13,7 @@ class BackupException implements Exception {
 /// [filePath] and the entered passphrase.
 class BackupEncryptedException extends BackupException {
   BackupEncryptedException(this.filePath)
-      : super('Backup is encrypted — passphrase required');
+    : super('Backup is encrypted — passphrase required');
 
   final String filePath;
 }

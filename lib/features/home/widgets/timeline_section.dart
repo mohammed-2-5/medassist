@@ -9,7 +9,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Timeline Section - Groups medications by time of day with staggered animations
 class TimelineSection extends ConsumerStatefulWidget {
-
   const TimelineSection({
     required this.timeOfDay,
     required this.timeRange,
@@ -35,8 +34,10 @@ class _TimelineSectionState extends ConsumerState<TimelineSection>
     super.initState();
     _controller = AnimationController(
       duration: Duration(
-        milliseconds: AppAnimations.listItemFade.inMilliseconds +
-            (widget.doses.length * AppAnimations.listItemStagger.inMilliseconds),
+        milliseconds:
+            AppAnimations.listItemFade.inMilliseconds +
+            (widget.doses.length *
+                AppAnimations.listItemStagger.inMilliseconds),
       ),
       vsync: this,
     );
@@ -56,8 +57,7 @@ class _TimelineSectionState extends ConsumerState<TimelineSection>
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final hasPending =
-        widget.doses.any((d) => d.status == DoseStatus.pending);
+    final hasPending = widget.doses.any((d) => d.status == DoseStatus.pending);
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -94,7 +94,6 @@ class _TimelineSectionState extends ConsumerState<TimelineSection>
 
 /// Staggered animated dose card for smooth entry
 class _StaggeredDoseCard extends StatelessWidget {
-
   const _StaggeredDoseCard({
     required this.dose,
     required this.index,
@@ -108,36 +107,39 @@ class _StaggeredDoseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final delay = index * AppAnimations.listItemStagger.inMilliseconds;
     final fadeStart = delay / controller.duration!.inMilliseconds;
-    final fadeEnd = (delay + AppAnimations.listItemFade.inMilliseconds) /
+    final fadeEnd =
+        (delay + AppAnimations.listItemFade.inMilliseconds) /
         controller.duration!.inMilliseconds;
 
-    final fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          fadeStart.clamp(0.0, 1.0),
-          fadeEnd.clamp(0.0, 1.0),
-          curve: AppAnimations.easeOut,
-        ),
-      ),
-    );
+    final fadeAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              fadeStart.clamp(0.0, 1.0),
+              fadeEnd.clamp(0.0, 1.0),
+              curve: AppAnimations.easeOut,
+            ),
+          ),
+        );
 
-    final slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.2),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          fadeStart.clamp(0.0, 1.0),
-          fadeEnd.clamp(0.0, 1.0),
-          curve: AppAnimations.smooth,
-        ),
-      ),
-    );
+    final slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0, 0.2),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              fadeStart.clamp(0.0, 1.0),
+              fadeEnd.clamp(0.0, 1.0),
+              curve: AppAnimations.smooth,
+            ),
+          ),
+        );
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -154,7 +156,6 @@ class _StaggeredDoseCard extends StatelessWidget {
 
 /// Time section header component
 class _TimeSectionHeader extends StatelessWidget {
-
   const _TimeSectionHeader({
     required this.timeOfDay,
     required this.timeRange,
@@ -184,7 +185,7 @@ class _TimeSectionHeader extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: timeColor.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, size: 20, color: timeColor),
         ),
@@ -216,12 +217,12 @@ class _TimeSectionHeader extends StatelessWidget {
           FilledButton.tonal(
             onPressed: onTakeAll,
             style: FilledButton.styleFrom(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              textStyle: theme.textTheme.labelSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              textStyle: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             child: Text(l10n.takeAll),
           ),

@@ -82,9 +82,7 @@ class PremiumBottomNavigationBar extends ConsumerWidget {
                       tab: tabs[i],
                       isSelected: currentIndex == i,
                       onTap: () => onTap(i),
-                      badge: i == 1
-                          ? _AlertBadge(database: db)
-                          : null,
+                      badge: i == 1 ? _AlertBadge(database: db) : null,
                     ),
                   ),
               ],
@@ -223,7 +221,7 @@ class _AlertBadge extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
           decoration: BoxDecoration(
             color: colorScheme.error,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: colorScheme.surface,
               width: 1.5,

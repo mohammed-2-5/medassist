@@ -12,15 +12,17 @@ class HuggingFaceService {
   factory HuggingFaceService() => _instance;
 
   HuggingFaceService._internal() {
-    _dio = Dio(BaseOptions(
-      baseUrl: ApiConstants.huggingFaceBaseUrl,
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
-      headers: {
-        'Authorization': 'Bearer ${ApiConstants.huggingFaceApiKey}',
-        'Content-Type': 'application/json',
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.huggingFaceBaseUrl,
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+        headers: {
+          'Authorization': 'Bearer ${ApiConstants.huggingFaceApiKey}',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
   }
   static final HuggingFaceService _instance = HuggingFaceService._internal();
 
@@ -31,11 +33,16 @@ class HuggingFaceService {
   void initialize() {
     if (_initialized) return;
     _initialized = true;
-    debugPrint('HuggingFace service initialized with model: ${ApiConstants.huggingFaceModel}');
+    debugPrint(
+      'HuggingFace service initialized with model: ${ApiConstants.huggingFaceModel}',
+    );
   }
 
   /// Send message and get AI response
-  Future<String> sendMessage(String message, {String? medicationContext}) async {
+  Future<String> sendMessage(
+    String message, {
+    String? medicationContext,
+  }) async {
     try {
       if (!_initialized) {
         initialize();
@@ -80,7 +87,9 @@ class HuggingFaceService {
             throw Exception('Empty response from HuggingFace');
           }
 
-          debugPrint('Received response from HuggingFace: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...');
+          debugPrint(
+            'Received response from HuggingFace: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+          );
           return responseText;
         }
       }
@@ -94,13 +103,16 @@ class HuggingFaceService {
       throw HuggingFaceException(errorMsg);
     } catch (e) {
       debugPrint('Error sending message to HuggingFace: $e');
-      throw HuggingFaceException('An unexpected error occurred. Please try again.');
+      throw HuggingFaceException(
+        'An unexpected error occurred. Please try again.',
+      );
     }
   }
 
   /// Build prompt with medical assistant context
   String _buildPrompt(String userMessage, String? medicationContext) {
-    final systemPrompt = '''You are a helpful medical assistant AI. Provide accurate, concise information about medications and health.
+    final systemPrompt =
+        '''You are a helpful medical assistant AI. Provide accurate, concise information about medications and health.
 
 GUIDELINES:
 - Always prioritize safety

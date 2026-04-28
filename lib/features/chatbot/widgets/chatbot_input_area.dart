@@ -50,7 +50,9 @@ class ChatbotInputArea extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outline.withOpacity(0.4),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withOpacity(0.4),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(

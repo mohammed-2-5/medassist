@@ -3,7 +3,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Empty Home State - First-time user experience
 class EmptyHomeState extends StatelessWidget {
-
   const EmptyHomeState({
     required this.onAddMedicationPressed,
     required this.onLearnMorePressed,
@@ -29,12 +28,11 @@ class EmptyHomeState extends StatelessWidget {
             _HeroIllustration(),
             const SizedBox(height: 48),
             _WelcomeMessage(),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
             _PrimaryCTA(onPressed: onAddMedicationPressed),
             const SizedBox(height: 16),
             _SecondaryCTA(onPressed: onLearnMorePressed),
             const SizedBox(height: 128),
-
           ],
         ),
       ),
@@ -104,7 +102,6 @@ class _WelcomeMessage extends StatelessWidget {
 
 /// Primary CTA button
 class _PrimaryCTA extends StatelessWidget {
-
   const _PrimaryCTA({required this.onPressed});
   final VoidCallback onPressed;
 
@@ -127,7 +124,6 @@ class _PrimaryCTA extends StatelessWidget {
 
 /// Secondary CTA button
 class _SecondaryCTA extends StatelessWidget {
-
   const _SecondaryCTA({required this.onPressed});
   final VoidCallback onPressed;
 
@@ -196,7 +192,6 @@ class _QuickTipsState extends State<_QuickTips> {
 
 /// Tips header with dismiss button
 class _TipsHeader extends StatelessWidget {
-
   const _TipsHeader({required this.onDismiss});
   final VoidCallback onDismiss;
 
@@ -216,7 +211,11 @@ class _TipsHeader extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.close, size: 18, color: colorScheme.onSurfaceVariant),
+          icon: Icon(
+            Icons.close,
+            size: 18,
+            color: colorScheme.onSurfaceVariant,
+          ),
           onPressed: onDismiss,
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
@@ -229,7 +228,6 @@ class _TipsHeader extends StatelessWidget {
 
 /// Individual tip item
 class _TipItem extends StatelessWidget {
-
   const _TipItem({
     required this.icon,
     required this.text,

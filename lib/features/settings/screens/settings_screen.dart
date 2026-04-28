@@ -52,33 +52,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   void _showThemeDialog(BuildContext context) {
     final settings = ref.read(settingsProvider);
-    unawaited(showThemeDialog(
-      context: context,
-      selectedThemeMode: settings.themeMode,
-      onThemeChanged: (value) {
-        return ref.read(settingsProvider.notifier).updateThemeMode(value);
-      },
-    ));
+    unawaited(
+      showThemeDialog(
+        context: context,
+        selectedThemeMode: settings.themeMode,
+        onThemeChanged: (value) {
+          return ref.read(settingsProvider.notifier).updateThemeMode(value);
+        },
+      ),
+    );
   }
 
   void _showLanguageDialog(BuildContext context) {
     final settings = ref.read(settingsProvider);
-    unawaited(showLanguageDialog(
-      context: context,
-      selectedLanguageCode: settings.languageCode,
-      onLanguageChanged: (value) {
-        return ref.read(settingsProvider.notifier).updateLanguageCode(value);
-      },
-    ));
+    unawaited(
+      showLanguageDialog(
+        context: context,
+        selectedLanguageCode: settings.languageCode,
+        onLanguageChanged: (value) {
+          return ref.read(settingsProvider.notifier).updateLanguageCode(value);
+        },
+      ),
+    );
   }
 
   void _showResetDialog(BuildContext context) {
-    unawaited(showResetDialog(
-      context: context,
-      onReset: () {
-        return ref.read(settingsProvider.notifier).resetToDefaults();
-      },
-    ));
+    unawaited(
+      showResetDialog(
+        context: context,
+        onReset: () {
+          return ref.read(settingsProvider.notifier).resetToDefaults();
+        },
+      ),
+    );
   }
 }
 

@@ -6,7 +6,6 @@ import 'package:med_assist/core/utils/repetition_pattern_utils.dart';
 
 /// Reminder time data with meal timing
 class ReminderTimeData {
-
   const ReminderTimeData({
     required this.time,
     this.mealTiming = MealTiming.anytime,
@@ -46,13 +45,21 @@ enum MedicineType {
 /// Medication repetition pattern enum
 enum RepetitionPattern {
   daily('📅 Every Day', 'Take medication daily', [1, 2, 3, 4, 5, 6, 7]),
-  everyOtherDay('📅 Every Other Day', 'Take medication every 2 days', [1, 3, 5, 7]),
+  everyOtherDay('📅 Every Other Day', 'Take medication every 2 days', [
+    1,
+    3,
+    5,
+    7,
+  ]),
   twiceAWeek('📅 Twice a Week', 'Take medication 2 days per week', [1, 4]),
   thriceAWeek('📅 Thrice a Week', 'Take medication 3 days per week', [1, 3, 5]),
   weekdays('📅 Weekdays Only', 'Monday to Friday', [1, 2, 3, 4, 5]),
   weekends('📅 Weekends Only', 'Saturday and Sunday', [6, 7]),
   specificDays('📅 Specific Days', 'Choose which days', []),
-  asNeeded('📅 As Needed', 'Take only when needed', []);
+  asNeeded('📅 As Needed', 'Take only when needed', []),
+  everyNDays('📅 Every N Days', 'Repeat every N days', []),
+  weekly('📅 Weekly', 'Repeat on selected weekdays', []),
+  monthly('📅 Monthly', 'Repeat on a day of the month', []);
 
   const RepetitionPattern(this.label, this.description, this.defaultDays);
   final String label;
@@ -68,7 +75,6 @@ enum RepetitionPattern {
 
 /// Medication form data holder for all 3 steps
 class MedicationFormData {
-
   MedicationFormData({
     this.id,
     this.medicineType,
@@ -86,6 +92,10 @@ class MedicationFormData {
     List<ReminderTimeData>? reminderTimes,
     this.repetitionPattern = RepetitionPattern.daily,
     List<int>? specificDaysOfWeek,
+    this.intervalDays,
+    this.intervalWeeks,
+    this.intervalMonths,
+    this.dayOfMonth,
     this.stockQuantity = 0,
     this.remindBeforeRunOut = true,
     this.reminderDaysBeforeRunOut = 3,
@@ -102,8 +112,8 @@ class MedicationFormData {
     this.sideEffects,
     this.drugWarnings,
     this.drugRoute,
-  })  : reminderTimes = reminderTimes ?? [],
-        specificDaysOfWeek = specificDaysOfWeek ?? repetitionPattern.defaultDays;
+  }) : reminderTimes = reminderTimes ?? [],
+       specificDaysOfWeek = specificDaysOfWeek ?? repetitionPattern.defaultDays;
   // ID (null for new, set for edit)
   int? id;
 
@@ -127,6 +137,12 @@ class MedicationFormData {
   // Repetition pattern
   RepetitionPattern repetitionPattern;
   List<int> specificDaysOfWeek; // For specificDays pattern (1=Mon, 7=Sun)
+
+  // Smart schedule intervals (Issue 3)
+  int? intervalDays; // everyNDays
+  int? intervalWeeks; // weekly every-N-weeks
+  int? intervalMonths; // monthly every-N-months
+  int? dayOfMonth; // monthly 1-31
 
   // Step 3: Stock & Reminder
   int stockQuantity;
@@ -170,6 +186,10 @@ class MedicationFormData {
     List<ReminderTimeData>? reminderTimes,
     RepetitionPattern? repetitionPattern,
     List<int>? specificDaysOfWeek,
+    int? intervalDays,
+    int? intervalWeeks,
+    int? intervalMonths,
+    int? dayOfMonth,
     int? stockQuantity,
     bool? remindBeforeRunOut,
     int? reminderDaysBeforeRunOut,
@@ -204,16 +224,23 @@ class MedicationFormData {
       reminderTimes: reminderTimes ?? this.reminderTimes,
       repetitionPattern: repetitionPattern ?? this.repetitionPattern,
       specificDaysOfWeek: specificDaysOfWeek ?? this.specificDaysOfWeek,
+      intervalDays: intervalDays ?? this.intervalDays,
+      intervalWeeks: intervalWeeks ?? this.intervalWeeks,
+      intervalMonths: intervalMonths ?? this.intervalMonths,
+      dayOfMonth: dayOfMonth ?? this.dayOfMonth,
       stockQuantity: stockQuantity ?? this.stockQuantity,
       remindBeforeRunOut: remindBeforeRunOut ?? this.remindBeforeRunOut,
       reminderDaysBeforeRunOut:
           reminderDaysBeforeRunOut ?? this.reminderDaysBeforeRunOut,
       expiryDate: expiryDate ?? this.expiryDate,
-      reminderDaysBeforeExpiry: reminderDaysBeforeExpiry ?? this.reminderDaysBeforeExpiry,
+      reminderDaysBeforeExpiry:
+          reminderDaysBeforeExpiry ?? this.reminderDaysBeforeExpiry,
       customSoundPath: customSoundPath ?? this.customSoundPath,
       maxSnoozesPerDay: maxSnoozesPerDay ?? this.maxSnoozesPerDay,
-      enableRecurringReminders: enableRecurringReminders ?? this.enableRecurringReminders,
-      recurringReminderInterval: recurringReminderInterval ?? this.recurringReminderInterval,
+      enableRecurringReminders:
+          enableRecurringReminders ?? this.enableRecurringReminders,
+      recurringReminderInterval:
+          recurringReminderInterval ?? this.recurringReminderInterval,
       genericName: genericName ?? this.genericName,
       activeIngredients: activeIngredients ?? this.activeIngredients,
       drugCategory: drugCategory ?? this.drugCategory,
@@ -231,6 +258,9 @@ class MedicationFormData {
     final doseDays = RepetitionPatternUtils.doseDaysPerWeek(
       pattern: repetitionPattern.name,
       specificDaysOfWeek: specificDaysOfWeek.join(','),
+      intervalDays: intervalDays,
+      intervalWeeks: intervalWeeks,
+      intervalMonths: intervalMonths,
     );
     if (doseDays <= 0) return null;
 

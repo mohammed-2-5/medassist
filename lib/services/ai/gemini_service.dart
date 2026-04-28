@@ -5,7 +5,6 @@ import 'package:med_assist/services/ai/ai_prompt_sanitizer.dart';
 
 /// Message model for chat history
 class ChatMessage {
-
   ChatMessage({required this.text, required this.isUser});
   final String text;
   final bool isUser;
@@ -14,8 +13,8 @@ class ChatMessage {
     return {
       'role': isUser ? 'user' : 'model',
       'parts': [
-        {'text': text}
-      ]
+        {'text': text},
+      ],
     };
   }
 }
@@ -25,12 +24,14 @@ class ChatMessage {
 class GeminiService {
   factory GeminiService() => _instance;
   GeminiService._internal() {
-    _dio = Dio(BaseOptions(
-      baseUrl: ApiConstants.geminiBaseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {'Content-Type': 'application/json'},
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.geminiBaseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
   }
   static final GeminiService _instance = GeminiService._internal();
 
@@ -44,13 +45,17 @@ class GeminiService {
 
     // Add system prompt as first message
     _chatHistory.clear();
-    _chatHistory.add(ChatMessage(
-      text: _getSystemPrompt(),
-      isUser: false,
-    ));
+    _chatHistory.add(
+      ChatMessage(
+        text: _getSystemPrompt(),
+        isUser: false,
+      ),
+    );
 
     _initialized = true;
-    debugPrint('Gemini AI service initialized with model: ${ApiConstants.geminiModel}');
+    debugPrint(
+      'Gemini AI service initialized with model: ${ApiConstants.geminiModel}',
+    );
   }
 
   /// Get system prompt that defines the AI assistant's role
@@ -128,19 +133,21 @@ Always end with "Is there anything else I can help you with?" when appropriate.'
       // Limit history to system prompt + last 10 exchanges (20 msgs).
       if (_chatHistory.length > 21) {
         final systemPrompt = _chatHistory.first;
-        final recent =
-            _chatHistory.skip(_chatHistory.length - 20).toList();
+        final recent = _chatHistory.skip(_chatHistory.length - 20).toList();
         _chatHistory
           ..clear()
           ..add(systemPrompt)
           ..addAll(recent);
       }
 
-      debugPrint('Received response from Gemini: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...');
+      debugPrint(
+        'Received response from Gemini: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+      );
 
       return responseText;
     } on DioException catch (e) {
-      final errorMsg = e.response?.data?['error']?['message']?.toString() ??
+      final errorMsg =
+          e.response?.data?['error']?['message']?.toString() ??
           e.message ??
           'Unknown error';
 
@@ -156,7 +163,9 @@ Always end with "Is there anything else I can help you with?" when appropriate.'
       // Return user-friendly error message based on error type
       if (errorMsg.contains('API key') || errorMsg.contains('api_key')) {
         return "I'm having trouble connecting. Please check the API key configuration.";
-      } else if (errorMsg.contains('quota') || errorMsg.contains('limit') || errorMsg.contains('429')) {
+      } else if (errorMsg.contains('quota') ||
+          errorMsg.contains('limit') ||
+          errorMsg.contains('429')) {
         return "I've reached my usage limit for now. Please try again later.";
       } else if (errorMsg.contains('safety') || errorMsg.contains('blocked')) {
         return "I can't respond to that question due to safety guidelines. Please rephrase your question.";

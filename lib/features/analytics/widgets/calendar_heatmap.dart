@@ -43,8 +43,8 @@ class CalendarHeatmap extends ConsumerWidget {
                   Text(
                     l10n.adherenceHeatmap30Day,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -78,13 +78,17 @@ class CalendarHeatmap extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Tooltip(
-                    message: '${DateFormat('MMM d').format(day.date)}\n'
+                    message:
+                        '${DateFormat('MMM d').format(day.date)}\n'
                         '${day.adherencePercentage.toStringAsFixed(1)}% adherence\n'
                         '${day.takenCount}/${day.totalCount} doses',
                     child: Container(
                       height: 30,
                       decoration: BoxDecoration(
-                        color: _getHeatmapColor(day.adherencePercentage, colorScheme),
+                        color: _getHeatmapColor(
+                          day.adherencePercentage,
+                          colorScheme,
+                        ),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -109,9 +113,7 @@ class CalendarHeatmap extends ConsumerWidget {
     final goodColor = isDark
         ? const Color(0xFF66BB6A).withOpacity(0.6)
         : Colors.green.withOpacity(0.5);
-    final greatColor = isDark
-        ? const Color(0xFF66BB6A)
-        : Colors.green;
+    final greatColor = isDark ? const Color(0xFF66BB6A) : Colors.green;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -168,7 +170,6 @@ class CalendarHeatmap extends ConsumerWidget {
 }
 
 class _LegendBox extends StatelessWidget {
-
   const _LegendBox({required this.color});
   final Color color;
 

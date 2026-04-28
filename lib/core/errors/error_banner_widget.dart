@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /// Banner widget to show important app-level notifications
 /// Used for notification permissions, deleted items, etc.
 class ErrorBanner extends StatelessWidget {
-
   const ErrorBanner({
     required this.message,
     this.icon = Icons.info_outline,
@@ -20,7 +19,8 @@ class ErrorBanner extends StatelessWidget {
     VoidCallback? onDismiss,
   }) {
     return ErrorBanner(
-      message: 'Notifications are disabled. Enable them to receive medication reminders.',
+      message:
+          'Notifications are disabled. Enable them to receive medication reminders.',
       icon: Icons.notifications_off,
       actionLabel: 'Enable',
       onAction: onAction,

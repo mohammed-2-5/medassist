@@ -6,7 +6,9 @@ import 'package:med_assist/features/onboarding/models/onboarding_data.dart';
 /// Animated content for a single onboarding page (icon, title, description).
 class OnboardingPageContent extends StatelessWidget {
   const OnboardingPageContent({
-    required this.page, required this.index, super.key,
+    required this.page,
+    required this.index,
+    super.key,
   });
 
   final OnboardingData page;
@@ -20,27 +22,27 @@ class OnboardingPageContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: page.gradient,
-              boxShadow: [
-                BoxShadow(
-                  color: page.accentColor.withOpacity(0.3),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: page.gradient,
+                  boxShadow: [
+                    BoxShadow(
+                      color: page.accentColor.withOpacity(0.3),
+                      blurRadius: 30,
+                      offset: const Offset(0, 15),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Center(
-              child: Icon(
-                page.icon,
-                size: 100,
-                color: Colors.white,
-              ),
-            ),
-          )
+                child: Center(
+                  child: Icon(
+                    page.icon,
+                    size: 100,
+                    color: Colors.white,
+                  ),
+                ),
+              )
               .animate(key: ValueKey(index))
               .scale(duration: 600.ms, curve: Curves.elasticOut)
               .fadeIn(),
@@ -48,15 +50,15 @@ class OnboardingPageContent extends StatelessWidget {
           const SizedBox(height: 60),
 
           Text(
-            page.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-              height: 1.2,
-            ),
-          )
+                page.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                  height: 1.2,
+                ),
+              )
               .animate(key: ValueKey('${index}_title'))
               .slideY(
                 begin: 0.3,
@@ -68,14 +70,14 @@ class OnboardingPageContent extends StatelessWidget {
           const SizedBox(height: 24),
 
           Text(
-            page.description,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-              height: 1.6,
-            ),
-          )
+                page.description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                  height: 1.6,
+                ),
+              )
               .animate(key: ValueKey('${index}_desc'))
               .slideY(
                 begin: 0.3,

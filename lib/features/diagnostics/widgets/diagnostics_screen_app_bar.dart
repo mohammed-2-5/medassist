@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:med_assist/core/theme/app_colors.dart';
+import 'package:med_assist/core/theme/app_colors.dart' show AppGradients;
 
 class DiagnosticsScreenAppBar extends StatelessWidget {
   const DiagnosticsScreenAppBar({
@@ -22,7 +22,9 @@ class DiagnosticsScreenAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          decoration: const BoxDecoration(gradient: AppColors.purpleGradient),
+          decoration: BoxDecoration(
+            gradient: theme.colorScheme.tertiaryGradient,
+          ),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
@@ -30,15 +32,12 @@ class DiagnosticsScreenAppBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                        title,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideY(begin: -0.2),
+                    title,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,

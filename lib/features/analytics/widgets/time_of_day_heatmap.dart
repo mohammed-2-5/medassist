@@ -9,7 +9,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// Shows adherence rates for each hour of the day (0-23)
 /// Helps identify problematic times when doses are frequently missed
 class TimeOfDayHeatmap extends ConsumerWidget {
-
   const TimeOfDayHeatmap({
     super.key,
     this.startDate,
@@ -24,7 +23,8 @@ class TimeOfDayHeatmap extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    final start = startDate ?? DateTime.now().subtract(const Duration(days: 30));
+    final start =
+        startDate ?? DateTime.now().subtract(const Duration(days: 30));
     final end = endDate ?? DateTime.now();
 
     return FutureBuilder<List<HourlyAdherenceData>>(
@@ -166,7 +166,9 @@ class TimeOfDayHeatmap extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    hoursWithData.sort((a, b) => b.adherencePercentage.compareTo(a.adherencePercentage));
+    hoursWithData.sort(
+      (a, b) => b.adherencePercentage.compareTo(a.adherencePercentage),
+    );
 
     final bestHour = hoursWithData.first;
     final worstHour = hoursWithData.last;

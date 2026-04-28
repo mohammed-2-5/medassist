@@ -5,11 +5,10 @@ import 'package:med_assist/features/add_medication/widgets/dose_per_time_section
 import 'package:med_assist/features/add_medication/widgets/duration_section.dart';
 import 'package:med_assist/features/add_medication/widgets/recurring_reminders_section.dart';
 import 'package:med_assist/features/add_medication/widgets/reminder_times_section.dart';
-import 'package:med_assist/features/add_medication/widgets/repetition_pattern_section.dart';
 import 'package:med_assist/features/add_medication/widgets/schedule_preview_card.dart';
 import 'package:med_assist/features/add_medication/widgets/schedule_step_header.dart';
+import 'package:med_assist/features/add_medication/widgets/smart_schedule_selector.dart';
 import 'package:med_assist/features/add_medication/widgets/start_date_section.dart';
-import 'package:med_assist/features/add_medication/widgets/times_per_day_selector.dart';
 
 /// Step 2: Schedule & Duration
 class Step2Schedule extends ConsumerStatefulWidget {
@@ -40,15 +39,16 @@ class _Step2ScheduleState extends ConsumerState<Step2Schedule>
       ),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.3, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 0.8, curve: Curves.easeOutCubic),
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0.3, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0, 0.8, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _animationController.forward();
   }
@@ -74,13 +74,11 @@ class _Step2ScheduleState extends ConsumerState<Step2Schedule>
             children: [
               const ScheduleStepHeader(),
               const SizedBox(height: 32),
-              TimesPerDaySelector(formData: formData),
+              SmartScheduleSelector(formData: formData),
               const SizedBox(height: 24),
               DosePerTimeSection(formData: formData),
               const SizedBox(height: 24),
               DurationSection(formData: formData),
-              const SizedBox(height: 24),
-              RepetitionPatternSection(formData: formData),
               const SizedBox(height: 24),
               StartDateSection(formData: formData),
               const SizedBox(height: 32),

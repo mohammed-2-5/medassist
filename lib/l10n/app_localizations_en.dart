@@ -27,6 +27,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get savingMedicine => 'Saving medication...';
+
+  @override
+  String get drugInfoRefresh => 'Refresh drug information';
+
+  @override
   String get addMedication => 'Add Medication';
 
   @override
@@ -1236,7 +1242,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dosesTakenOf(int taken, int total) {
-    return '$taken of $total doses taken';
+    return '$taken of $total doses';
   }
 
   @override
@@ -1379,6 +1385,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customSound => 'Custom Sound';
+
+  @override
+  String get soundPickFromDevice => 'Pick from device…';
+
+  @override
+  String get soundPickFromDeviceHint => 'Choose a ringtone from your phone';
+
+  @override
+  String get soundTapToChange => 'Tap to change';
+
+  @override
+  String get soundPickerHint =>
+      'Tap Default for system tone, or pick a ringtone from your device';
+
+  @override
+  String get soundPreviewUnavailable => 'Preview unavailable for this sound';
 
   @override
   String get advancedSettings => 'Advanced Settings';
@@ -1791,6 +1813,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get draftSaved => 'Draft saved!';
 
   @override
+  String get duplicateMedicineTitle => 'Medicine already exists';
+
+  @override
+  String get duplicateMedicineMessage =>
+      'A medicine with the same name, strength, and unit already exists. Would you like to edit the existing one instead?';
+
+  @override
+  String get editExistingMedicine => 'Edit existing';
+
+  @override
+  String get showMore => 'More';
+
+  @override
+  String get showLess => 'Less';
+
+  @override
+  String get highFrequencyWarning =>
+      'High frequency. Double-check with your doctor.';
+
+  @override
+  String get highDosePerTimeWarning =>
+      'High dose per intake. Verify this is correct.';
+
+  @override
   String get noData => 'No data';
 
   @override
@@ -1822,6 +1868,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last30Days => 'Last 30 Days';
+
+  @override
+  String get partial => 'Partial';
 
   @override
   String get last3Months => 'Last 3 Months';
@@ -2018,6 +2067,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanMedicationLabel => 'Scan Medication Label';
+
+  @override
+  String get scanPrescription => 'Scan Prescription';
+
+  @override
+  String get scanPrescriptionHint =>
+      'Camera reads medicine name & strength automatically';
 
   @override
   String get autoFillFromPhoto => 'Auto-fill details from photo';
@@ -2236,6 +2292,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stockInformation => 'Stock information';
+
+  @override
+  String treatmentDaysRemaining(int count) {
+    return 'Treatment: $count days remaining';
+  }
+
+  @override
+  String get treatmentCompleted => 'Treatment completed';
 
   @override
   String xTimesPerDay(int count) {
@@ -2477,6 +2541,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interactionCheckFailed => 'Could not check drug interactions';
 
   @override
+  String interactionWarningCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count conflicts found',
+      one: '1 conflict found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get interactionDoctorAdvice =>
+      'Don\'t change your medications without consulting your doctor first.';
+
+  @override
+  String get seeYourDoctor => 'See Your Doctor';
+
+  @override
+  String get conflictBetween => 'Conflict between';
+
+  @override
+  String get and => 'and';
+
+  @override
+  String get whatHappens => 'What can happen?';
+
+  @override
+  String get whatToDo => 'What to do?';
+
+  @override
+  String get drugInfoFetch => 'Get AI Drug Info';
+
+  @override
+  String get drugInfoFetching => 'Fetching drug information...';
+
+  @override
+  String get drugInfoFetchError =>
+      'Could not load drug information. Tap to retry.';
+
+  @override
+  String get drugInfoDidYouMean =>
+      'Drug name not recognized. Did you mean one of these?';
+
+  @override
   String get drugInformation => 'Drug Information';
 
   @override
@@ -2499,6 +2607,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drugWarnings => 'Warnings';
+
+  @override
+  String get howToTake => 'How to take';
+
+  @override
+  String get watchOut => 'Watch out';
+
+  @override
+  String get foodsToAvoid => 'Foods to avoid';
+
+  @override
+  String get drowsinessWarning => 'Drowsiness warning';
+
+  @override
+  String get mayCauseDrowsiness =>
+      'May cause drowsiness. Avoid driving after taking it.';
+
+  @override
+  String get missedDoseAdvice => 'Missed dose';
+
+  @override
+  String get storageInstructions => 'Storage';
+
+  @override
+  String get alcoholWarning => 'Alcohol';
+
+  @override
+  String get contraindications => 'Don\'t take if';
+
+  @override
+  String get requiresMonitoring => 'Monitoring';
+
+  @override
+  String get otcOrPrescription => 'Availability';
+
+  @override
+  String get severityMinor => 'Minor';
+
+  @override
+  String get severityModerate => 'Moderate';
+
+  @override
+  String get severityMajor => 'Major';
+
+  @override
+  String get severitySevere => 'Severe';
+
+  @override
+  String get severityMinorDesc => 'Monitor for side effects';
+
+  @override
+  String get severityModerateDesc => 'Use with caution';
+
+  @override
+  String get severityMajorDesc => 'Avoid if possible';
+
+  @override
+  String get severitySevereDesc => 'Do not combine';
 
   @override
   String get medicationSavedTitle => 'Medication Saved';
@@ -2613,4 +2779,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planAhead => 'Plan Ahead';
+
+  @override
+  String get toBuy => 'To Buy';
+
+  @override
+  String get inCart => 'In Cart';
+
+  @override
+  String get scheduleSectionTitle => 'Schedule';
+
+  @override
+  String get scheduleSectionDesc => 'Choose how often to take this medication';
+
+  @override
+  String get modeDaily => 'Daily';
+
+  @override
+  String get modeWeekly => 'Weekly';
+
+  @override
+  String get modeMonthly => 'Monthly';
+
+  @override
+  String get modeAsNeeded => 'As Needed';
+
+  @override
+  String get everyNDays => 'Every N days';
+
+  @override
+  String get everyLabel => 'Every';
+
+  @override
+  String get daysUnit => 'days';
+
+  @override
+  String get weekSingular => 'week';
+
+  @override
+  String get weekPlural => 'weeks';
+
+  @override
+  String get monthSingular => 'month';
+
+  @override
+  String get monthPlural => 'months';
+
+  @override
+  String get weekdaysPreset => 'Weekdays';
+
+  @override
+  String get weekendsPreset => 'Weekends';
+
+  @override
+  String get allDaysPreset => 'All days';
+
+  @override
+  String get dayOfMonthLabel => 'Day of month';
+
+  @override
+  String get monthlyShortMonthHint => 'Falls on last day when month is shorter';
+
+  @override
+  String get asNeededInfo =>
+      'Take only when needed. Reminders will not be scheduled.';
+
+  @override
+  String get nextDose => 'Next dose';
+
+  @override
+  String get overdue => 'Overdue';
+
+  @override
+  String get laterToday => 'Later today';
+
+  @override
+  String get allCaughtUp => 'All caught up';
+
+  @override
+  String get noMoreDosesToday => 'No more doses scheduled today';
+
+  @override
+  String get dueNow => 'Due now';
+
+  @override
+  String dueInMinutes(int minutes) {
+    return 'Due in $minutes min';
+  }
+
+  @override
+  String dueInHours(int hours, int minutes) {
+    return 'Due in ${hours}h ${minutes}m';
+  }
+
+  @override
+  String overdueByMinutes(int minutes) {
+    return 'Overdue by $minutes min';
+  }
+
+  @override
+  String overdueByHours(int hours, int minutes) {
+    return 'Overdue by ${hours}h ${minutes}m';
+  }
+
+  @override
+  String get noNotes => 'No notes yet';
+
+  @override
+  String get dosageInfo => 'Dosage';
+
+  @override
+  String get mostMissed => 'Most Missed';
+
+  @override
+  String get bestTime => 'Best Time';
+
+  @override
+  String get dayStreak => 'Day Streak';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get goodAfternoon => 'Good afternoon';
+
+  @override
+  String get goodEvening => 'Good evening';
+
+  @override
+  String get goodNight => 'Good night';
+
+  @override
+  String get todaysProgress => 'Today\'s progress';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get stayOnTrack => 'Stay on track';
+
+  @override
+  String get greatJobToday => 'Great job today';
+
+  @override
+  String get letsStartDay => 'Let\'s start the day';
 }

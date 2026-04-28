@@ -25,7 +25,9 @@ void main() {
         tester,
         const MedicationsListScreen(),
         overrides: [
-          filteredMedicationsProvider.overrideWith((ref) async => [mockMedication]),
+          filteredMedicationsProvider.overrideWith(
+            (ref) async => [mockMedication],
+          ),
         ],
       );
 

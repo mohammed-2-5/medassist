@@ -185,7 +185,10 @@ void main() {
 
       final lowStockMeds = await db.getLowStockMedications();
       expect(lowStockMeds.length, greaterThanOrEqualTo(1));
-      expect(lowStockMeds.any((m) => m.medicineName == 'Low Stock Med'), isTrue);
+      expect(
+        lowStockMeds.any((m) => m.medicineName == 'Low Stock Med'),
+        isTrue,
+      );
     });
 
     test('Medication with sufficient stock not flagged', () async {
@@ -197,7 +200,10 @@ void main() {
       );
 
       final lowStockMeds = await db.getLowStockMedications();
-      expect(lowStockMeds.any((m) => m.medicineName == 'Good Stock Med'), isFalse);
+      expect(
+        lowStockMeds.any((m) => m.medicineName == 'Good Stock Med'),
+        isFalse,
+      );
     });
 
     test('Calculate days remaining correctly', () async {
@@ -237,7 +243,10 @@ void main() {
       );
 
       final lowStockMeds = await db.getLowStockMedications();
-      expect(lowStockMeds.any((m) => m.medicineName == 'Empty Med'), isFalse); // Zero stock excluded
+      expect(
+        lowStockMeds.any((m) => m.medicineName == 'Empty Med'),
+        isFalse,
+      ); // Zero stock excluded
     });
   });
 
@@ -270,7 +279,10 @@ void main() {
       );
 
       final expiringMeds = await db.getExpiringMedications();
-      expect(expiringMeds.any((m) => m.medicineName == 'Future Expiry Med'), isFalse);
+      expect(
+        expiringMeds.any((m) => m.medicineName == 'Future Expiry Med'),
+        isFalse,
+      );
     });
 
     test('Medication without expiry date not included', () async {
@@ -281,7 +293,10 @@ void main() {
       );
 
       final expiringMeds = await db.getExpiringMedications();
-      expect(expiringMeds.any((m) => m.medicineName == 'No Expiry Med'), isFalse);
+      expect(
+        expiringMeds.any((m) => m.medicineName == 'No Expiry Med'),
+        isFalse,
+      );
     });
 
     test('Already expired medication not included', () async {
@@ -313,8 +328,14 @@ void main() {
       final expiringIn7Days = await db.getExpiringMedications(daysAhead: 7);
       final expiringIn3Days = await db.getExpiringMedications(daysAhead: 3);
 
-      expect(expiringIn7Days.any((m) => m.medicineName == 'Near Expiry Med'), isTrue);
-      expect(expiringIn3Days.any((m) => m.medicineName == 'Near Expiry Med'), isFalse);
+      expect(
+        expiringIn7Days.any((m) => m.medicineName == 'Near Expiry Med'),
+        isTrue,
+      );
+      expect(
+        expiringIn3Days.any((m) => m.medicineName == 'Near Expiry Med'),
+        isFalse,
+      );
     });
   });
 

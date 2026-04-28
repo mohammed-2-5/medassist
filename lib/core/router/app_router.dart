@@ -13,6 +13,7 @@ import 'package:med_assist/features/onboarding/screens/enhanced_onboarding_scree
 import 'package:med_assist/features/reports/screens/reports_screen.dart';
 import 'package:med_assist/features/settings/screens/backup_restore_screen.dart';
 import 'package:med_assist/features/settings/screens/notification_debug_screen.dart';
+import 'package:med_assist/features/settings/screens/notification_settings_screen.dart';
 import 'package:med_assist/features/settings/screens/settings_screen.dart';
 import 'package:med_assist/features/splash/screens/splash_screen.dart';
 import 'package:med_assist/features/shopping_list/screens/shopping_list_screen.dart';
@@ -73,17 +74,63 @@ class AppRouter {
       GoRoute(
         path: '/medication/:id',
         name: 'medication-detail',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final id = int.parse(state.pathParameters['id']!);
-          return MedicationDetailScreen(medicationId: id);
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: MedicationDetailScreen(medicationId: id),
+            transitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  final slide =
+                      Tween<Offset>(
+                        begin: const Offset(0.06, 0),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        ),
+                      );
+                  return FadeTransition(
+                    opacity: CurveTween(
+                      curve: Curves.easeIn,
+                    ).animate(animation),
+                    child: SlideTransition(position: slide, child: child),
+                  );
+                },
+          );
         },
       ),
       GoRoute(
         path: '/medication/:id/edit',
         name: 'medication-edit',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final id = int.parse(state.pathParameters['id']!);
-          return MedicationEditScreen(medicationId: id);
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: MedicationEditScreen(medicationId: id),
+            transitionDuration: const Duration(milliseconds: 280),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  final slide =
+                      Tween<Offset>(
+                        begin: const Offset(0.06, 0),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        ),
+                      );
+                  return FadeTransition(
+                    opacity: CurveTween(
+                      curve: Curves.easeIn,
+                    ).animate(animation),
+                    child: SlideTransition(position: slide, child: child),
+                  );
+                },
+          );
         },
       ),
       GoRoute(
@@ -131,6 +178,11 @@ class AppRouter {
         path: '/settings/backup',
         name: 'backup-restore',
         builder: (context, state) => const BackupRestoreScreen(),
+      ),
+      GoRoute(
+        path: '/settings/notifications',
+        name: 'notification-settings',
+        builder: (context, state) => const NotificationSettingsScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

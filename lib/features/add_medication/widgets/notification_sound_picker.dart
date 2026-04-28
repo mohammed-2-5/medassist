@@ -1,15 +1,24 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:med_assist/core/models/notification_sound.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
+import 'package:med_assist/services/ringtone/ringtone_picker_service.dart';
 
-/// Widget for selecting notification sound with preview
+/// Picker for the notification sound used by reminders.
+///
+/// Two choices:
+/// - **Default** — the system's notification tone.
+/// - **Custom** — opens the native ringtone picker; the chosen ringtone
+///   plays for the actual notification (per-URI Android channel).
 class NotificationSoundPicker extends StatefulWidget {
-
   const NotificationSoundPicker({
-    required this.selectedSound, required this.onChanged, super.key,
+    required this.selectedSound,
+    required this.onChanged,
+    super.key,
   });
+
   final NotificationSound selectedSound;
   final ValueChanged<NotificationSound> onChanged;
 
@@ -19,12 +28,43 @@ class NotificationSoundPicker extends StatefulWidget {
 }
 
 class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
-  String? _playingId;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+  bool _isPicking = false;
+  String? _resolvedTitle;
+  Timer? _previewTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_resolveTitleIfNeeded());
+  }
+
+  @override
+  void didUpdateWidget(NotificationSoundPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedSound.uri != widget.selectedSound.uri) {
+      unawaited(_resolveTitleIfNeeded());
+    }
+  }
+
+  Future<void> _resolveTitleIfNeeded() async {
+    final sound = widget.selectedSound;
+    if (sound.isDefault) {
+      setState(() => _resolvedTitle = null);
+      return;
+    }
+    if (sound.name.isNotEmpty && sound.name != 'Custom') {
+      setState(() => _resolvedTitle = sound.name);
+      return;
+    }
+    final title = await RingtonePickerService.getTitle(sound.uri!);
+    if (mounted) setState(() => _resolvedTitle = title);
+  }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _previewTimer?.cancel();
+    unawaited(RingtonePickerService.stop());
     super.dispose();
   }
 
@@ -33,17 +73,14 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final isDefault = widget.selectedSound.isDefault;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(
-              Icons.volume_up,
-              color: colorScheme.primary,
-              size: 20,
-            ),
+            Icon(Icons.volume_up, color: colorScheme.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               l10n.notificationSound,
@@ -57,31 +94,40 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(
-              color: colorScheme.outlineVariant,
-            ),
+            border: Border.all(color: colorScheme.outlineVariant),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
-            children: NotificationSound.presets.asMap().entries.map((entry) {
-              final index = entry.key;
-              final sound = entry.value;
-              final isFirst = index == 0;
-              final isLast = index == NotificationSound.presets.length - 1;
-              final isSelected = sound.id == widget.selectedSound.id;
-              final isPlaying = _playingId == sound.id;
-
-              return _buildSoundTile(
-                sound: sound,
-                isSelected: isSelected,
-                isPlaying: isPlaying,
-                isFirst: isFirst,
-                isLast: isLast,
+            children: [
+              _DefaultTile(
+                isSelected: isDefault,
                 theme: theme,
                 colorScheme: colorScheme,
                 l10n: l10n,
-              );
-            }).toList(),
+                onTap: () {
+                  unawaited(_stopPreview());
+                  widget.onChanged(NotificationSound.defaultSound);
+                },
+              ),
+              Divider(
+                height: 1,
+                color: colorScheme.outlineVariant.withOpacity(0.5),
+              ),
+              _CustomTile(
+                isSelected: !isDefault,
+                isPicking: _isPicking,
+                isPlaying: _isPlaying && !isDefault,
+                title: _customTileTitle(l10n),
+                subtitle: _customTileSubtitle(isDefault, l10n),
+                theme: theme,
+                colorScheme: colorScheme,
+                l10n: l10n,
+                onTap: () => unawaited(_openPicker()),
+                onPreview: !isDefault
+                    ? () => unawaited(_previewCurrent())
+                    : null,
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -95,7 +141,7 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                'Tap to select, long press to preview',
+                l10n.soundPickerHint,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
@@ -108,81 +154,115 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
     );
   }
 
-  Widget _buildSoundTile({
-    required NotificationSound sound,
-    required bool isSelected,
-    required bool isPlaying,
-    required bool isFirst,
-    required bool isLast,
-    required ThemeData theme,
-    required ColorScheme colorScheme,
-    required AppLocalizations l10n,
-  }) {
+  String _customTileTitle(AppLocalizations l10n) {
+    if (widget.selectedSound.isDefault) return l10n.soundPickFromDevice;
+    return _resolvedTitle ?? widget.selectedSound.name;
+  }
+
+  String _customTileSubtitle(bool isDefault, AppLocalizations l10n) {
+    if (isDefault) return l10n.soundPickFromDeviceHint;
+    return l10n.soundTapToChange;
+  }
+
+  Future<void> _openPicker() async {
+    if (_isPicking) return;
+    setState(() => _isPicking = true);
+    await _stopPreview();
+    final pickerTitle = AppLocalizations.of(context)!.selectNotificationSound;
+    final picked = await RingtonePickerService.pick(
+      existingUri: widget.selectedSound.uri,
+      title: pickerTitle,
+    );
+    if (!mounted) return;
+    setState(() => _isPicking = false);
+    if (picked == null) return;
+    final sound = NotificationSound.fromUri(picked.uri, title: picked.title);
+    setState(() => _resolvedTitle = picked.title);
+    widget.onChanged(sound);
+  }
+
+  Future<void> _previewCurrent() async {
+    final uri = widget.selectedSound.uri;
+    if (uri == null) return;
+    if (_isPlaying) {
+      await _stopPreview();
+      return;
+    }
+    final ok = await RingtonePickerService.play(uri);
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.soundPreviewUnavailable),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    setState(() => _isPlaying = true);
+    _previewTimer?.cancel();
+    _previewTimer = Timer(const Duration(seconds: 5), () {
+      unawaited(_stopPreview());
+    });
+  }
+
+  Future<void> _stopPreview() async {
+    _previewTimer?.cancel();
+    _previewTimer = null;
+    await RingtonePickerService.stop();
+    if (mounted && _isPlaying) {
+      setState(() => _isPlaying = false);
+    }
+  }
+}
+
+class _DefaultTile extends StatelessWidget {
+  const _DefaultTile({
+    required this.isSelected,
+    required this.theme,
+    required this.colorScheme,
+    required this.l10n,
+    required this.onTap,
+  });
+
+  final bool isSelected;
+  final ThemeData theme;
+  final ColorScheme colorScheme;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        widget.onChanged(sound);
-        setState(() {
-          _playingId = null;
-        });
-      },
-      onLongPress: () {
-        _previewSound(sound);
-      },
-      borderRadius: BorderRadius.vertical(
-        top: isFirst ? const Radius.circular(16) : Radius.zero,
-        bottom: isLast ? const Radius.circular(16) : Radius.zero,
-      ),
+      onTap: onTap,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
               ? colorScheme.primaryContainer.withOpacity(0.5)
               : Colors.transparent,
-          borderRadius: BorderRadius.vertical(
-            top: isFirst ? const Radius.circular(16) : Radius.zero,
-            bottom: isLast ? const Radius.circular(16) : Radius.zero,
-          ),
-          border: !isLast
-              ? Border(
-                  bottom: BorderSide(
-                    color: colorScheme.outlineVariant.withOpacity(0.5),
-                  ),
-                )
-              : null,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         ),
         child: Row(
           children: [
-            // Icon
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? colorScheme.primary
-                    : colorScheme.surfaceContainerHighest,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                sound.icon,
-                size: 20,
-                color: isSelected
-                    ? colorScheme.onPrimary
-                    : colorScheme.onSurfaceVariant,
-              ),
-            )
-                .animate(target: isSelected ? 1 : 0)
-                .scale(duration: 200.ms, curve: Curves.easeOut),
+            _LeadingIcon(
+              icon: Icons.notifications_active,
+              isSelected: isSelected,
+              colorScheme: colorScheme,
+            ),
             const SizedBox(width: 16),
-
-            // Title and description
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _getLocalizedName(sound, l10n),
+                    l10n.soundDefault,
                     style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       color: isSelected
                           ? colorScheme.onPrimaryContainer
                           : colorScheme.onSurface,
@@ -190,7 +270,7 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    _getLocalizedDescription(sound, l10n),
+                    l10n.soundDefaultDescription,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: isSelected
                           ? colorScheme.onPrimaryContainer.withOpacity(0.7)
@@ -200,149 +280,181 @@ class _NotificationSoundPickerState extends State<NotificationSoundPicker> {
                 ],
               ),
             ),
-
-            // Preview/Selected indicator
-            if (isPlaying)
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      colorScheme.primary,
-                    ),
-                  ),
-                ),
-              )
-                  .animate(onPlay: (controller) => controller.repeat())
-                  .fadeIn()
-            else if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: colorScheme.primary,
-                size: 24,
-              )
+            if (isSelected)
+              Icon(Icons.check_circle, color: colorScheme.primary, size: 24)
                   .animate()
-                  .scale(
-                    duration: 300.ms,
-                    curve: Curves.elasticOut,
-                  )
+                  .scale(duration: 300.ms, curve: Curves.elasticOut)
                   .fadeIn()
             else
-              IconButton(
-                icon: Icon(
-                  Icons.play_circle_outline,
-                  color: colorScheme.primary,
-                ),
-                onPressed: () => _previewSound(sound),
-                tooltip: l10n.previewSound,
+              Icon(
+                Icons.radio_button_unchecked,
+                color: colorScheme.onSurfaceVariant,
+                size: 24,
               ),
           ],
         ),
       ),
     );
   }
+}
 
-  String _getLocalizedName(NotificationSound sound, AppLocalizations l10n) {
-    switch (sound.id) {
-      case 'default':
-        return l10n.soundDefault;
-      case 'notification':
-        return l10n.soundNotification;
-      case 'reminder':
-        return l10n.soundReminder;
-      case 'alert':
-        return l10n.soundAlert;
-      default:
-        return sound.name;
-    }
-  }
+class _CustomTile extends StatelessWidget {
+  const _CustomTile({
+    required this.isSelected,
+    required this.isPicking,
+    required this.isPlaying,
+    required this.title,
+    required this.subtitle,
+    required this.theme,
+    required this.colorScheme,
+    required this.l10n,
+    required this.onTap,
+    required this.onPreview,
+  });
 
-  String _getLocalizedDescription(
-      NotificationSound sound, AppLocalizations l10n) {
-    switch (sound.id) {
-      case 'default':
-        return l10n.soundDefaultDescription;
-      case 'notification':
-        return l10n.soundNotificationDescription;
-      case 'reminder':
-        return l10n.soundReminderDescription;
-      case 'alert':
-        return l10n.soundAlertDescription;
-      default:
-        return sound.description;
-    }
-  }
+  final bool isSelected;
+  final bool isPicking;
+  final bool isPlaying;
+  final String title;
+  final String subtitle;
+  final ThemeData theme;
+  final ColorScheme colorScheme;
+  final AppLocalizations l10n;
+  final VoidCallback onTap;
+  final VoidCallback? onPreview;
 
-  Future<void> _previewSound(NotificationSound sound) async {
-    try {
-      // Stop any currently playing sound
-      await _audioPlayer.stop();
-
-      setState(() {
-        _playingId = sound.id;
-      });
-
-      if (sound.path != null) {
-        // Play custom sound from file path
-        await _audioPlayer.play(DeviceFileSource(sound.path!));
-      } else {
-        // For system sounds, play a default notification sound asset
-        // Since we don't have audio files, we'll use a notification sound URL
-        // You can add actual sound files to assets later
-        await _audioPlayer.play(AssetSource('sounds/notification.mp3')).catchError((e) {
-          // If asset doesn't exist, show message instead
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "This will use your device's ${_getLocalizedName(sound, AppLocalizations.of(context)!)} sound"
-                ),
-                duration: const Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        });
-      }
-
-      // Listen for completion
-      _audioPlayer.onPlayerComplete.listen((event) {
-        if (mounted) {
-          setState(() {
-            _playingId = null;
-          });
-        }
-      });
-
-      // Auto-stop after 3 seconds for system sounds
-      if (sound.path == null) {
-        await Future.delayed(const Duration(seconds: 3));
-        if (mounted && _playingId == sound.id) {
-          await _audioPlayer.stop();
-          setState(() {
-            _playingId = null;
-          });
-        }
-      }
-    } catch (e) {
-      // Handle any errors gracefully
-      if (mounted) {
-        setState(() {
-          _playingId = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Preview unavailable. This will use your device's notification sound."
-            ),
-            duration: Duration(seconds: 2),
-            behavior: SnackBarBehavior.floating,
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.primaryContainer.withOpacity(0.5)
+              : Colors.transparent,
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(16),
           ),
+        ),
+        child: Row(
+          children: [
+            _LeadingIcon(
+              icon: Icons.library_music,
+              isSelected: isSelected,
+              colorScheme: colorScheme,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? colorScheme.onPrimaryContainer
+                          : colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isSelected
+                          ? colorScheme.onPrimaryContainer.withOpacity(0.7)
+                          : colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isPicking)
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    colorScheme.primary,
+                  ),
+                ),
+              )
+            else if (isPlaying)
+              IconButton(
+                icon: Icon(Icons.stop_circle, color: colorScheme.primary),
+                onPressed: onPreview,
+                tooltip: l10n.previewSound,
+              )
+            else if (onPreview != null)
+              IconButton(
+                icon: Icon(
+                  Icons.play_circle_outline,
+                  color: colorScheme.primary,
+                ),
+                onPressed: onPreview,
+                tooltip: l10n.previewSound,
+              )
+            else
+              Icon(
+                Icons.chevron_right,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            if (isSelected) ...[
+              const SizedBox(width: 4),
+              Icon(Icons.check_circle, color: colorScheme.primary, size: 20)
+                  .animate()
+                  .scale(duration: 300.ms, curve: Curves.elasticOut)
+                  .fadeIn(),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LeadingIcon extends StatelessWidget {
+  const _LeadingIcon({
+    required this.icon,
+    required this.isSelected,
+    required this.colorScheme,
+  });
+
+  final IconData icon;
+  final bool isSelected;
+  final ColorScheme colorScheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.primary
+                : colorScheme.surfaceContainerHighest,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: isSelected
+                ? colorScheme.onPrimary
+                : colorScheme.onSurfaceVariant,
+          ),
+        )
+        .animate(target: isSelected ? 1 : 0)
+        .scale(
+          duration: 200.ms,
+          curve: Curves.easeOut,
         );
-      }
-    }
   }
 }

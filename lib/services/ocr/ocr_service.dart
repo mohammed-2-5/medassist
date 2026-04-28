@@ -49,8 +49,7 @@ class OCRService {
   Future<String> extractText(File imageFile) async {
     try {
       final inputImage = InputImage.fromFile(imageFile);
-      final recognizedText =
-          await _textRecognizer.processImage(inputImage);
+      final recognizedText = await _textRecognizer.processImage(inputImage);
 
       return recognizedText.text;
     } catch (e) {
@@ -106,7 +105,10 @@ class OCRService {
     };
 
     // Split text into lines for easier processing
-    final lines = text.split('\n').where((line) => line.trim().isNotEmpty).toList();
+    final lines = text
+        .split('\n')
+        .where((line) => line.trim().isNotEmpty)
+        .toList();
 
     // Patterns for medication details
     final strengthPattern = RegExp(
@@ -183,10 +185,13 @@ class OCRService {
     name = name.trim().replaceAll(RegExp(r'\s+'), ' ');
 
     // Capitalize properly (title case)
-    return name.split(' ').map((word) {
-      if (word.isEmpty) return word;
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }).join(' ');
+    return name
+        .split(' ')
+        .map((word) {
+          if (word.isEmpty) return word;
+          return word[0].toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(' ');
   }
 
   /// Capitalize dosage form properly
@@ -230,7 +235,6 @@ class OCRService {
 
 /// Result of medication label scanning
 class MedicationScanResult {
-
   MedicationScanResult({
     required this.success,
     this.errorMessage,

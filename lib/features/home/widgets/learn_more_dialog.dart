@@ -46,7 +46,6 @@ class LearnMoreDialog extends StatelessWidget {
 
 /// A single item in the "Learn More" dialog, with an icon, title, and description.
 class _LearnMoreItem extends StatelessWidget {
-
   const _LearnMoreItem({
     required this.icon,
     required this.title,

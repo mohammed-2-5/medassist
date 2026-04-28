@@ -35,12 +35,14 @@ final todaysMedicationsProvider = FutureProvider<List<Medication>>((ref) async {
 /// Provider to get medications with reminders
 final medicationsWithRemindersProvider =
     FutureProvider<List<MedicationWithReminders>>((ref) async {
-  final repository = ref.watch(medicationRepositoryProvider);
-  return repository.getMedicationsWithReminders();
-});
+      final repository = ref.watch(medicationRepositoryProvider);
+      return repository.getMedicationsWithReminders();
+    });
 
 /// Provider to get low stock medications
-final lowStockMedicationsProvider = FutureProvider<List<Medication>>((ref) async {
+final lowStockMedicationsProvider = FutureProvider<List<Medication>>((
+  ref,
+) async {
   final repository = ref.watch(medicationRepositoryProvider);
   return repository.getLowStockMedications();
 });
@@ -54,14 +56,14 @@ final medicationCountProvider = FutureProvider<int>((ref) async {
 /// Provider to search medications
 final FutureProviderFamily<List<Medication>, String> medicationSearchProvider =
     FutureProvider.family<List<Medication>, String>((ref, query) async {
-  if (query.isEmpty) return [];
-  final repository = ref.watch(medicationRepositoryProvider);
-  return repository.searchMedications(query);
-});
+      if (query.isEmpty) return [];
+      final repository = ref.watch(medicationRepositoryProvider);
+      return repository.searchMedications(query);
+    });
 
 /// Provider to get a specific medication by ID
 final FutureProviderFamily<Medication?, int> medicationByIdProvider =
     FutureProvider.family<Medication?, int>((ref, id) async {
-  final repository = ref.watch(medicationRepositoryProvider);
-  return repository.getMedicationById(id);
-});
+      final repository = ref.watch(medicationRepositoryProvider);
+      return repository.getMedicationById(id);
+    });

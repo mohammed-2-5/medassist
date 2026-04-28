@@ -37,9 +37,7 @@ class Step1Actions {
 
     if (result.strength != null && result.strength!.isNotEmpty) {
       strengthController.text = result.strength!;
-      ref
-          .read(medicationFormProvider.notifier)
-          .setStrength(result.strength!);
+      ref.read(medicationFormProvider.notifier).setStrength(result.strength!);
     }
 
     if (result.unit != null && result.unit!.isNotEmpty) {
@@ -59,9 +57,11 @@ class Step1Actions {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.scannedMedication(
-            result.medicationName ??
-                AppLocalizations.of(context)!.unknown)),
+        content: Text(
+          AppLocalizations.of(context)!.scannedMedication(
+            result.medicationName ?? AppLocalizations.of(context)!.unknown,
+          ),
+        ),
         backgroundColor: Colors.green,
         duration: const Duration(seconds: 2),
       ),
@@ -97,9 +97,7 @@ class Step1Actions {
       );
 
       if (photo != null) {
-        ref
-            .read(medicationFormProvider.notifier)
-            .setMedicinePhoto(photo.path);
+        ref.read(medicationFormProvider.notifier).setMedicinePhoto(photo.path);
 
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -126,8 +124,11 @@ class Step1Actions {
               const Icon(Icons.error, color: Colors.white),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(AppLocalizations.of(context)!
-                    .failedToCapturePhoto(e.toString())),
+                child: Text(
+                  AppLocalizations.of(
+                    context,
+                  )!.failedToCapturePhoto(e.toString()),
+                ),
               ),
             ],
           ),
@@ -167,9 +168,7 @@ class Step1Actions {
       );
 
       if (image != null) {
-        ref
-            .read(medicationFormProvider.notifier)
-            .setMedicinePhoto(image.path);
+        ref.read(medicationFormProvider.notifier).setMedicinePhoto(image.path);
 
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -196,8 +195,9 @@ class Step1Actions {
               const Icon(Icons.error, color: Colors.white),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(AppLocalizations.of(context)!
-                    .failedToPickPhoto(e.toString())),
+                child: Text(
+                  AppLocalizations.of(context)!.failedToPickPhoto(e.toString()),
+                ),
               ),
             ],
           ),

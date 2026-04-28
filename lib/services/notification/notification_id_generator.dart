@@ -34,7 +34,10 @@ class NotificationIdGenerator {
 
   /// Recurring: medicationId * 100 + 10 + reminderIndex * 10 + escalationLevel.
   static int recurring(
-      int medicationId, int reminderIndex, int escalationLevel) {
+    int medicationId,
+    int reminderIndex,
+    int escalationLevel,
+  ) {
     return ((medicationId * 100 + 10 + reminderIndex * 10 + escalationLevel) %
             _maxInt32)
         .abs();
@@ -42,7 +45,10 @@ class NotificationIdGenerator {
 
   /// Pattern-aware: medicationId * 1000 + scheduledDayIndex * 10 + reminderIndex.
   static int patternAware(
-      int medicationId, int scheduledDayIndex, int reminderIndex) {
+    int medicationId,
+    int scheduledDayIndex,
+    int reminderIndex,
+  ) {
     return ((medicationId * 1000 + scheduledDayIndex * 10 + reminderIndex) %
             _maxInt32)
         .abs();

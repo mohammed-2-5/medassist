@@ -116,12 +116,14 @@ class AnalyticsNotifier {
   Future<List<TrendDataPoint>> getAdherenceTrend(int days) async {
     try {
       final now = DateTime.now();
-      final startDate =
-          DateTime(now.year, now.month, now.day).subtract(
-            Duration(days: days - 1),
-          );
-      final endDate =
-          DateTime(now.year, now.month, now.day).add(const Duration(days: 1));
+      final startDate = DateTime(now.year, now.month, now.day).subtract(
+        Duration(days: days - 1),
+      );
+      final endDate = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).add(const Duration(days: 1));
 
       final allHistory = await _database.getAllDoseHistory();
       final rangeHistory = allHistory
@@ -134,7 +136,11 @@ class AnalyticsNotifier {
           )
           .toList();
 
-      return AnalyticsComputationUtils.buildTrendPoints(rangeHistory, days, now);
+      return AnalyticsComputationUtils.buildTrendPoints(
+        rangeHistory,
+        days,
+        now,
+      );
     } catch (e) {
       debugPrint('Error getting adherence trend: $e');
       return [];

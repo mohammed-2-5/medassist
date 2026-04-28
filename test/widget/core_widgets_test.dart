@@ -28,7 +28,10 @@ void main() {
       expect(find.text('No Medications'), findsOneWidget);
 
       // Verify subtitle is displayed
-      expect(find.text('Add your first medication to get started'), findsOneWidget);
+      expect(
+        find.text('Add your first medication to get started'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('Displays action button when provided', (tester) async {
@@ -61,7 +64,9 @@ void main() {
       expect(actionCalled, isTrue);
     });
 
-    testWidgets('Does not display action button when not provided', (tester) async {
+    testWidgets('Does not display action button when not provided', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         createTestApp(
           const EmptyStateWidget(
@@ -174,7 +179,8 @@ void main() {
         createTestApp(
           const EmptyStateWidget(
             icon: Icons.text_fields,
-            title: 'This is a very long title that should wrap properly and not overflow the screen boundaries',
+            title:
+                'This is a very long title that should wrap properly and not overflow the screen boundaries',
             subtitle: 'Short subtitle',
           ),
         ),
@@ -192,7 +198,8 @@ void main() {
           const EmptyStateWidget(
             icon: Icons.text_fields,
             title: 'Short title',
-            subtitle: 'This is a very long subtitle that contains a lot of information and should wrap properly across multiple lines without causing any layout issues or overflow errors',
+            subtitle:
+                'This is a very long subtitle that contains a lot of information and should wrap properly across multiple lines without causing any layout issues or overflow errors',
           ),
         ),
       );

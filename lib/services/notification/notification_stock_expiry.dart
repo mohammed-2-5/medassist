@@ -66,7 +66,8 @@ class NotificationStockExpiry {
     );
 
     debugPrint(
-        'Scheduled low stock notification for ${medication.medicineName} ($daysRemaining days left, threshold: $threshold)');
+      'Scheduled low stock notification for ${medication.medicineName} ($daysRemaining days left, threshold: $threshold)',
+    );
   }
 
   /// Schedule expiry date notification for a medication.
@@ -133,7 +134,8 @@ class NotificationStockExpiry {
     );
 
     debugPrint(
-        'Scheduled expiry notification for ${medication.medicineName} ($daysUntilExpiry days until expiry)');
+      'Scheduled expiry notification for ${medication.medicineName} ($daysUntilExpiry days until expiry)',
+    );
   }
 
   /// Cancel expiry notification for a medication.

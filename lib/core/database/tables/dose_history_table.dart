@@ -12,8 +12,7 @@ class DoseHistory extends Table {
   IntColumn get scheduledMinute => integer()();
 
   // Actual information
-  TextColumn get status =>
-      text()(); // 'taken', 'skipped', 'snoozed', 'missed'
+  TextColumn get status => text()(); // 'taken', 'skipped', 'snoozed', 'missed'
   DateTimeColumn get actualTime =>
       dateTime().nullable()(); // When actually taken
   TextColumn get notes => text().nullable()(); // Optional notes
@@ -23,6 +22,6 @@ class DoseHistory extends Table {
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
-      ];
+    'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
+  ];
 }

@@ -35,22 +35,24 @@ class ExportService {
         'Created At',
       ],
       // Data rows
-      ...medications.map((med) => [
-            med.id.toString(),
-            med.medicineName,
-            med.medicineType,
-            med.dosePerTime.toString(),
-            med.doseUnit,
-            med.timesPerDay.toString(),
-            med.durationDays.toString(),
-            med.stockQuantity.toString(),
-            med.reminderDaysBeforeRunOut.toString(),
-            med.expiryDate?.toIso8601String() ?? 'N/A',
-            med.reminderDaysBeforeExpiry.toString(),
-            if (med.isActive) 'Yes' else 'No',
-            DateFormat('yyyy-MM-dd').format(med.startDate),
-            DateFormat('yyyy-MM-dd HH:mm').format(med.createdAt),
-          ]),
+      ...medications.map(
+        (med) => [
+          med.id.toString(),
+          med.medicineName,
+          med.medicineType,
+          med.dosePerTime.toString(),
+          med.doseUnit,
+          med.timesPerDay.toString(),
+          med.durationDays.toString(),
+          med.stockQuantity.toString(),
+          med.reminderDaysBeforeRunOut.toString(),
+          med.expiryDate?.toIso8601String() ?? 'N/A',
+          med.reminderDaysBeforeExpiry.toString(),
+          if (med.isActive) 'Yes' else 'No',
+          DateFormat('yyyy-MM-dd').format(med.startDate),
+          DateFormat('yyyy-MM-dd HH:mm').format(med.createdAt),
+        ],
+      ),
     ];
 
     final csv = const ListToCsvConverter().convert(csvData);
@@ -90,7 +92,10 @@ class ExportService {
           '${scheduledTime.hour.toString().padLeft(2, '0')}:${scheduledTime.minute.toString().padLeft(2, '0')}',
           medication?.medicineName ?? 'Unknown',
           record.status,
-          if (record.actualTime != null) DateFormat('HH:mm').format(record.actualTime!) else 'N/A',
+          if (record.actualTime != null)
+            DateFormat('HH:mm').format(record.actualTime!)
+          else
+            'N/A',
           record.notes ?? '',
         ];
       }),
@@ -171,7 +176,9 @@ class ExportService {
           ),
           pw.SizedBox(height: 10),
           pw.Text(
-            l10n.generatedOn(DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())),
+            l10n.generatedOn(
+              DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now()),
+            ),
             style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 20),
@@ -196,9 +203,11 @@ class ExportService {
                 pw.SizedBox(height: 5),
                 pw.Text('${l10n.totalMedications}: ${medications.length}'),
                 pw.Text(
-                    '${l10n.active}: ${medications.where((m) => m.isActive).length}'),
+                  '${l10n.active}: ${medications.where((m) => m.isActive).length}',
+                ),
                 pw.Text(
-                    '${l10n.paused}: ${medications.where((m) => !m.isActive).length}'),
+                  '${l10n.paused}: ${medications.where((m) => !m.isActive).length}',
+                ),
               ],
             ),
           ),
@@ -291,7 +300,9 @@ class ExportService {
           ),
           pw.SizedBox(height: 10),
           pw.Text(
-            l10n.generatedOn(DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now())),
+            l10n.generatedOn(
+              DateFormat('MMMM dd, yyyy HH:mm').format(DateTime.now()),
+            ),
             style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 20),
@@ -431,7 +442,6 @@ class ExportService {
 
 /// TimeOfDay helper for formatting
 class TimeOfDay {
-
   const TimeOfDay({required this.hour, required this.minute});
   final int hour;
   final int minute;

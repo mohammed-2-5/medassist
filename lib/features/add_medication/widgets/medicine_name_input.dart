@@ -62,8 +62,11 @@ class MedicineNameInput extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.camera_alt,
-                        size: 20, color: colorScheme.primary),
+                    Icon(
+                      Icons.camera_alt,
+                      size: 20,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       l10n.scanName,

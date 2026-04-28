@@ -28,7 +28,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final selectedDate = ref.watch(selectedDateProvider);
-    final doseHistoryAsync = ref.watch(doseHistoryForDateProvider(selectedDate));
+    final doseHistoryAsync = ref.watch(
+      doseHistoryForDateProvider(selectedDate),
+    );
     final monthlyStatsAsync = ref.watch(monthlyAdherenceProvider(_focusedDay));
     final datesWithDosesAsync = ref.watch(datesWithDosesProvider(_focusedDay));
 
@@ -92,7 +94,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       setState(() {
                         _focusedDay = focusedDay;
                       });
-                      ref.read(selectedDateProvider.notifier).setDate(selectedDay);
+                      ref
+                          .read(selectedDateProvider.notifier)
+                          .setDate(selectedDay);
                     },
                     onPageChanged: (focusedDay) {
                       setState(() {
@@ -140,7 +144,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       setState(() {
                         _focusedDay = focusedDay;
                       });
-                      ref.read(selectedDateProvider.notifier).setDate(selectedDay);
+                      ref
+                          .read(selectedDateProvider.notifier)
+                          .setDate(selectedDay);
                     },
                     onPageChanged: (focusedDay) {
                       setState(() {
@@ -164,7 +170,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       setState(() {
                         _focusedDay = focusedDay;
                       });
-                      ref.read(selectedDateProvider.notifier).setDate(selectedDay);
+                      ref
+                          .read(selectedDateProvider.notifier)
+                          .setDate(selectedDay);
                     },
                   ),
                 ),
@@ -209,7 +217,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   padding: const EdgeInsets.all(32),
                   child: Column(
                     children: [
-                      Icon(Icons.error_outline, size: 48, color: colorScheme.error),
+                      Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: colorScheme.error,
+                      ),
                       const SizedBox(height: 16),
                       Text('${l10n.errorLoadingHistory}: $error'),
                     ],
@@ -223,7 +235,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
+  Widget _buildEmptyState(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    AppLocalizations l10n,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(32),
       child: EmptyStateWidget(

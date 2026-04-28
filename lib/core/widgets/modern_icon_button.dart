@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_assist/core/theme/app_animations.dart';
 
 /// Modern icon button with smooth scale animation
 /// Provides professional tactile feedback
 class ModernIconButton extends StatefulWidget {
-
   const ModernIconButton({
     required this.icon,
     required this.onPressed,
@@ -59,6 +59,7 @@ class _ModernIconButtonState extends State<ModernIconButton>
 
   void _onTapUp(TapUpDetails details) {
     _controller.reverse();
+    HapticFeedback.selectionClick();
     widget.onPressed();
   }
 

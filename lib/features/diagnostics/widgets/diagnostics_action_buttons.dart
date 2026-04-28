@@ -119,7 +119,13 @@ class _ActionButton extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, size: 16, color: color),
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.arrow_back_ios
+                      : Icons.arrow_forward_ios,
+                  size: 16,
+                  color: color,
+                ),
               ],
             ),
           ),

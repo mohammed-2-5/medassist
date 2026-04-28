@@ -105,8 +105,9 @@ class HeatmapHourCell extends StatelessWidget {
           Text(label, style: theme.textTheme.bodyMedium),
           Text(
             value,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

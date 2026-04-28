@@ -3,7 +3,6 @@ import 'package:med_assist/features/home/models/dose_event.dart';
 
 /// Helper class for dose card styling based on status
 class DoseCardStyles {
-
   DoseCardStyles(this.colorScheme, this.status);
   final ColorScheme colorScheme;
   final DoseStatus status;
@@ -19,7 +18,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.surfaceContainerHighest.withOpacity(0.5);
       case DoseStatus.snoozed:
-        return Colors.amber.shade50;
+        return colorScheme.tertiaryContainer.withOpacity(0.3);
     }
   }
 
@@ -34,7 +33,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.outlineVariant;
       case DoseStatus.snoozed:
-        return Colors.amber.shade200;
+        return colorScheme.tertiary.withOpacity(0.3);
     }
   }
 
@@ -49,7 +48,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.surfaceContainerHighest;
       case DoseStatus.snoozed:
-        return Colors.amber.shade100;
+        return colorScheme.tertiaryContainer;
     }
   }
 
@@ -64,7 +63,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.onSurfaceVariant;
       case DoseStatus.snoozed:
-        return Colors.amber.shade700;
+        return colorScheme.tertiary;
     }
   }
 
@@ -79,7 +78,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.surfaceContainerHighest;
       case DoseStatus.snoozed:
-        return Colors.amber.shade100;
+        return colorScheme.tertiaryContainer;
     }
   }
 
@@ -94,7 +93,7 @@ class DoseCardStyles {
       case DoseStatus.skipped:
         return colorScheme.onSurfaceVariant;
       case DoseStatus.snoozed:
-        return Colors.amber.shade900;
+        return colorScheme.onTertiaryContainer;
     }
   }
 

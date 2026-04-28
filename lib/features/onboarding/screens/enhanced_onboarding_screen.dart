@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:med_assist/core/constants/app_constants.dart';
 import 'package:med_assist/core/theme/app_colors.dart';
 import 'package:med_assist/features/onboarding/models/onboarding_data.dart';
 import 'package:med_assist/features/onboarding/widgets/onboarding_page_content.dart';
@@ -75,7 +76,9 @@ class _EnhancedOnboardingScreenState
       widget.onComplete!();
     } else {
       if (mounted) {
+        // Go home first, then push add-medication so user can navigate back.
         context.go('/home');
+        context.push(AppConstants.routeAddReminder);
       }
     }
   }
@@ -102,8 +105,10 @@ class _EnhancedOnboardingScreenState
           child: Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -112,7 +117,9 @@ class _EnhancedOnboardingScreenState
                         onPressed: _previousPage,
                         icon: const Icon(Icons.arrow_back_rounded),
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHigh,
                           foregroundColor: AppColors.textPrimary,
                         ),
                       )
@@ -151,8 +158,7 @@ class _EnhancedOnboardingScreenState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   pages.length,
-                  (index) =>
-                      _buildPageIndicator(index == _currentPage, pages),
+                  (index) => _buildPageIndicator(index == _currentPage, pages),
                 ),
               ),
               const SizedBox(height: 32),
@@ -167,16 +173,17 @@ class _EnhancedOnboardingScreenState
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color:
-                              pages[_currentPage].accentColor.withOpacity(0.3),
+                          color: pages[_currentPage].accentColor.withOpacity(
+                            0.3,
+                          ),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
                       ],
                     ),
-                    child: ElevatedButton(
+                    child: FilledButton(
                       onPressed: () => _nextPage(context),
-                      style: ElevatedButton.styleFrom(
+                      style: FilledButton.styleFrom(
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
@@ -197,7 +204,7 @@ class _EnhancedOnboardingScreenState
                   ),
                 ).animate().scale(delay: 400.ms, duration: 600.ms).fadeIn(),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
             ],
           ),
         ),

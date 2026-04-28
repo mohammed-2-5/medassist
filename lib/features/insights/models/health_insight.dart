@@ -1,6 +1,5 @@
 /// Health Insight Model
 class HealthInsight {
-
   const HealthInsight({
     required this.type,
     required this.title,

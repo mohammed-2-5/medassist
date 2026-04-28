@@ -63,16 +63,27 @@ Future<List<int>> createMultipleTestMedications(
 
 /// Create test reminder times
 List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})>
-    createTestReminderTimes({
+createTestReminderTimes({
   int count = 2,
 }) {
-  final times = <({int hour, int minute, String mealTiming, int mealOffsetMinutes})>[];
+  final times =
+      <({int hour, int minute, String mealTiming, int mealOffsetMinutes})>[];
 
   if (count >= 1) {
-    times.add((hour: 8, minute: 0, mealTiming: 'anytime', mealOffsetMinutes: 0));
+    times.add((
+      hour: 8,
+      minute: 0,
+      mealTiming: 'anytime',
+      mealOffsetMinutes: 0,
+    ));
   }
   if (count >= 2) {
-    times.add((hour: 20, minute: 0, mealTiming: 'anytime', mealOffsetMinutes: 0));
+    times.add((
+      hour: 20,
+      minute: 0,
+      mealTiming: 'anytime',
+      mealOffsetMinutes: 0,
+    ));
   }
 
   for (var i = 2; i < count; i++) {
@@ -80,7 +91,7 @@ List<({int hour, int minute, String mealTiming, int mealOffsetMinutes})>
       hour: 12 + (i - 2) * 4,
       minute: 0,
       mealTiming: 'anytime',
-      mealOffsetMinutes: 0
+      mealOffsetMinutes: 0,
     ));
   }
 

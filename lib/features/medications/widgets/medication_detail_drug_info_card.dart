@@ -1,8 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:med_assist/core/database/app_database.dart';
-import 'package:med_assist/l10n/app_localizations.dart';
+import 'dart:async';
 
-class MedicationDetailDrugInfoCard extends StatelessWidget {
+import 'package:drift/drift.dart' as drift;
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/core/database/repositories/medication_repository.dart';
+import 'package:med_assist/features/medications/models/display_drug_info.dart';
+import 'package:med_assist/features/medications/widgets/drug_info_content_card.dart';
+import 'package:med_assist/features/medications/widgets/drug_info_state_cards.dart';
+import 'package:med_assist/services/ai/ai_drug_info_service.dart';
+import 'package:med_assist/services/health/drug_info_extras_service.dart';
+
+/// Shows AI-powered drug information for a medication.
+/// Auto-fetches from AI on first open if no data is in the DB yet.
+class MedicationDetailDrugInfoCard extends ConsumerStatefulWidget {
   const MedicationDetailDrugInfoCard({
     required this.medication,
     super.key,
@@ -11,195 +23,197 @@ class MedicationDetailDrugInfoCard extends StatelessWidget {
   final Medication medication;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withOpacity(0.5),
-        ),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.auto_awesome, size: 20, color: colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                l10n.drugInformation,
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'AI',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (medication.genericName != null)
-            _DrugInfoRow(
-              icon: Icons.label_outline,
-              label: l10n.genericName,
-              value: medication.genericName!,
-            ),
-          if (medication.activeIngredients != null)
-            _DrugInfoRow(
-              icon: Icons.science_outlined,
-              label: l10n.activeIngredients,
-              value: medication.activeIngredients!,
-            ),
-          if (medication.drugCategory != null)
-            _DrugInfoRow(
-              icon: Icons.category_outlined,
-              label: l10n.drugCategory,
-              value: medication.drugCategory!,
-            ),
-          if (medication.purpose != null)
-            _DrugInfoRow(
-              icon: Icons.healing_outlined,
-              label: l10n.purpose,
-              value: medication.purpose!,
-            ),
-          if (medication.route != null)
-            _DrugInfoRow(
-              icon: Icons.route_outlined,
-              label: l10n.drugRoute,
-              value: medication.route!,
-            ),
-          if (medication.sideEffects != null) ...[
-            const Divider(height: 20),
-            _DrugInfoSection(
-              icon: Icons.warning_amber_rounded,
-              label: l10n.sideEffects,
-              value: medication.sideEffects!,
-              color: Colors.orange,
-            ),
-          ],
-          if (medication.warnings != null) ...[
-            const SizedBox(height: 8),
-            _DrugInfoSection(
-              icon: Icons.shield_outlined,
-              label: l10n.drugWarnings,
-              value: medication.warnings!,
-              color: colorScheme.error,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
+  ConsumerState<MedicationDetailDrugInfoCard> createState() =>
+      _MedicationDetailDrugInfoCardState();
 }
 
-class _DrugInfoRow extends StatelessWidget {
-  const _DrugInfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+class _MedicationDetailDrugInfoCardState
+    extends ConsumerState<MedicationDetailDrugInfoCard> {
+  List<MedicationDrugInfoData>? _dbEntries;
+  List<DrugInfoExtras> _extras = const [];
+  bool _loading = false;
+  bool _fetchFailed = false;
+  List<String> _suggestions = const [];
 
-  final IconData icon;
-  final String label;
-  final String value;
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadFromDb());
+  }
+
+  Future<void> _loadFromDb() async {
+    final db = ref.read(appDatabaseProvider);
+    final entries = await db.getMedicationDrugInfoAllLanguages(
+      widget.medication.id,
+    );
+    final extras = await DrugInfoExtrasService(db).forMedication(
+      widget.medication.id,
+    );
+    if (!mounted) return;
+
+    final info = DisplayDrugInfo.fromSources(
+      medication: widget.medication,
+      requestedLanguage: 'en',
+      localizedEntries: entries,
+      extras: extras,
+    );
+
+    if (info.isEmpty) {
+      await _fetchFromAi();
+    } else {
+      setState(() {
+        _dbEntries = entries;
+        _extras = extras;
+      });
+    }
+  }
+
+  Future<void> _fetchFromAi({
+    String? overrideName,
+    bool forceRefresh = false,
+  }) async {
+    if (!mounted) return;
+    setState(() {
+      _loading = true;
+      _fetchFailed = false;
+      _suggestions = const [];
+    });
+
+    final lookupName = overrideName ?? widget.medication.medicineName;
+
+    try {
+      final bilingual = await AiDrugInfoService().fetchDrugInfoBilingual(
+        lookupName,
+        forceRefresh: forceRefresh,
+      );
+
+      if (!mounted) return;
+
+      if (bilingual == null) {
+        setState(() {
+          _loading = false;
+          _fetchFailed = true;
+        });
+        return;
+      }
+
+      if (!bilingual.hasData) {
+        setState(() {
+          _loading = false;
+          _fetchFailed = true;
+          _suggestions = bilingual.suggestions;
+        });
+        return;
+      }
+
+      final repo = ref.read(medicationRepositoryProvider);
+      final db = ref.read(appDatabaseProvider);
+      final extrasService = DrugInfoExtrasService(db);
+      await _saveLanguage(repo, bilingual.en, 'en', extrasService);
+      await _saveLanguage(repo, bilingual.ar, 'ar', extrasService);
+
+      // Critical: also push activeIngredients/drugCategory/genericName into the
+      // medication row itself so future interaction checks can match on them.
+      // (`getAllMedications()` reads from the medication table, not localized
+      //  drug-info tables.)
+      final preferred = bilingual.en ?? bilingual.ar;
+      if (preferred != null && !preferred.isEmpty) {
+        final updated = widget.medication.copyWith(
+          genericName: drift.Value(
+            preferred.genericName ?? widget.medication.genericName,
+          ),
+          activeIngredients: drift.Value(
+            preferred.activeIngredients?.join(', ') ??
+                widget.medication.activeIngredients,
+          ),
+          drugCategory: drift.Value(
+            preferred.drugCategory ?? widget.medication.drugCategory,
+          ),
+          updatedAt: DateTime.now(),
+        );
+        await db.updateMedication(updated);
+      }
+
+      if (!mounted) return;
+      final refreshed = await db.getMedicationDrugInfoAllLanguages(
+        widget.medication.id,
+      );
+      final refreshedExtras = await extrasService.forMedication(
+        widget.medication.id,
+      );
+      setState(() {
+        _dbEntries = refreshed;
+        _extras = refreshedExtras;
+        _loading = false;
+      });
+    } on Object {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _fetchFailed = true;
+      });
+    }
+  }
+
+  Future<void> _saveLanguage(
+    MedicationRepository repo,
+    DrugInfoResult? info,
+    String language,
+    DrugInfoExtrasService extrasService,
+  ) async {
+    if (info == null || info.isEmpty) return;
+    await repo.upsertLocalizedDrugInfo(
+      medicationId: widget.medication.id,
+      language: language,
+      genericName: info.genericName,
+      activeIngredients: info.activeIngredients?.join(', '),
+      drugCategory: info.drugCategory,
+      purpose: info.purpose,
+      howToTake: info.howToTake,
+      bestTimeOfDay: info.bestTimeOfDay,
+      drowsinessAffectsDriving: info.drowsinessAffectsDriving,
+      drowsinessWarning: info.drowsinessWarning,
+      foodsToAvoid: info.foodsToAvoid?.join(', '),
+      missedDoseAdvice: info.missedDoseAdvice,
+      storageInstructions: info.storageInstructions,
+      sideEffects: info.commonSideEffects?.join(', '),
+      warnings: info.warnings?.join(', '),
+      route: info.route,
+    );
+    await extrasService.upsert(
+      medicationId: widget.medication.id,
+      language: language,
+      alcoholWarning: info.alcoholWarning,
+      contraindications: info.contraindications?.join(', '),
+      requiresMonitoring: info.requiresMonitoring,
+      otcOrPrescription: info.otcOrPrescription,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
+    if (_loading) return const DrugInfoLoadingCard();
+    if (_fetchFailed) {
+      return DrugInfoErrorCard(
+        onRetry: _fetchFromAi,
+        suggestions: _suggestions,
+        onSuggestionTap: (name) => _fetchFromAi(overrideName: name),
+      );
+    }
+
+    final requestedLanguage = Localizations.localeOf(context).languageCode;
+    final info = DisplayDrugInfo.fromSources(
+      medication: widget.medication,
+      requestedLanguage: requestedLanguage,
+      localizedEntries: _dbEntries ?? [],
+      extras: _extras,
     );
-  }
-}
 
-class _DrugInfoSection extends StatelessWidget {
-  const _DrugInfoSection({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+    if (info.isEmpty) return const SizedBox.shrink();
 
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 16, color: color),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: theme.textTheme.bodySmall,
-          ),
-        ],
-      ),
+    return DrugInfoContentCard(
+      info: info,
+      onRefresh: () => _fetchFromAi(forceRefresh: true),
     );
   }
 }

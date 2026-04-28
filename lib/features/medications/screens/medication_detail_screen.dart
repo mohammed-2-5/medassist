@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
+import 'package:med_assist/features/home/models/dose_event.dart';
+import 'package:med_assist/features/home/providers/home_providers.dart';
 import 'package:med_assist/features/medications/screens/medication_detail_tabs_section.dart';
 import 'package:med_assist/features/medications/utils/medication_actions.dart';
 import 'package:med_assist/features/medications/widgets/medication_detail_app_bar.dart';
-import 'package:med_assist/features/medications/widgets/medication_detail_overview.dart';
+import 'package:med_assist/features/medications/widgets/medication_stat_chips.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Modern Medication Detail Screen with comprehensive information
@@ -27,7 +29,7 @@ class _MedicationDetailScreenState extends ConsumerState<MedicationDetailScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -81,10 +83,12 @@ class _MedicationDetailScreenState extends ConsumerState<MedicationDetailScreen>
 
         return Scaffold(
           backgroundColor: colorScheme.surface,
-          body: CustomScrollView(
-            slivers: [
+          body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
               MedicationDetailAppBar(
                 medication: medication,
+                onEdit: () =>
+                    context.push('/medication/${widget.medicationId}/edit'),
                 onToggleActive: () => MedicationActions.toggleActive(
                   context: context,
                   ref: ref,
@@ -99,28 +103,57 @@ class _MedicationDetailScreenState extends ConsumerState<MedicationDetailScreen>
                 ),
               ),
               SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MedicationDetailOverview(medication: medication),
-                    const SizedBox(height: 16),
-                    MedicationDetailTabsSection(
-                      tabController: _tabController,
-                      medicationId: medication.id,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+                  child: MedicationStatChips(medication: medication),
                 ),
               ),
             ],
+            body: MedicationDetailTabsSection(
+              tabController: _tabController,
+              medication: medication,
+            ),
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () =>
-                context.push('/medication/${widget.medicationId}/edit'),
-            icon: const Icon(Icons.edit),
-            label: Text(l10n.edit),
+          floatingActionButton: _LogDoseFab(
+            medicationId: widget.medicationId!,
           ),
         );
       },
+    );
+  }
+}
+
+class _LogDoseFab extends ConsumerWidget {
+  const _LogDoseFab({required this.medicationId});
+
+  final int medicationId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final idStr = medicationId.toString();
+    final nextPending = ref
+        .watch(todayDosesProvider)
+        .where(
+          (d) => d.medicationId == idStr && d.status == DoseStatus.pending,
+        )
+        .firstOrNull;
+
+    return FloatingActionButton.extended(
+      heroTag: 'detail_fab',
+      onPressed: nextPending == null
+          ? null
+          : () async {
+              final messenger = ScaffoldMessenger.of(context);
+              await ref
+                  .read(todayDosesProvider.notifier)
+                  .markAsTaken(nextPending.id);
+              messenger.showSnackBar(
+                SnackBar(content: Text(l10n.takeDose)),
+              );
+            },
+      icon: const Icon(Icons.check_circle_outline),
+      label: Text(nextPending == null ? l10n.allCaughtUp : l10n.takeNow),
     );
   }
 }

@@ -31,7 +31,7 @@ class BackupRestoreContent extends StatelessWidget {
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.processing,
               style: TextStyle(

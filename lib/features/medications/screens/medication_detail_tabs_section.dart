@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/features/medications/widgets/medication_detail_drug_info_card.dart';
 import 'package:med_assist/features/medications/widgets/medication_history_tab.dart';
-import 'package:med_assist/features/medications/widgets/medication_reminders_tab.dart';
+import 'package:med_assist/features/medications/widgets/medication_persisted_interactions.dart';
+import 'package:med_assist/features/medications/widgets/medication_schedule_tab.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
-/// Tabs section shown at the bottom of the medication detail screen.
+/// Four-tab section for the medication detail screen.
 ///
-/// Contains History and Reminders tabs.
+/// Tabs: Schedule | History | Notes | Interactions.
 class MedicationDetailTabsSection extends StatelessWidget {
   const MedicationDetailTabsSection({
     required this.tabController,
-    required this.medicationId,
+    required this.medication,
     super.key,
   });
 
   final TabController tabController;
-  final int medicationId;
+  final Medication medication;
 
   @override
   Widget build(BuildContext context) {
@@ -32,23 +35,108 @@ class MedicationDetailTabsSection extends StatelessWidget {
           ),
           child: TabBar(
             controller: tabController,
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            labelColor: colorScheme.primary,
+            unselectedLabelColor: colorScheme.onSurfaceVariant,
+            indicatorColor: colorScheme.primary,
+            indicatorWeight: 2.5,
+            indicatorSize: TabBarIndicatorSize.label,
+            labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
             tabs: [
-              Tab(text: l10n.history),
-              Tab(text: l10n.reminders),
+              Tab(
+                icon: const Icon(Icons.schedule, size: 18),
+                text: l10n.schedule,
+              ),
+              Tab(
+                icon: const Icon(Icons.history, size: 18),
+                text: l10n.history,
+              ),
+              Tab(
+                icon: const Icon(Icons.notes, size: 18),
+                text: l10n.notes,
+              ),
+              Tab(
+                icon: const Icon(Icons.science_outlined, size: 18),
+                text: l10n.drugInteractions,
+              ),
             ],
           ),
         ),
-        SizedBox(
-          height: 400,
+        Expanded(
           child: TabBarView(
             controller: tabController,
             children: [
-              MedicationHistoryTab(medicationId: medicationId),
-              MedicationRemindersTab(medicationId: medicationId),
+              MedicationScheduleTab(medication: medication),
+              MedicationHistoryTab(medicationId: medication.id),
+              _NotesTab(medication: medication),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    MedicationPersistedInteractions(
+                      medicationId: medication.id,
+                    ),
+                    MedicationDetailDrugInfoCard(medication: medication),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NotesTab extends StatelessWidget {
+  const _NotesTab({required this.medication});
+
+  final Medication medication;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final notes = medication.notes;
+
+    if (notes == null || notes.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.notes_outlined,
+              size: 48,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l10n.noNotes,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(notes, style: theme.textTheme.bodyMedium),
+      ),
     );
   }
 }

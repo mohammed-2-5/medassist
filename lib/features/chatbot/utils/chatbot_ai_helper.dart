@@ -12,8 +12,9 @@ Future<String> sendAiMessage(
 }) async {
   String? medicationContext;
   try {
-    medicationContext =
-        await MedicationContextService(db).getMedicationContext();
+    medicationContext = await MedicationContextService(
+      db,
+    ).getMedicationContext();
   } on Exception {
     medicationContext = null;
   }

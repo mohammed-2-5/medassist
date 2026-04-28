@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 class MedicationCardFooter extends StatelessWidget {
   const MedicationCardFooter({
@@ -14,13 +15,14 @@ class MedicationCardFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: OutlinedButton.icon(
             onPressed: onEdit,
             icon: const Icon(Icons.edit, size: 16),
-            label: const Text('Edit'),
+            label: Text(l10n.edit),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
@@ -31,7 +33,7 @@ class MedicationCardFooter extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onToggleActive,
             icon: Icon(isActive ? Icons.pause : Icons.play_arrow, size: 16),
-            label: Text(isActive ? 'Pause' : 'Resume'),
+            label: Text(isActive ? l10n.pause : l10n.resume),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),

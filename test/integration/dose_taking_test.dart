@@ -386,7 +386,10 @@ void main() {
       final history = await db.getDoseHistory(medId);
       expect(history.length, equals(3));
       // History is ordered by date descending (newest first)
-      expect(history[0].scheduledHour, greaterThanOrEqualTo(history[1].scheduledHour));
+      expect(
+        history[0].scheduledHour,
+        greaterThanOrEqualTo(history[1].scheduledHour),
+      );
     });
 
     test('Empty medication has no dose history', () async {
@@ -398,7 +401,6 @@ void main() {
       expect(history.length, equals(0));
     });
   });
-
 
   group('Complex Dose Scenarios', () {
     test('Complete daily medication workflow', () async {

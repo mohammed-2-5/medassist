@@ -33,7 +33,8 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
     final colorScheme = theme.colorScheme;
 
     // Default gradient if none provided
-    final effectiveGradient = gradient ??
+    final effectiveGradient =
+        gradient ??
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -56,7 +57,8 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: AppBar(
         title: DefaultTextStyle(
-          style: titleStyle ??
+          style:
+              titleStyle ??
               theme.textTheme.titleLarge!.copyWith(
                 color: colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
@@ -105,7 +107,8 @@ class SliverGradientAppBar extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final effectiveGradient = gradient ??
+    final effectiveGradient =
+        gradient ??
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

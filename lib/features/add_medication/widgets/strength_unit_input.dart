@@ -53,8 +53,10 @@ class StrengthUnitInput extends StatelessWidget {
               ),
               filled: true,
               fillColor: fillColor,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
             ),
             items: units.map((unit) {
               return DropdownMenuItem(

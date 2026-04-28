@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Instructions info box
 class DoseInstructions extends StatelessWidget {
-
   const DoseInstructions({
     required this.instructions,
     super.key,
@@ -18,7 +17,7 @@ class DoseInstructions extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
@@ -44,7 +43,6 @@ class DoseInstructions extends StatelessWidget {
 
 /// Low stock warning box
 class LowStockWarning extends StatelessWidget {
-
   const LowStockWarning({
     required this.stockRemaining,
     super.key,
@@ -59,7 +57,7 @@ class LowStockWarning extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.orange.shade200),
       ),
       child: Row(

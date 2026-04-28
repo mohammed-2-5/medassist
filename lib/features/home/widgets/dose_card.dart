@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:med_assist/core/database/models/dose_result.dart';
@@ -11,7 +12,6 @@ import 'package:med_assist/features/home/widgets/dose_card_components/dose_card_
 
 /// Dose Card Widget - Displays individual medication dose
 class DoseCard extends ConsumerWidget {
-
   const DoseCard({
     required this.dose,
     super.key,
@@ -23,60 +23,75 @@ class DoseCard extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final styles = DoseCardStyles(colorScheme, dose.status);
 
-    final card = Container(
-      decoration: BoxDecoration(
-        color: styles.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: styles.borderColor, width: 1.5),
-        boxShadow: styles.hasShadow
-            ? [
-                BoxShadow(
-                  color: colorScheme.primary.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Column(
-        children: [
-          // Main content — tappable to view medication details
-          InkWell(
-            onTap: () => context.push('/medication/${dose.medicationId}'),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // Header with medication info
-                  DoseCardHeader(
-                    dose: dose,
-                    iconColor: styles.iconColor,
-                    iconBackgroundColor: styles.iconBackgroundColor,
-                    textColor: styles.textColor,
-                    timeBadgeColor: styles.timeBadgeColor,
-                    timeBadgeTextColor: styles.timeBadgeTextColor,
+    final card = Semantics(
+      label:
+          '${dose.medicationName}, ${dose.dosage} at ${dose.time}, ${dose.status.name}',
+      hint: dose.status == DoseStatus.pending
+          ? 'Swipe right to take, left to snooze'
+          : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          color: styles.cardColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: styles.borderColor, width: 1.5),
+          boxShadow: styles.hasShadow
+              ? [
+                  BoxShadow(
+                    color: colorScheme.primary.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
+                ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            // Main content — tappable to view medication details
+            InkWell(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                context.push('/medication/${dose.medicationId}');
+              },
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Header with medication info
+                    DoseCardHeader(
+                      dose: dose,
+                      iconColor: styles.iconColor,
+                      iconBackgroundColor: styles.iconBackgroundColor,
+                      textColor: styles.textColor,
+                      timeBadgeColor: styles.timeBadgeColor,
+                      timeBadgeTextColor: styles.timeBadgeTextColor,
+                    ),
 
-                  // Instructions
-                  if (dose.instructions != null) ...[
-                    const SizedBox(height: 12),
-                    DoseInstructions(instructions: dose.instructions!),
-                  ],
+                    // Instructions
+                    if (dose.instructions != null) ...[
+                      const SizedBox(height: 12),
+                      DoseInstructions(instructions: dose.instructions!),
+                    ],
 
-                  // Low stock warning
-                  if (dose.stockRemaining != null && dose.stockRemaining! <= 3) ...[
-                    const SizedBox(height: 12),
-                    LowStockWarning(stockRemaining: dose.stockRemaining!),
+                    // Low stock warning
+                    if (dose.stockRemaining != null &&
+                        dose.stockRemaining! <= 3) ...[
+                      const SizedBox(height: 12),
+                      LowStockWarning(stockRemaining: dose.stockRemaining!),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
 
-          // Action buttons based on status
-          _buildActions(context, ref),
-        ],
+            // Action buttons based on status
+            _buildActions(context, ref),
+          ],
+        ),
       ),
     );
 

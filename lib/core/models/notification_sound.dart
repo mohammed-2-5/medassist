@@ -1,21 +1,70 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-/// Model for notification sounds
+/// Model for a notification sound choice.
+///
+/// Two flavors:
+/// - [defaultSound]: system default notification tone (uri == null)
+/// - Custom: user-picked via native ringtone picker (uri = content://...)
+@immutable
 class NotificationSound {
-
   const NotificationSound({
     required this.id,
     required this.name,
-    required this.icon, required this.description, this.path,
+    this.uri,
+    this.icon,
   });
-  final String id;
-  final String name;
-  final String? path; // null for default system sound
-  final IconData icon;
-  final String description;
 
-  bool get isDefault => path == null;
-  bool get isCustom => id == 'custom';
+  /// Build a custom sound from a picker result.
+  factory NotificationSound.fromUri(String uri, {String? title}) {
+    return NotificationSound(
+      id: 'custom:${uri.hashCode}',
+      name: title ?? 'Custom',
+      uri: uri,
+      icon: Icons.music_note,
+    );
+  }
+
+  /// Restore from a stored URI (e.g. medication.customSoundPath).
+  factory NotificationSound.fromStoredPath(
+    String? path, {
+    String? cachedTitle,
+  }) {
+    if (path == null || path.isEmpty) return defaultSound;
+    return NotificationSound.fromUri(path, title: cachedTitle);
+  }
+
+  /// Stable id for equality. `'default'` for system default,
+  /// `'custom:<hash>'` for picked URIs.
+  final String id;
+
+  /// Display title (system default label or the picked ringtone's title).
+  final String name;
+
+  /// Storage path. `null` = system default.
+  /// Format on Android: `content://media/...` from RingtoneManager.
+  final String? uri;
+
+  /// Optional icon override.
+  final IconData? icon;
+
+  bool get isDefault => uri == null;
+
+  /// System default notification sound — always available, no permission.
+  static const NotificationSound defaultSound = NotificationSound(
+    id: 'default',
+    name: 'Default',
+    icon: Icons.notifications_active,
+  );
+
+  NotificationSound copyWith({String? name}) {
+    return NotificationSound(
+      id: id,
+      name: name ?? this.name,
+      uri: uri,
+      icon: icon,
+    );
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -26,58 +75,4 @@ class NotificationSound {
 
   @override
   int get hashCode => id.hashCode;
-
-  /// Built-in notification sounds
-  /// Note: All use system notification sound for reliability
-  /// Different options provided for user clarity/preference
-  static const List<NotificationSound> presets = [
-    NotificationSound(
-      id: 'default',
-      name: 'Default',
-      icon: Icons.notifications,
-      description: 'System default notification sound',
-    ),
-    NotificationSound(
-      id: 'notification',
-      name: 'Notification',
-      icon: Icons.notifications_outlined,
-      description: 'Standard notification tone',
-    ),
-    NotificationSound(
-      id: 'reminder',
-      name: 'Reminder',
-      icon: Icons.alarm,
-      description: 'Reminder notification',
-    ),
-    NotificationSound(
-      id: 'alert',
-      name: 'Alert',
-      icon: Icons.notification_important,
-      description: 'Alert notification',
-    ),
-  ];
-
-  /// Find a sound by ID
-  static NotificationSound fromId(String? id) {
-    if (id == null || id.isEmpty) {
-      return presets.first; // Return default
-    }
-
-    return presets.firstWhere(
-      (sound) => sound.id == id,
-      orElse: () => presets.first,
-    );
-  }
-
-  /// Find a sound by path
-  static NotificationSound? fromPath(String? path) {
-    if (path == null || path.isEmpty) {
-      return presets.first; // Return default
-    }
-
-    return presets.firstWhere(
-      (sound) => sound.path == path,
-      orElse: () => presets.first,
-    );
-  }
 }

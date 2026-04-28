@@ -17,7 +17,10 @@ void main() {
   group('GroqService Initialization', () {
     test('Service initializes correctly', () {
       groqService.initialize();
-      expect(groqService.historyLength, greaterThan(0)); // Should have system prompt
+      expect(
+        groqService.historyLength,
+        greaterThan(0),
+      ); // Should have system prompt
     });
 
     test('Initialize is idempotent (can call multiple times)', () {
@@ -96,7 +99,10 @@ void main() {
       final response = await groqService.sendMessage('Hello');
 
       expect(response, isNotEmpty);
-      expect(response.length, greaterThan(10)); // Should be more than just "hello"
+      expect(
+        response.length,
+        greaterThan(10),
+      ); // Should be more than just "hello"
     });
   });
 

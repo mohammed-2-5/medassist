@@ -20,7 +20,13 @@ class ReportsScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
         title: Text(AppLocalizations.of(context)!.reportsAndExportTitle),
       ),
@@ -44,7 +50,11 @@ class ReportsScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // CSV Exports Section
-          _buildSectionHeader(theme, AppLocalizations.of(context)!.csvExports, Icons.table_chart),
+          _buildSectionHeader(
+            theme,
+            AppLocalizations.of(context)!.csvExports,
+            Icons.table_chart,
+          ),
           const SizedBox(height: 16),
           _buildExportCard(
             context,
@@ -79,7 +89,11 @@ class ReportsScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // PDF Reports Section
-          _buildSectionHeader(theme, AppLocalizations.of(context)!.pdfReports, Icons.picture_as_pdf),
+          _buildSectionHeader(
+            theme,
+            AppLocalizations.of(context)!.pdfReports,
+            Icons.picture_as_pdf,
+          ),
           const SizedBox(height: 16),
           _buildExportCard(
             context,
@@ -208,7 +222,10 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _exportMedicationsCSV(BuildContext context, WidgetRef ref) async {
+  Future<void> _exportMedicationsCSV(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     try {
       _showLoadingDialog(context);
 
@@ -225,21 +242,33 @@ class ReportsScreen extends ConsumerWidget {
         await Share.shareXFiles(
           [XFile(file.path)],
           subject: 'Med Assist - Medications Export',
-          text: 'Here is your medications list exported from Med Assist app. '
+          text:
+              'Here is your medications list exported from Med Assist app. '
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.medicationsList));
+        _showSuccessSnackbar(
+          context,
+          AppLocalizations.of(context)!.exportedSuccessfully(
+            AppLocalizations.of(context)!.medicationsList,
+          ),
+        );
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
+        _showErrorSnackbar(
+          context,
+          AppLocalizations.of(context)!.failedToExport(e.toString()),
+        );
       }
     }
   }
 
-  Future<void> _exportDoseHistoryCSV(BuildContext context, WidgetRef ref) async {
+  Future<void> _exportDoseHistoryCSV(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     try {
       _showLoadingDialog(context);
 
@@ -252,8 +281,10 @@ class ReportsScreen extends ConsumerWidget {
         for (final med in medications) med.id: med,
       };
 
-      final file =
-          await ExportService.exportDoseHistoryToCSV(history, medicationsMap);
+      final file = await ExportService.exportDoseHistoryToCSV(
+        history,
+        medicationsMap,
+      );
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
@@ -261,21 +292,33 @@ class ReportsScreen extends ConsumerWidget {
         await Share.shareXFiles(
           [XFile(file.path)],
           subject: 'Med Assist - Dose History Export',
-          text: 'Here is your complete dose history exported from Med Assist app. '
+          text:
+              'Here is your complete dose history exported from Med Assist app. '
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.doseHistory));
+        _showSuccessSnackbar(
+          context,
+          AppLocalizations.of(
+            context,
+          )!.exportedSuccessfully(AppLocalizations.of(context)!.doseHistory),
+        );
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
+        _showErrorSnackbar(
+          context,
+          AppLocalizations.of(context)!.failedToExport(e.toString()),
+        );
       }
     }
   }
 
-  Future<void> _exportStockHistoryCSV(BuildContext context, WidgetRef ref) async {
+  Future<void> _exportStockHistoryCSV(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     try {
       _showLoadingDialog(context);
 
@@ -305,21 +348,33 @@ class ReportsScreen extends ConsumerWidget {
         await Share.shareXFiles(
           [XFile(file.path)],
           subject: 'Med Assist - Stock History Export',
-          text: 'Here is your stock changes history exported from Med Assist app. '
+          text:
+              'Here is your stock changes history exported from Med Assist app. '
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, AppLocalizations.of(context)!.exportedSuccessfully(AppLocalizations.of(context)!.stockHistory));
+        _showSuccessSnackbar(
+          context,
+          AppLocalizations.of(
+            context,
+          )!.exportedSuccessfully(AppLocalizations.of(context)!.stockHistory),
+        );
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToExport(e.toString()));
+        _showErrorSnackbar(
+          context,
+          AppLocalizations.of(context)!.failedToExport(e.toString()),
+        );
       }
     }
   }
 
-  Future<void> _generateMedicationsPDF(BuildContext context, WidgetRef ref) async {
+  Future<void> _generateMedicationsPDF(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     try {
       _showLoadingDialog(context);
 
@@ -335,21 +390,33 @@ class ReportsScreen extends ConsumerWidget {
         await Share.shareXFiles(
           [XFile(file.path)],
           subject: 'Med Assist - Medications Report',
-          text: 'Here is your detailed medications report from Med Assist app. '
+          text:
+              'Here is your detailed medications report from Med Assist app. '
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, AppLocalizations.of(context)!.pdfGeneratedSuccessfully(AppLocalizations.of(context)!.medicationsReport));
+        _showSuccessSnackbar(
+          context,
+          AppLocalizations.of(context)!.pdfGeneratedSuccessfully(
+            AppLocalizations.of(context)!.medicationsReport,
+          ),
+        );
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()));
+        _showErrorSnackbar(
+          context,
+          AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()),
+        );
       }
     }
   }
 
-  Future<void> _generateAdherencePDF(BuildContext context, WidgetRef ref) async {
+  Future<void> _generateAdherencePDF(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     try {
       _showLoadingDialog(context);
 
@@ -385,16 +452,25 @@ class ReportsScreen extends ConsumerWidget {
         await Share.shareXFiles(
           [XFile(file.path)],
           subject: 'Med Assist - Adherence Report',
-          text: 'Here is your medication adherence report (last 30 days) from Med Assist app. '
+          text:
+              'Here is your medication adherence report (last 30 days) from Med Assist app. '
               'File: ${file.path.split('/').last}',
         );
 
-        _showSuccessSnackbar(context, AppLocalizations.of(context)!.pdfGeneratedSuccessfully(AppLocalizations.of(context)!.adherenceReport));
+        _showSuccessSnackbar(
+          context,
+          AppLocalizations.of(context)!.pdfGeneratedSuccessfully(
+            AppLocalizations.of(context)!.adherenceReport,
+          ),
+        );
       }
     } catch (e) {
       if (context.mounted) {
         Navigator.of(context).pop(); // Close loading dialog
-        _showErrorSnackbar(context, AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()));
+        _showErrorSnackbar(
+          context,
+          AppLocalizations.of(context)!.failedToGeneratePdf(e.toString()),
+        );
       }
     }
   }

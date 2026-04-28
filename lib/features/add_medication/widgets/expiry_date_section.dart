@@ -120,8 +120,9 @@ class _ExpiryDatePicker extends ConsumerWidget {
                   color: formData.expiryDate != null
                       ? colorScheme.onSurface
                       : colorScheme.onSurfaceVariant,
-                  fontWeight:
-                      formData.expiryDate != null ? FontWeight.w600 : null,
+                  fontWeight: formData.expiryDate != null
+                      ? FontWeight.w600
+                      : null,
                 ),
               ),
             ),
@@ -146,8 +147,18 @@ class _ExpiryDatePicker extends ConsumerWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

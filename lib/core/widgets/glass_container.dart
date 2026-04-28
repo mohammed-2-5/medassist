@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Premium Glass Container with Blur Effect
 ///
@@ -38,7 +39,6 @@ class GlassContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
 
     return Container(
       width: width,
@@ -115,7 +115,6 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard>
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -124,13 +123,16 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard>
       duration: const Duration(milliseconds: 150),
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 0.97,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation =
+        Tween<double>(
+          begin: 1,
+          end: 0.97,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeInOut,
+          ),
+        );
   }
 
   @override
@@ -147,6 +149,7 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard>
   void _handleTapUp(TapUpDetails details) {
     setState(() => _isPressed = false);
     _controller.reverse();
+    if (widget.onTap != null) HapticFeedback.selectionClick();
     widget.onTap?.call();
   }
 
@@ -207,7 +210,8 @@ class GradientBorderContainer extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final effectiveGradient = gradient ??
+    final effectiveGradient =
+        gradient ??
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

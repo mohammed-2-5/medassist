@@ -46,12 +46,14 @@ class MedicationBulkActions {
       try {
         final repository = ref.read(medicationRepositoryProvider);
         for (final id in selectedIds) {
-          await repository.deleteMedication(id);
+          await repository.hardDeleteMedication(id);
         }
 
         if (context.mounted) {
           HapticService.success();
-          _showSuccessSnackBar('${selectedIds.length} ${l10n.medicationsDeleted}');
+          _showSuccessSnackBar(
+            '${selectedIds.length} ${l10n.medicationsDeleted}',
+          );
         }
 
         onComplete();
@@ -82,7 +84,9 @@ class MedicationBulkActions {
       }
 
       if (context.mounted) {
-        _showSuccessSnackBar('${selectedIds.length} ${l10n.medicationsPaused ?? 'medication(s) paused'}');
+        _showSuccessSnackBar(
+          '${selectedIds.length} ${l10n.medicationsPaused ?? 'medication(s) paused'}',
+        );
       }
 
       onComplete();
@@ -115,7 +119,9 @@ class MedicationBulkActions {
       }
 
       if (context.mounted) {
-        _showSuccessSnackBar('${selectedIds.length} ${l10n.medicationsResumed ?? 'medication(s) resumed'}');
+        _showSuccessSnackBar(
+          '${selectedIds.length} ${l10n.medicationsResumed ?? 'medication(s) resumed'}',
+        );
       }
 
       onComplete();

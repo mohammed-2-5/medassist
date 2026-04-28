@@ -10,7 +10,9 @@ class AiPromptSanitizer {
   static const int maxUserMessageLength = 2000;
   static const int maxContextLength = 4000;
 
-  static final RegExp _controlChars = RegExp(r'[\u0000-\u0008\u000B-\u001F\u007F]');
+  static final RegExp _controlChars = RegExp(
+    r'[\u0000-\u0008\u000B-\u001F\u007F]',
+  );
   static final RegExp _roleMarkers = RegExp(
     r'(?:^|\n)\s*(?:system|assistant|user)\s*:',
     caseSensitive: false,

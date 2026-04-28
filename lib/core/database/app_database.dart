@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:med_assist/core/database/tables/dose_history_table.dart';
+import 'package:med_assist/core/database/tables/medication_drug_info_table.dart';
 import 'package:med_assist/core/database/tables/medication_table.dart';
 import 'package:med_assist/core/database/tables/snooze_history_table.dart';
 import 'package:med_assist/core/database/tables/stock_history_table.dart';
@@ -15,6 +16,7 @@ part 'app_database.g.dart';
     DoseHistory,
     StockHistory,
     SnoozeHistoryTable,
+    MedicationDrugInfo,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -28,13 +30,17 @@ class AppDatabase extends _$AppDatabase {
   static final AppDatabase _instance = AppDatabase._internal();
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+        await _createMedicationInteractionsTable();
+        await _createMedicationDrugInfoExtrasTable();
+        await _createDrugInfoCacheTable();
+        await _createEgyptianDrugsTable();
         await customStatement('''
           CREATE TABLE IF NOT EXISTS chat_sessions (
             id TEXT PRIMARY KEY,
@@ -196,8 +202,154 @@ class AppDatabase extends _$AppDatabase {
           );
           await customStatement('PRAGMA foreign_keys = ON');
         }
+
+        // Migrate from version 10 to 11
+        // - Issue 3: smart schedule interval columns on medications
+        // - Issue 5: medication_drug_info bilingual AI info table
+        if (from <= 10 && to >= 11) {
+          await m.addColumn(medications, medications.intervalDays);
+          await m.addColumn(medications, medications.intervalWeeks);
+          await m.addColumn(medications, medications.intervalMonths);
+          await m.addColumn(medications, medications.dayOfMonth);
+          await m.createTable(medicationDrugInfo);
+        }
+
+        // Migrate from version 11 to 12
+        // - Issue 5 follow-up: add route + explicit drowsiness boolean
+        if (from <= 11 && to >= 12) {
+          await m.addColumn(medicationDrugInfo, medicationDrugInfo.route);
+          await m.addColumn(
+            medicationDrugInfo,
+            medicationDrugInfo.drowsinessAffectsDriving,
+          );
+          await customStatement('''
+            UPDATE medication_drug_info
+            SET drowsiness_affects_driving = CASE
+              WHEN drowsiness_warning IS NOT NULL
+                   AND TRIM(drowsiness_warning) != ''
+              THEN 1
+              ELSE 0
+            END
+          ''');
+        }
+
+        // Migrate from version 12 to 13
+        // - Persisted accepted drug-interaction warnings between two meds.
+        if (from <= 12 && to >= 13) {
+          await _createMedicationInteractionsTable();
+        }
+
+        // Migrate from version 13 to 14
+        // - Extra AI drug-info fields not modelled in the Drift table:
+        //   alcoholWarning, contraindications, requiresMonitoring,
+        //   otcOrPrescription. Stored in a parallel raw-SQL table keyed by
+        //   (medication_id, language).
+        if (from <= 13 && to >= 14) {
+          await _createMedicationDrugInfoExtrasTable();
+        }
+
+        // Migrate from version 14 to 15
+        // - Cache AI bilingual drug-info lookups by normalized drug name so
+        //   re-querying the same drug returns identical wording without a
+        //   second AI call.
+        if (from <= 14 && to >= 15) {
+          await _createDrugInfoCacheTable();
+        }
+
+        // Migrate from version 15 to 16
+        // - Egyptian drug catalog (~26k rows) imported from a bundled CSV.
+        //   Used to translate brand names → active ingredients before any AI
+        //   call so the LLM gets a name it actually knows.
+        if (from <= 15 && to >= 16) {
+          await _createEgyptianDrugsTable();
+        }
       },
     );
+  }
+
+  Future<void> _createEgyptianDrugsTable() async {
+    await customStatement('''
+      CREATE TABLE IF NOT EXISTS egyptian_drugs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trade_name TEXT NOT NULL,
+        normalized_trade_name TEXT NOT NULL,
+        active_ingredient TEXT,
+        normalized_ingredient TEXT,
+        drug_category TEXT,
+        form TEXT,
+        route TEXT,
+        manufacturer TEXT,
+        pharmacology TEXT
+      )
+    ''');
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS idx_egy_drugs_norm_trade '
+      'ON egyptian_drugs (normalized_trade_name)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS idx_egy_drugs_norm_ingredient '
+      'ON egyptian_drugs (normalized_ingredient)',
+    );
+  }
+
+  Future<void> _createDrugInfoCacheTable() async {
+    await customStatement('''
+      CREATE TABLE IF NOT EXISTS drug_info_cache (
+        normalized_name TEXT PRIMARY KEY,
+        payload TEXT NOT NULL,
+        cached_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+      )
+    ''');
+  }
+
+  Future<void> _createMedicationDrugInfoExtrasTable() async {
+    await customStatement('''
+      CREATE TABLE IF NOT EXISTS medication_drug_info_extras (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        medication_id INTEGER NOT NULL REFERENCES medications(id) ON DELETE CASCADE,
+        language TEXT NOT NULL,
+        alcohol_warning TEXT,
+        contraindications TEXT,
+        requires_monitoring TEXT,
+        otc_or_prescription TEXT,
+        updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+      )
+    ''');
+    await customStatement(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_drug_info_extras_med_lang '
+      'ON medication_drug_info_extras (medication_id, language)',
+    );
+    await customStatement('PRAGMA foreign_keys = ON');
+  }
+
+  Future<void> _createMedicationInteractionsTable() async {
+    await customStatement('''
+      CREATE TABLE IF NOT EXISTS medication_interactions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        medication1_id INTEGER NOT NULL REFERENCES medications(id) ON DELETE CASCADE,
+        medication2_id INTEGER NOT NULL REFERENCES medications(id) ON DELETE CASCADE,
+        severity TEXT NOT NULL,
+        description_en TEXT,
+        description_ar TEXT,
+        recommendation_en TEXT,
+        recommendation_ar TEXT,
+        evidence TEXT,
+        accepted_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000)
+      )
+    ''');
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS idx_medication_interactions_med1 '
+      'ON medication_interactions (medication1_id)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS idx_medication_interactions_med2 '
+      'ON medication_interactions (medication2_id)',
+    );
+    await customStatement(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_medication_interactions_pair '
+      'ON medication_interactions (medication1_id, medication2_id)',
+    );
+    await customStatement('PRAGMA foreign_keys = ON');
   }
 
   // Medication CRUD operations
@@ -266,6 +418,101 @@ class AppDatabase extends _$AppDatabase {
   /// Hard delete medication (actually remove from database)
   Future<int> hardDeleteMedication(int id) async {
     return (delete(medications)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<MedicationDrugInfoData?> getMedicationDrugInfoByLanguage(
+    int medicationId,
+    String language,
+  ) async {
+    final normalizedLanguage = language.toLowerCase().startsWith('ar')
+        ? 'ar'
+        : 'en';
+
+    final localized =
+        await (select(medicationDrugInfo)..where((tbl) {
+              return tbl.medicationId.equals(medicationId) &
+                  tbl.language.equals(normalizedLanguage);
+            }))
+            .getSingleOrNull();
+
+    if (localized != null) return localized;
+    if (normalizedLanguage == 'en') return null;
+
+    return (select(medicationDrugInfo)..where((tbl) {
+          return tbl.medicationId.equals(medicationId) &
+              tbl.language.equals('en');
+        }))
+        .getSingleOrNull();
+  }
+
+  Future<List<MedicationDrugInfoData>> getMedicationDrugInfoAllLanguages(
+    int medicationId,
+  ) {
+    return (select(medicationDrugInfo)
+          ..where((tbl) => tbl.medicationId.equals(medicationId))
+          ..orderBy([
+            (tbl) => OrderingTerm(expression: tbl.language),
+          ]))
+        .get();
+  }
+
+  Future<void> upsertMedicationDrugInfo({
+    required int medicationId,
+    required String language,
+    String? genericName,
+    String? activeIngredients,
+    String? drugCategory,
+    String? purpose,
+    String? howToTake,
+    String? bestTimeOfDay,
+    bool? drowsinessAffectsDriving,
+    String? drowsinessWarning,
+    String? foodsToAvoid,
+    String? missedDoseAdvice,
+    String? storageInstructions,
+    String? sideEffects,
+    String? warnings,
+    String? route,
+  }) async {
+    final normalizedLanguage = language.toLowerCase().startsWith('ar')
+        ? 'ar'
+        : 'en';
+
+    final existing =
+        await (select(medicationDrugInfo)..where((tbl) {
+              return tbl.medicationId.equals(medicationId) &
+                  tbl.language.equals(normalizedLanguage);
+            }))
+            .getSingleOrNull();
+
+    final companion = MedicationDrugInfoCompanion(
+      medicationId: Value(medicationId),
+      language: Value(normalizedLanguage),
+      genericName: Value(genericName),
+      activeIngredients: Value(activeIngredients),
+      drugCategory: Value(drugCategory),
+      purpose: Value(purpose),
+      howToTake: Value(howToTake),
+      bestTimeOfDay: Value(bestTimeOfDay),
+      drowsinessAffectsDriving: Value(drowsinessAffectsDriving ?? false),
+      drowsinessWarning: Value(drowsinessWarning),
+      foodsToAvoid: Value(foodsToAvoid),
+      missedDoseAdvice: Value(missedDoseAdvice),
+      storageInstructions: Value(storageInstructions),
+      sideEffects: Value(sideEffects),
+      warnings: Value(warnings),
+      route: Value(route),
+      updatedAt: Value(DateTime.now()),
+    );
+
+    if (existing == null) {
+      await into(medicationDrugInfo).insert(companion);
+      return;
+    }
+
+    await (update(
+      medicationDrugInfo,
+    )..where((tbl) => tbl.id.equals(existing.id))).write(companion);
   }
 
   // Reminder Times CRUD operations

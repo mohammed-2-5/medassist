@@ -49,13 +49,16 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
       duration: widget.duration,
     );
 
-    _animation = Tween<double>(
-      begin: 0,
-      end: widget.value,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    _animation =
+        Tween<double>(
+          begin: 0,
+          end: widget.value,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: widget.curve,
+          ),
+        );
 
     _controller.forward();
   }
@@ -66,13 +69,16 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
 
     if (oldWidget.value != widget.value) {
       _previousValue = oldWidget.value;
-      _animation = Tween<double>(
-        begin: _previousValue,
-        end: widget.value,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ));
+      _animation =
+          Tween<double>(
+            begin: _previousValue,
+            end: widget.value,
+          ).animate(
+            CurvedAnimation(
+              parent: _controller,
+              curve: widget.curve,
+            ),
+          );
 
       _controller
         ..reset()
@@ -104,7 +110,8 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     final effectiveBackgroundColor =
         widget.backgroundColor ?? colorScheme.surfaceContainerHighest;
 
-    final effectiveGradient = widget.gradient ??
+    final effectiveGradient =
+        widget.gradient ??
         LinearGradient(
           colors: [
             _getGradientColorAtValue(widget.value),
@@ -133,9 +140,12 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
                     boxShadow: widget.showGlow
                         ? [
                             BoxShadow(
-                              color: (widget.glowColor ??
-                                      _getGradientColorAtValue(widget.value))
-                                  .withOpacity(0.6),
+                              color:
+                                  (widget.glowColor ??
+                                          _getGradientColorAtValue(
+                                            widget.value,
+                                          ))
+                                      .withOpacity(0.6),
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
@@ -191,13 +201,16 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
       duration: widget.duration,
     );
 
-    _animation = Tween<double>(
-      begin: 0,
-      end: widget.value,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    _animation =
+        Tween<double>(
+          begin: 0,
+          end: widget.value,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _controller.forward();
   }
@@ -207,13 +220,16 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.value != widget.value) {
-      _animation = Tween<double>(
-        begin: _animation.value,
-        end: widget.value,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ));
+      _animation =
+          Tween<double>(
+            begin: _animation.value,
+            end: widget.value,
+          ).animate(
+            CurvedAnimation(
+              parent: _controller,
+              curve: Curves.easeOutCubic,
+            ),
+          );
 
       _controller
         ..reset()
@@ -248,7 +264,8 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
                 child: CircularProgressIndicator(
                   value: 1,
                   strokeWidth: widget.strokeWidth,
-                  backgroundColor: widget.backgroundColor ??
+                  backgroundColor:
+                      widget.backgroundColor ??
                       colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     widget.backgroundColor ??

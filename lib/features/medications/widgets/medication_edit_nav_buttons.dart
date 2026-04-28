@@ -70,13 +70,12 @@ class MedicationEditNavButtons extends ConsumerWidget {
     );
   }
 
-  bool _canProceed(int step, MedicationFormData formData) =>
-      switch (step) {
-        0 => formData.isStep1Valid,
-        1 => formData.isStep2Valid,
-        2 => formData.isStep3Valid,
-        _ => false,
-      };
+  bool _canProceed(int step, MedicationFormData formData) => switch (step) {
+    0 => formData.isStep1Valid,
+    1 => formData.isStep2Valid,
+    2 => formData.isStep3Valid,
+    _ => false,
+  };
 
   void _onNextOrFinish(BuildContext context, WidgetRef ref, int currentStep) {
     if (currentStep < 2) {

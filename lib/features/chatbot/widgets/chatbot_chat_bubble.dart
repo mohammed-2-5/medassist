@@ -23,8 +23,9 @@ class ChatBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         child: Column(
-          crossAxisAlignment:
-              message.isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: message.isUser
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -32,9 +33,11 @@ class ChatBubble extends StatelessWidget {
                 color: message.isUser
                     ? colorScheme.primary
                     : colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomRight: message.isUser ? const Radius.circular(4) : null,
-                  bottomLeft: !message.isUser ? const Radius.circular(4) : null,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(17),
+                  topRight: const Radius.circular(17),
+                  bottomLeft: Radius.circular(message.isUser ? 17 : 4),
+                  bottomRight: Radius.circular(message.isUser ? 4 : 17),
                 ),
               ),
               child: Text(

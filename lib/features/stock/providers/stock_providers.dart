@@ -5,13 +5,14 @@ import 'package:med_assist/core/database/repositories/medication_repository.dart
 
 /// Model for medication stock information
 class MedicationStock {
-
   MedicationStock({
     required this.medication,
     required this.currentStock,
     required this.daysRemaining,
     required this.stockLevel,
-    required this.isExpired, required this.isExpiringSoon, this.expiryDate,
+    required this.isExpired,
+    required this.isExpiringSoon,
+    this.expiryDate,
     this.daysUntilExpiry,
   });
   final Medication medication;
@@ -27,13 +28,15 @@ class MedicationStock {
 /// Stock level categories
 enum StockLevel {
   critical, // < 3 days
-  low,      // < 7 days
-  medium,   // < 14 days
-  good,     // >= 14 days
+  low, // < 7 days
+  medium, // < 14 days
+  good, // >= 14 days
 }
 
 /// Provider for all medications with stock information
-final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) async {
+final medicationsStockProvider = FutureProvider<List<MedicationStock>>((
+  ref,
+) async {
   final database = ref.watch(appDatabaseProvider);
 
   // Get all active medications
@@ -59,7 +62,11 @@ final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) asy
 
     if (medication.expiryDate != null) {
       // Normalize to midnight to avoid time-of-day truncation
-      final today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      final today = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      );
       final expiry = DateTime(
         medication.expiryDate!.year,
         medication.expiryDate!.month,
@@ -74,16 +81,18 @@ final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) asy
       }
     }
 
-    stockList.add(MedicationStock(
-      medication: medication,
-      currentStock: medication.stockQuantity,
-      daysRemaining: daysRemaining,
-      stockLevel: stockLevel,
-      expiryDate: medication.expiryDate,
-      daysUntilExpiry: daysUntilExpiry,
-      isExpired: isExpired,
-      isExpiringSoon: isExpiringSoon,
-    ));
+    stockList.add(
+      MedicationStock(
+        medication: medication,
+        currentStock: medication.stockQuantity,
+        daysRemaining: daysRemaining,
+        stockLevel: stockLevel,
+        expiryDate: medication.expiryDate,
+        daysUntilExpiry: daysUntilExpiry,
+        isExpired: isExpired,
+        isExpiringSoon: isExpiringSoon,
+      ),
+    );
   }
 
   // Sort by stock level (critical first)
@@ -96,7 +105,6 @@ final medicationsStockProvider = FutureProvider<List<MedicationStock>>((ref) asy
 
   return stockList;
 });
-
 
 /// Determine stock level based on days remaining
 StockLevel _determineStockLevel(double daysRemaining) {
@@ -112,17 +120,25 @@ StockLevel _determineStockLevel(double daysRemaining) {
 }
 
 /// Provider for critical stock medications (< 3 days)
-final criticalStockProvider = FutureProvider<List<MedicationStock>>((ref) async {
+final criticalStockProvider = FutureProvider<List<MedicationStock>>((
+  ref,
+) async {
   final allStock = await ref.watch(medicationsStockProvider.future);
-  return allStock.where((stock) => stock.stockLevel == StockLevel.critical).toList();
+  return allStock
+      .where((stock) => stock.stockLevel == StockLevel.critical)
+      .toList();
 });
 
 /// Provider for low stock medications (< 7 days)
 final lowStockProvider = FutureProvider<List<MedicationStock>>((ref) async {
   final allStock = await ref.watch(medicationsStockProvider.future);
-  return allStock.where((stock) =>
-    stock.stockLevel == StockLevel.critical || stock.stockLevel == StockLevel.low
-  ).toList();
+  return allStock
+      .where(
+        (stock) =>
+            stock.stockLevel == StockLevel.critical ||
+            stock.stockLevel == StockLevel.low,
+      )
+      .toList();
 });
 
 /// Provider for stock statistics
@@ -131,23 +147,33 @@ final stockStatisticsProvider = FutureProvider<Map<String, int>>((ref) async {
 
   return {
     'total': allStock.length,
-    'critical': allStock.where((s) => s.stockLevel == StockLevel.critical).length,
+    'critical': allStock
+        .where((s) => s.stockLevel == StockLevel.critical)
+        .length,
     'low': allStock.where((s) => s.stockLevel == StockLevel.low).length,
     'medium': allStock.where((s) => s.stockLevel == StockLevel.medium).length,
     'good': allStock.where((s) => s.stockLevel == StockLevel.good).length,
     'expired': allStock.where((s) => s.isExpired).length,
-    'expiring_soon': allStock.where((s) => s.isExpiringSoon && !s.isExpired).length,
+    'expiring_soon': allStock
+        .where((s) => s.isExpiringSoon && !s.isExpired)
+        .length,
   };
 });
 
 /// Provider for expiring medications
-final expiringMedicationsProvider = FutureProvider<List<MedicationStock>>((ref) async {
+final expiringMedicationsProvider = FutureProvider<List<MedicationStock>>((
+  ref,
+) async {
   final allStock = await ref.watch(medicationsStockProvider.future);
-  return allStock.where((stock) => stock.isExpiringSoon && !stock.isExpired).toList();
+  return allStock
+      .where((stock) => stock.isExpiringSoon && !stock.isExpired)
+      .toList();
 });
 
 /// Provider for expired medications
-final expiredMedicationsProvider = FutureProvider<List<MedicationStock>>((ref) async {
+final expiredMedicationsProvider = FutureProvider<List<MedicationStock>>((
+  ref,
+) async {
   final allStock = await ref.watch(medicationsStockProvider.future);
   return allStock.where((stock) => stock.isExpired).toList();
 });

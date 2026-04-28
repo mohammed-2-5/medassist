@@ -10,7 +10,9 @@ import 'package:med_assist/l10n/app_localizations.dart';
 /// Card displaying medication stock information
 class StockCard extends ConsumerWidget {
   const StockCard({
-    required this.medicationStock, required this.onStockAdjusted, super.key,
+    required this.medicationStock,
+    required this.onStockAdjusted,
+    super.key,
   });
 
   final MedicationStock medicationStock;
@@ -92,7 +94,8 @@ class StockCard extends ConsumerWidget {
                   Expanded(
                     child: StockInfoColumn(
                       label: l10n.currentStockLabel,
-                      value: '${medicationStock.currentStock} ${medication.doseUnit}',
+                      value:
+                          '${medicationStock.currentStock} ${medication.doseUnit}',
                       icon: Icons.inventory_2,
                     ),
                   ),
@@ -132,13 +135,17 @@ class StockCard extends ConsumerWidget {
                   medicationStock.stockLevel == StockLevel.low) ...[
                 const SizedBox(height: 12),
                 _StockWarningBanner(
-                  message: getStockWarningMessage(medicationStock.stockLevel, context),
+                  message: getStockWarningMessage(
+                    medicationStock.stockLevel,
+                    context,
+                  ),
                   color: stockColor,
                 ),
               ],
 
               // Expired/expiring warning
-              if (medicationStock.isExpired || medicationStock.isExpiringSoon) ...[
+              if (medicationStock.isExpired ||
+                  medicationStock.isExpiringSoon) ...[
                 const SizedBox(height: 8),
                 _ExpiryWarningBanner(stock: medicationStock),
               ],
@@ -193,9 +200,9 @@ class _StockWarningBanner extends StatelessWidget {
             child: Text(
               message,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -232,9 +239,9 @@ class _ExpiryWarningBanner extends StatelessWidget {
             child: Text(
               message,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

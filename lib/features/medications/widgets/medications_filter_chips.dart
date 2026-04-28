@@ -34,7 +34,9 @@ class MedicationsFilterChips extends ConsumerWidget {
             label: l10n.active,
             selected: filter.isActive ?? false,
             onSelected: (selected) {
-              ref.read(medicationFilterProvider.notifier).updateIsActive(selected ? true : null);
+              ref
+                  .read(medicationFilterProvider.notifier)
+                  .updateIsActive(selected ? true : null);
             },
             colorScheme: colorScheme,
           ),
@@ -45,7 +47,9 @@ class MedicationsFilterChips extends ConsumerWidget {
             label: l10n.paused,
             selected: filter.isActive == false,
             onSelected: (selected) {
-              ref.read(medicationFilterProvider.notifier).updateIsActive(selected ? false : null);
+              ref
+                  .read(medicationFilterProvider.notifier)
+                  .updateIsActive(selected ? false : null);
             },
             colorScheme: colorScheme,
           ),
@@ -57,7 +61,9 @@ class MedicationsFilterChips extends ConsumerWidget {
             icon: Icons.inventory,
             selected: filter.showLowStock,
             onSelected: (selected) {
-              ref.read(medicationFilterProvider.notifier).updateShowLowStock(selected);
+              ref
+                  .read(medicationFilterProvider.notifier)
+                  .updateShowLowStock(selected);
             },
             colorScheme: colorScheme,
           ),
@@ -69,7 +75,9 @@ class MedicationsFilterChips extends ConsumerWidget {
             icon: Icons.warning_amber,
             selected: filter.showExpiring,
             onSelected: (selected) {
-              ref.read(medicationFilterProvider.notifier).updateShowExpiring(selected);
+              ref
+                  .read(medicationFilterProvider.notifier)
+                  .updateShowExpiring(selected);
             },
             colorScheme: colorScheme,
           ),
@@ -81,7 +89,9 @@ class MedicationsFilterChips extends ConsumerWidget {
             icon: Icons.error,
             selected: filter.showExpired,
             onSelected: (selected) {
-              ref.read(medicationFilterProvider.notifier).updateShowExpired(selected);
+              ref
+                  .read(medicationFilterProvider.notifier)
+                  .updateShowExpired(selected);
             },
             colorScheme: colorScheme,
           ),
@@ -91,7 +101,11 @@ class MedicationsFilterChips extends ConsumerWidget {
           medicineTypesAsync.when(
             data: (types) {
               if (types.isEmpty) return const SizedBox.shrink();
-              return _MedicineTypeChip(types: types, filter: filter, colorScheme: colorScheme);
+              return _MedicineTypeChip(
+                types: types,
+                filter: filter,
+                colorScheme: colorScheme,
+              );
             },
             loading: () => const SizedBox.shrink(),
             error: (_, _) => const SizedBox.shrink(),
@@ -120,7 +134,9 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chipColor = selected ? const Color(0xFF00BCD4) : colorScheme.surfaceContainerHigh;
+    final chipColor = selected
+        ? const Color(0xFF00BCD4)
+        : colorScheme.surfaceContainerHigh;
     final labelColor = selected ? colorScheme.onPrimary : colorScheme.onSurface;
     final borderColor = selected
         ? const Color(0xFF00BCD4)
@@ -139,36 +155,38 @@ class _FilterChip extends StatelessWidget {
               ]
             : null,
       ),
-      child: FilterChip(
-        label: Text(
-          label,
-          style: TextStyle(
-            color: labelColor,
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 13,
-          ),
-        ),
-        avatar: icon != null
-            ? Icon(icon, size: 18, color: labelColor)
-            : null,
-        selected: selected,
-        onSelected: onSelected,
-        backgroundColor: chipColor,
-        selectedColor: chipColor,
-        side: BorderSide(
-          color: borderColor,
-          width: 1.5,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-        elevation: selected ? 2 : 0,
-        shadowColor: colorScheme.primary.withOpacity(0.3),
-      ).animate(target: selected ? 1 : 0)
-       .scale(
-         begin: const Offset(1, 1),
-         end: const Offset(1.05, 1.05),
-         duration: const Duration(milliseconds: 200),
-       ),
+      child:
+          FilterChip(
+                label: Text(
+                  label,
+                  style: TextStyle(
+                    color: labelColor,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
+                avatar: icon != null
+                    ? Icon(icon, size: 18, color: labelColor)
+                    : null,
+                selected: selected,
+                onSelected: onSelected,
+                backgroundColor: chipColor,
+                selectedColor: chipColor,
+                side: BorderSide(
+                  color: borderColor,
+                  width: 1.5,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                elevation: selected ? 2 : 0,
+                shadowColor: colorScheme.primary.withOpacity(0.3),
+              )
+              .animate(target: selected ? 1 : 0)
+              .scale(
+                begin: const Offset(1, 1),
+                end: const Offset(1.05, 1.05),
+                duration: const Duration(milliseconds: 200),
+              ),
     );
   }
 }
@@ -189,8 +207,12 @@ class _MedicineTypeChip extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isSelected = filter.medicineType != null;
-    final chipColor = isSelected ? colorScheme.primary : colorScheme.surfaceContainerHigh;
-    final labelColor = isSelected ? colorScheme.onPrimary : colorScheme.onSurface;
+    final chipColor = isSelected
+        ? colorScheme.primary
+        : colorScheme.surfaceContainerHigh;
+    final labelColor = isSelected
+        ? colorScheme.onPrimary
+        : colorScheme.onSurface;
 
     return Container(
       decoration: BoxDecoration(
@@ -209,45 +231,54 @@ class _MedicineTypeChip extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Chip(
-          label: Text(
-            filter.medicineType ?? l10n.type,
-            style: TextStyle(
-              color: labelColor,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              fontSize: 13,
-            ),
-          ),
-          avatar: Icon(
-            Icons.medication,
-            size: 18,
-            color: labelColor,
-          ),
-          backgroundColor: chipColor,
-          side: BorderSide(
-            color: isSelected
-                ? colorScheme.primary
-                : colorScheme.outline.withOpacity(0.3),
-            width: 1.5,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-          elevation: isSelected ? 2 : 0,
-          shadowColor: colorScheme.primary.withOpacity(0.3),
-        ).animate(target: isSelected ? 1 : 0)
-         .scale(
-           begin: const Offset(1, 1),
-           end: const Offset(1.05, 1.05),
-           duration: const Duration(milliseconds: 200),
-         ),
+        child:
+            Chip(
+                  label: Text(
+                    filter.medicineType ?? l10n.type,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  avatar: Icon(
+                    Icons.medication,
+                    size: 18,
+                    color: labelColor,
+                  ),
+                  backgroundColor: chipColor,
+                  side: BorderSide(
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.outline.withOpacity(0.3),
+                    width: 1.5,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  elevation: isSelected ? 2 : 0,
+                  shadowColor: colorScheme.primary.withOpacity(0.3),
+                )
+                .animate(target: isSelected ? 1 : 0)
+                .scale(
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.05, 1.05),
+                  duration: const Duration(milliseconds: 200),
+                ),
         itemBuilder: (context) => [
           PopupMenuItem<String?>(
             child: Text(l10n.allTypes),
           ),
-          ...types.map((type) => PopupMenuItem<String?>(
-            value: type,
-            child: Text(type),
-          )),
+          ...types.map(
+            (type) => PopupMenuItem<String?>(
+              value: type,
+              child: Text(type),
+            ),
+          ),
         ],
         onSelected: (String? value) {
           ref.read(medicationFilterProvider.notifier).updateMedicineType(value);

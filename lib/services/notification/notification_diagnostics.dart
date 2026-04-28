@@ -11,7 +11,8 @@ class NotificationDiagnostics {
 
   /// Show test notification immediately.
   static Future<void> showTestNotification(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
         NotificationChannels.generalChannelId,
@@ -41,13 +42,15 @@ class NotificationDiagnostics {
 
   /// Schedule a test notification for 1 minute from now.
   static Future<void> scheduleTestIn1Minute(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     final now = DateTime.now();
     final scheduledTime = now.add(const Duration(minutes: 1));
     final tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
 
     debugPrint(
-        '⏰ Scheduling test notification for: ${scheduledTime.hour}:${scheduledTime.minute.toString().padLeft(2, '0')}');
+      '⏰ Scheduling test notification for: ${scheduledTime.hour}:${scheduledTime.minute.toString().padLeft(2, '0')}',
+    );
 
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -79,7 +82,8 @@ class NotificationDiagnostics {
 
   /// Get detailed notification diagnostics.
   static Future<Map<String, dynamic>> getDiagnostics(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     final pending = await notifications.pendingNotificationRequests();
     final notificationsEnabled =
         await NotificationPermissions.areNotificationsEnabled(notifications);
@@ -92,12 +96,14 @@ class NotificationDiagnostics {
       'canScheduleExactAlarms': canScheduleExact,
       'pendingNotificationsCount': pending.length,
       'pendingNotifications': pending
-          .map((p) => {
-                'id': p.id,
-                'title': p.title,
-                'body': p.body,
-                'payload': p.payload,
-              })
+          .map(
+            (p) => {
+              'id': p.id,
+              'title': p.title,
+              'body': p.body,
+              'payload': p.payload,
+            },
+          )
           .toList(),
       'channelsCreated': true,
       'timezoneConfigured': tz.local.name,
@@ -112,7 +118,8 @@ class NotificationDiagnostics {
     debugPrint('Pending Notifications: ${pending.length}');
     debugPrint('Timezone: ${tz.local.name}');
     debugPrint(
-        'Device Time: ${now.hour}:${now.minute.toString().padLeft(2, '0')}');
+      'Device Time: ${now.hour}:${now.minute.toString().padLeft(2, '0')}',
+    );
     for (final p in pending) {
       debugPrint('  - ID: ${p.id}, Title: ${p.title}, Body: ${p.body}');
     }
@@ -130,8 +137,9 @@ class NotificationDiagnostics {
   }
 
   /// Open notification channel settings.
-  static Future<void> openChannelSettings(
-      {String channelId = NotificationChannels.medicationChannelId}) async {
+  static Future<void> openChannelSettings({
+    String channelId = NotificationChannels.medicationChannelId,
+  }) async {
     const intent = AndroidIntent(
       action: 'android.settings.CHANNEL_NOTIFICATION_SETTINGS',
       arguments: <String, dynamic>{

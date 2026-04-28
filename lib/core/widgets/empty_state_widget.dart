@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 /// Empty state widget with icon, message, and optional action
 class EmptyStateWidget extends StatelessWidget {
-
   const EmptyStateWidget({
     required this.icon,
     required this.title,
@@ -33,17 +32,19 @@ class EmptyStateWidget extends StatelessWidget {
           children: [
             // Icon with animation
             Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: (iconColor ?? colorScheme.primary).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 64,
-                color: iconColor ?? colorScheme.primary,
-              ),
-            )
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: (iconColor ?? colorScheme.primary).withValues(
+                      alpha: 0.1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 64,
+                    color: iconColor ?? colorScheme.primary,
+                  ),
+                )
                 .animate()
                 .fadeIn(duration: 400.ms)
                 .scale(begin: const Offset(0.8, 0.8)),
@@ -74,10 +75,13 @@ class EmptyStateWidget extends StatelessWidget {
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: 32),
               FilledButton.icon(
-                onPressed: onAction,
-                icon: const Icon(Icons.add),
-                label: Text(actionLabel!),
-              ).animate().fadeIn(delay: 400.ms, duration: 400.ms).slideY(
+                    onPressed: onAction,
+                    icon: const Icon(Icons.add),
+                    label: Text(actionLabel!),
+                  )
+                  .animate()
+                  .fadeIn(delay: 400.ms, duration: 400.ms)
+                  .slideY(
                     begin: 0.2,
                     end: 0,
                   ),

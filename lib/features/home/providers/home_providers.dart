@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:med_assist/core/database/app_database.dart' show DoseHistoryData;
+import 'package:med_assist/core/database/app_database.dart'
+    show DoseHistoryData;
 import 'package:med_assist/core/database/models/dose_result.dart';
 import 'package:med_assist/core/database/providers/database_providers.dart';
-import 'package:med_assist/core/database/repositories/medication_repository.dart' show MedicationRepository;
+import 'package:med_assist/core/database/repositories/medication_repository.dart'
+    show MedicationRepository;
 import 'package:med_assist/features/home/models/dose_event.dart';
 import 'package:med_assist/features/home/services/dose_event_generator.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
@@ -20,8 +22,8 @@ final doseEventGeneratorProvider = Provider<DoseEventGenerator>((ref) {
 /// Provider for today's dose events
 final todayDosesProvider =
     NotifierProvider<TodayDosesNotifier, List<DoseEvent>>(
-  TodayDosesNotifier.new,
-);
+      TodayDosesNotifier.new,
+    );
 
 /// Notifier for managing today's doses.
 ///
@@ -38,8 +40,9 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
 
   Future<void> _loadTodayDoses() async {
     try {
-      final medications =
-          await ref.read(medicationsWithRemindersProvider.future);
+      final medications = await ref.read(
+        medicationsWithRemindersProvider.future,
+      );
       final generator = ref.read(doseEventGeneratorProvider);
       final doseEvents = generator.generateTodayDoses(medications);
 
@@ -149,6 +152,8 @@ class TodayDosesNotifier extends Notifier<List<DoseEvent>> {
         medicationName: dose.medicationName,
         dose: dose.dosage,
         minutes: minutes,
+        scheduledHour: hour24,
+        scheduledMinute: minute,
       );
 
       _updateDoseStatus(doseId, DoseStatus.snoozed);
@@ -327,11 +332,51 @@ final groupedDosesProvider = Provider<Map<String, List<DoseEvent>>>((ref) {
   return grouped;
 });
 
+/// Parse dose time string ("8:00 AM") into today's scheduled DateTime.
+DateTime doseScheduledDateTime(String timeStr, DateTime now) {
+  final parts = timeStr.split(' ');
+  final timeParts = parts[0].split(':');
+  var hour = int.parse(timeParts[0]);
+  final minute = int.parse(timeParts[1]);
+  final isPM = parts[1] == 'PM';
+  if (isPM && hour != 12) {
+    hour += 12;
+  } else if (!isPM && hour == 12) {
+    hour = 0;
+  }
+  return DateTime(now.year, now.month, now.day, hour, minute);
+}
+
+/// Next upcoming pending dose today (sorted list first pending).
+final nextDoseProvider = Provider<DoseEvent?>((ref) {
+  final doses = ref.watch(todayDosesProvider);
+  return doses.where((d) => d.status == DoseStatus.pending).firstOrNull;
+});
+
+/// Overdue doses: missed or snoozed, not yet taken/skipped.
+final overdueDosesProvider = Provider<List<DoseEvent>>((ref) {
+  final doses = ref.watch(todayDosesProvider);
+  return doses
+      .where(
+        (d) => d.status == DoseStatus.missed || d.status == DoseStatus.snoozed,
+      )
+      .toList();
+});
+
+/// Pending doses excluding the next one (used in collapsible Later Today).
+final laterTodayDosesProvider = Provider<List<DoseEvent>>((ref) {
+  final doses = ref.watch(todayDosesProvider);
+  final next = ref.watch(nextDoseProvider);
+  return doses
+      .where((d) => d.status == DoseStatus.pending && d.id != next?.id)
+      .toList();
+});
+
 /// Provider for notification permission status
 final notificationPermissionProvider =
     NotifierProvider<NotificationPermissionNotifier, bool>(
-  NotificationPermissionNotifier.new,
-);
+      NotificationPermissionNotifier.new,
+    );
 
 /// Notifier for notification permission status
 class NotificationPermissionNotifier extends Notifier<bool> {

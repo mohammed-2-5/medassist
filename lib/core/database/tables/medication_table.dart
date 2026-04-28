@@ -17,7 +17,8 @@ class Medications extends Table {
   // AI-enriched drug info
   TextColumn get genericName => text().nullable()();
   TextColumn get activeIngredients => text().nullable()(); // comma-separated
-  TextColumn get drugCategory => text().nullable()(); // e.g. "NSAID", "antibiotic"
+  TextColumn get drugCategory =>
+      text().nullable()(); // e.g. "NSAID", "antibiotic"
   TextColumn get purpose => text().nullable()();
   TextColumn get sideEffects => text().nullable()(); // comma-separated
   TextColumn get warnings => text().nullable()();
@@ -31,10 +32,20 @@ class Medications extends Table {
   DateTimeColumn get startDate => dateTime()();
 
   // Repetition pattern
-  TextColumn get repetitionPattern =>
-      text().withDefault(const Constant('daily'))(); // daily, everyOtherDay, etc.
-  TextColumn get specificDaysOfWeek =>
-      text().withDefault(const Constant('1,2,3,4,5,6,7'))(); // Comma-separated weekday numbers
+  TextColumn get repetitionPattern => text().withDefault(
+    const Constant('daily'),
+  )(); // daily, everyOtherDay, etc.
+  TextColumn get specificDaysOfWeek => text().withDefault(
+    const Constant('1,2,3,4,5,6,7'),
+  )(); // Comma-separated weekday numbers
+
+  // Smart schedule intervals (Issue 3 — v11)
+  IntColumn get intervalDays => integer().nullable()(); // for everyNDays
+  IntColumn get intervalWeeks =>
+      integer().nullable()(); // for weekly every-N-weeks
+  IntColumn get intervalMonths =>
+      integer().nullable()(); // for monthly every-N-months
+  IntColumn get dayOfMonth => integer().nullable()(); // 1-31, for monthly
 
   // Step 3: Stock & Reminder
   IntColumn get stockQuantity => integer().withDefault(const Constant(0))();
@@ -42,24 +53,26 @@ class Medications extends Table {
       boolean().withDefault(const Constant(true))();
   IntColumn get reminderDaysBeforeRunOut =>
       integer().withDefault(const Constant(3))();
-  DateTimeColumn get expiryDate => dateTime().nullable()(); // Expiry date for stock
-  IntColumn get reminderDaysBeforeExpiry =>
-      integer().withDefault(const Constant(30))(); // Remind 30 days before expiry
+  DateTimeColumn get expiryDate =>
+      dateTime().nullable()(); // Expiry date for stock
+  IntColumn get reminderDaysBeforeExpiry => integer().withDefault(
+    const Constant(30),
+  )(); // Remind 30 days before expiry
 
   // Advanced Reminder Settings (Phase 2)
-  TextColumn get customSoundPath => text().nullable()(); // Path to custom notification sound
+  TextColumn get customSoundPath =>
+      text().nullable()(); // Path to custom notification sound
   IntColumn get maxSnoozesPerDay =>
       integer().withDefault(const Constant(3))(); // Limit snoozes
   BoolColumn get enableRecurringReminders =>
       boolean().withDefault(const Constant(false))(); // For missed doses
-  IntColumn get recurringReminderInterval =>
-      integer().withDefault(const Constant(30))(); // Minutes between recurring reminders
+  IntColumn get recurringReminderInterval => integer().withDefault(
+    const Constant(30),
+  )(); // Minutes between recurring reminders
 
   // Metadata
-  DateTimeColumn get createdAt =>
-      dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt =>
-      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
 }
 
@@ -72,13 +85,15 @@ class ReminderTimes extends Table {
   IntColumn get orderIndex => integer()(); // To maintain order
 
   // Advanced Reminder Options (Phase 2)
-  TextColumn get mealTiming => text()
-      .withDefault(const Constant('anytime'))(); // 'before_meal', 'with_meal', 'after_meal', 'anytime'
-  IntColumn get mealOffsetMinutes => integer()
-      .withDefault(const Constant(0))(); // Offset from meal time (e.g., 30 min before)
+  TextColumn get mealTiming => text().withDefault(
+    const Constant('anytime'),
+  )(); // 'before_meal', 'with_meal', 'after_meal', 'anytime'
+  IntColumn get mealOffsetMinutes => integer().withDefault(
+    const Constant(0),
+  )(); // Offset from meal time (e.g., 30 min before)
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
-      ];
+    'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
+  ];
 }

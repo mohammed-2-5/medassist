@@ -42,7 +42,8 @@ class NotificationTimezone {
 
         if (!timezoneSet) {
           throw Exception(
-              'Could not find matching timezone for: $timezoneName');
+            'Could not find matching timezone for: $timezoneName',
+          );
         }
       }
     } catch (e, stackTrace) {
@@ -142,20 +143,20 @@ class NotificationTimezone {
 
   /// Common timezones for manual selection.
   static List<String> get commonTimezones => [
-        'Asia/Riyadh',
-        'Asia/Dubai',
-        'Africa/Cairo',
-        'Asia/Baghdad',
-        'Asia/Kuwait',
-        'Asia/Qatar',
-        'Asia/Bahrain',
-        'Europe/London',
-        'Europe/Paris',
-        'America/New_York',
-        'America/Chicago',
-        'America/Los_Angeles',
-        'Asia/Tokyo',
-        'Australia/Sydney',
-        'UTC',
-      ];
+    'Asia/Riyadh',
+    'Asia/Dubai',
+    'Africa/Cairo',
+    'Asia/Baghdad',
+    'Asia/Kuwait',
+    'Asia/Qatar',
+    'Asia/Bahrain',
+    'Europe/London',
+    'Europe/Paris',
+    'America/New_York',
+    'America/Chicago',
+    'America/Los_Angeles',
+    'Asia/Tokyo',
+    'Australia/Sydney',
+    'UTC',
+  ];
 }

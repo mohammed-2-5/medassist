@@ -3,7 +3,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Dialog to let user choose snooze duration
 class SnoozeOptionsDialog extends StatelessWidget {
-
   const SnoozeOptionsDialog({
     required this.medicationName,
     super.key,
@@ -42,49 +41,49 @@ class SnoozeOptionsDialog extends StatelessWidget {
       ),
       content: SingleChildScrollView(
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            l10n.howLongSnooze,
-            style: theme.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 16),
-          _SnoozeOption(
-            icon: Icons.timer,
-            label: l10n.fiveMinutes,
-            minutes: 5,
-            onTap: () => Navigator.of(context).pop(5),
-          ),
-          const SizedBox(height: 8),
-          _SnoozeOption(
-            icon: Icons.timer,
-            label: l10n.tenMinutes,
-            minutes: 10,
-            onTap: () => Navigator.of(context).pop(10),
-          ),
-          const SizedBox(height: 8),
-          _SnoozeOption(
-            icon: Icons.timer,
-            label: l10n.fifteenMinutes,
-            minutes: 15,
-            onTap: () => Navigator.of(context).pop(15),
-          ),
-          const SizedBox(height: 8),
-          _SnoozeOption(
-            icon: Icons.timer_outlined,
-            label: l10n.thirtyMinutes,
-            minutes: 30,
-            onTap: () => Navigator.of(context).pop(30),
-          ),
-          const SizedBox(height: 8),
-          _SnoozeOption(
-            icon: Icons.timer_outlined,
-            label: l10n.oneHour,
-            minutes: 60,
-            onTap: () => Navigator.of(context).pop(60),
-          ),
-        ],
-      ),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.howLongSnooze,
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            _SnoozeOption(
+              icon: Icons.timer,
+              label: l10n.fiveMinutes,
+              minutes: 5,
+              onTap: () => Navigator.of(context).pop(5),
+            ),
+            const SizedBox(height: 8),
+            _SnoozeOption(
+              icon: Icons.timer,
+              label: l10n.tenMinutes,
+              minutes: 10,
+              onTap: () => Navigator.of(context).pop(10),
+            ),
+            const SizedBox(height: 8),
+            _SnoozeOption(
+              icon: Icons.timer,
+              label: l10n.fifteenMinutes,
+              minutes: 15,
+              onTap: () => Navigator.of(context).pop(15),
+            ),
+            const SizedBox(height: 8),
+            _SnoozeOption(
+              icon: Icons.timer_outlined,
+              label: l10n.thirtyMinutes,
+              minutes: 30,
+              onTap: () => Navigator.of(context).pop(30),
+            ),
+            const SizedBox(height: 8),
+            _SnoozeOption(
+              icon: Icons.timer_outlined,
+              label: l10n.oneHour,
+              minutes: 60,
+              onTap: () => Navigator.of(context).pop(60),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -97,7 +96,6 @@ class SnoozeOptionsDialog extends StatelessWidget {
 }
 
 class _SnoozeOption extends StatelessWidget {
-
   const _SnoozeOption({
     required this.icon,
     required this.label,

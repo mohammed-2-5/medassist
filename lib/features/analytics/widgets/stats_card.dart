@@ -4,7 +4,6 @@ import 'package:med_assist/core/widgets/gradient_container.dart';
 
 /// Reusable card widget for displaying a single statistic with smooth animations
 class StatsCard extends StatelessWidget {
-
   const StatsCard({
     required this.title,
     required this.value,

@@ -15,8 +15,10 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
 
   Color _getAdherenceColor(double percentage, ColorScheme colorScheme) {
     final isDark = colorScheme.brightness == Brightness.dark;
-    if (percentage >= 80) return isDark ? const Color(0xFF66BB6A) : Colors.green;
-    if (percentage >= 50) return isDark ? const Color(0xFFFFA726) : Colors.orange;
+    if (percentage >= 80)
+      return isDark ? const Color(0xFF66BB6A) : Colors.green;
+    if (percentage >= 50)
+      return isDark ? const Color(0xFFFFA726) : Colors.orange;
     return isDark ? const Color(0xFFEF5350) : Colors.red;
   }
 
@@ -28,12 +30,14 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
     final provider = selectedPeriod == 0
         ? todayAdherenceProvider
         : selectedPeriod == 1
-            ? weekAdherenceProvider
-            : selectedPeriod == 2
-                ? monthAdherenceProvider
-                : yearAdherenceProvider;
+        ? weekAdherenceProvider
+        : selectedPeriod == 2
+        ? monthAdherenceProvider
+        : yearAdherenceProvider;
 
-    return ref.watch(provider).when(
+    return ref
+        .watch(provider)
+        .when(
           data: (stats) => Card(
             margin: EdgeInsets.zero,
             child: Padding(
@@ -58,8 +62,9 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             color: _getAdherenceColor(
-                                    stats.adherencePercentage, colorScheme)
-                                .withOpacity(0.1),
+                              stats.adherencePercentage,
+                              colorScheme,
+                            ).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -68,7 +73,9 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: _getAdherenceColor(
-                                  stats.adherencePercentage, colorScheme),
+                                stats.adherencePercentage,
+                                colorScheme,
+                              ),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -76,7 +83,7 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
@@ -85,11 +92,13 @@ class AnalyticsAdherenceCard extends ConsumerWidget {
                       backgroundColor: colorScheme.surfaceContainerHighest,
                       valueColor: AlwaysStoppedAnimation(
                         _getAdherenceColor(
-                            stats.adherencePercentage, colorScheme),
+                          stats.adherencePercentage,
+                          colorScheme,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(

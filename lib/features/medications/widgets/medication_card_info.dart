@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/utils/dose_unit_localizer.dart';
 import 'package:med_assist/features/medications/widgets/medication_card_stock_indicator.dart';
+import 'package:med_assist/l10n/app_localizations.dart';
 
 class MedicationCardInfo extends StatelessWidget {
   const MedicationCardInfo({
@@ -19,9 +21,9 @@ class MedicationCardInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDosageInfo(),
+        _buildDosageInfo(context),
         const SizedBox(height: 12),
-        _buildScheduleSummary(),
+        _buildScheduleSummary(context),
         const SizedBox(height: 12),
         MedicationCardStockIndicator(
           medication: medication,
@@ -32,41 +34,46 @@ class MedicationCardInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildDosageInfo() {
+  Widget _buildDosageInfo(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final amount = medication.dosePerTime;
-    final unit = medication.doseUnit;
+    final unit = localizeDoseUnit(l10n, medication.doseUnit);
     final amountStr = amount == amount.toInt()
         ? amount.toInt().toString()
         : amount.toString();
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    return Column(
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.medication, size: 16, color: colorScheme.primary),
             const SizedBox(width: 8),
-            Text(
-              '$amountStr $unit',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+            Expanded(
+              child: Text(
+                '$amountStr $unit',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
               ),
             ),
           ],
         ),
+        const SizedBox(height: 6),
         Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.schedule, size: 16, color: colorScheme.primary),
             const SizedBox(width: 8),
-            Text(
-              '${medication.timesPerDay}x per day',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+            Expanded(
+              child: Text(
+                l10n.xTimesPerDay(medication.timesPerDay),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],
@@ -75,7 +82,8 @@ class MedicationCardInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildScheduleSummary() {
+  Widget _buildScheduleSummary(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final daysRemaining = medication.startDate
         .add(Duration(days: medication.durationDays))
         .difference(DateTime.now())
@@ -94,8 +102,8 @@ class MedicationCardInfo extends StatelessWidget {
           Expanded(
             child: Text(
               daysRemaining > 0
-                  ? 'Treatment: $daysRemaining day${daysRemaining != 1 ? 's' : ''} remaining'
-                  : 'Treatment completed',
+                  ? l10n.treatmentDaysRemaining(daysRemaining)
+                  : l10n.treatmentCompleted,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -105,5 +113,4 @@ class MedicationCardInfo extends StatelessWidget {
       ),
     );
   }
-
 }

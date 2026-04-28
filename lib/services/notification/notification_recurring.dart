@@ -19,19 +19,30 @@ class NotificationRecurring {
     required String medicationName,
     required String dose,
     required int intervalMinutes,
+    required int scheduledHour,
+    required int scheduledMinute,
     int maxReminders = 4,
+    String? customSoundUri,
   }) async {
     debugPrint('📱 Scheduling recurring reminders for $medicationName');
     debugPrint('   → Interval: $intervalMinutes minutes');
     debugPrint('   → Max reminders: $maxReminders');
 
     await cancelForReminderTime(notifications, medicationId, reminderIndex);
+    final channelId =
+        await NotificationChannels.ensureMedicationChannelForSound(
+          notifications,
+          customSoundUri,
+        );
 
     for (var i = 0; i < maxReminders; i++) {
       final escalationLevel = i + 1;
       final minutesFromNow = intervalMinutes * escalationLevel;
       final notificationId = NotificationIdGenerator.recurring(
-          medicationId, reminderIndex, escalationLevel);
+        medicationId,
+        reminderIndex,
+        escalationLevel,
+      );
 
       await _scheduleSingle(
         notifications,
@@ -41,11 +52,16 @@ class NotificationRecurring {
         dose: dose,
         minutesFromNow: minutesFromNow,
         escalationLevel: escalationLevel,
+        scheduledHour: scheduledHour,
+        scheduledMinute: scheduledMinute,
+        channelId: channelId,
+        soundUri: customSoundUri,
       );
     }
 
     debugPrint(
-        '✅ Scheduled $maxReminders recurring reminders for $medicationName');
+      '✅ Scheduled $maxReminders recurring reminders for $medicationName',
+    );
   }
 
   static Future<void> _scheduleSingle(
@@ -56,9 +72,12 @@ class NotificationRecurring {
     required String dose,
     required int minutesFromNow,
     required int escalationLevel,
+    required int scheduledHour,
+    required int scheduledMinute,
+    required String channelId,
+    required String? soundUri,
   }) async {
-    final scheduledTime =
-        DateTime.now().add(Duration(minutes: minutesFromNow));
+    final scheduledTime = DateTime.now().add(Duration(minutes: minutesFromNow));
     final tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
 
     debugPrint('⏰ Scheduling recurring reminder #$escalationLevel');
@@ -70,31 +89,35 @@ class NotificationRecurring {
       'medicationName': medicationName,
       'dose': dose,
       'escalationLevel': escalationLevel,
+      'scheduledHour': scheduledHour,
+      'scheduledMinute': scheduledMinute,
     });
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: AndroidNotificationDetails(
-        NotificationChannels.medicationChannelId,
+        channelId,
         'Medication Reminders',
-        channelDescription:
-            'Recurring reminders for missed medication doses',
+        channelDescription: 'Recurring reminders for missed medication doses',
         importance: Importance.max,
         priority: Priority.max,
         icon: 'ic_notification',
         enableLights: true,
-        color: Color(0xFFFF5722),
-        ledColor: Color(0xFFFF5722),
+        color: const Color(0xFFFF5722),
+        ledColor: const Color(0xFFFF5722),
         ledOnMs: 1000,
         ledOffMs: 500,
         fullScreenIntent: true,
         category: AndroidNotificationCategory.alarm,
         visibility: NotificationVisibility.public,
-        actions: <AndroidNotificationAction>[
+        sound: soundUri != null && soundUri.isNotEmpty
+            ? UriAndroidNotificationSound(soundUri)
+            : null,
+        actions: const <AndroidNotificationAction>[
           AndroidNotificationAction('take', 'Take Now'),
           AndroidNotificationAction('skip', 'Skip'),
         ],
       ),
-      iOS: DarwinNotificationDetails(
+      iOS: const DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
@@ -113,7 +136,8 @@ class NotificationRecurring {
     );
 
     debugPrint(
-        '✅ Scheduled recurring reminder #$escalationLevel for $medicationName');
+      '✅ Scheduled recurring reminder #$escalationLevel for $medicationName',
+    );
   }
 
   /// Cancel recurring reminders for a specific reminder time.
@@ -124,7 +148,8 @@ class NotificationRecurring {
   ) async {
     for (var i = 1; i <= 10; i++) {
       await notifications.cancel(
-          NotificationIdGenerator.recurring(medicationId, reminderIndex, i));
+        NotificationIdGenerator.recurring(medicationId, reminderIndex, i),
+      );
     }
   }
 
@@ -135,8 +160,13 @@ class NotificationRecurring {
   ) async {
     for (var reminderIndex = 0; reminderIndex < 6; reminderIndex++) {
       for (var escalation = 1; escalation <= 10; escalation++) {
-        await notifications.cancel(NotificationIdGenerator.recurring(
-            medicationId, reminderIndex, escalation));
+        await notifications.cancel(
+          NotificationIdGenerator.recurring(
+            medicationId,
+            reminderIndex,
+            escalation,
+          ),
+        );
       }
     }
   }

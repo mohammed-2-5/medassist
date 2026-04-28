@@ -18,13 +18,13 @@ class MedicationDetailStockCard extends StatelessWidget {
     final daysRemaining = days < 0 ? 0 : days;
     final stockPercentage =
         (medication.stockQuantity > 0 && medication.durationDays > 0)
-            ? (daysRemaining / medication.durationDays).clamp(0.0, 1.0)
-            : 0.0;
+        ? (daysRemaining / medication.durationDays).clamp(0.0, 1.0)
+        : 0.0;
     final stockColor = daysRemaining > 7
         ? Colors.green
         : daysRemaining > 3
-            ? Colors.orange
-            : Colors.red;
+        ? Colors.orange
+        : Colors.red;
 
     return Container(
       decoration: BoxDecoration(
@@ -42,8 +42,9 @@ class MedicationDetailStockCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 l10n.stockStatus,
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -64,8 +65,9 @@ class MedicationDetailStockCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     l10n.available,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -82,8 +84,9 @@ class MedicationDetailStockCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     l10n.remaining,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -109,7 +112,11 @@ class MedicationDetailStockCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber, color: Colors.red.shade700, size: 20),
+                  Icon(
+                    Icons.warning_amber,
+                    color: Colors.red.shade700,
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

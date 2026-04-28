@@ -1,9 +1,9 @@
 /// Typed error model for the application
 class AppError {
-
   const AppError({
     required this.message,
-    required this.type, this.userMessage,
+    required this.type,
+    this.userMessage,
     this.originalError,
     this.stackTrace,
   });

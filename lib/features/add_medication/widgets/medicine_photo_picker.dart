@@ -4,9 +4,10 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Medicine photo picker with camera and gallery options
 class MedicinePhotoPicker extends StatelessWidget {
-
   const MedicinePhotoPicker({
-    required this.onTakePhoto, required this.onPickFromGallery, this.photoPath,
+    required this.onTakePhoto,
+    required this.onPickFromGallery,
+    this.photoPath,
     this.onRemovePhoto,
     super.key,
   });
@@ -77,7 +78,7 @@ class MedicinePhotoPicker extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // Action buttons
           Row(
@@ -173,8 +174,11 @@ class MedicinePhotoPicker extends StatelessWidget {
                   // Remove button
                   TextButton.icon(
                     onPressed: onRemovePhoto,
-                    icon:
-                        const Icon(Icons.delete, size: 18, color: Colors.white),
+                    icon: const Icon(
+                      Icons.delete,
+                      size: 18,
+                      color: Colors.white,
+                    ),
                     label: Text(
                       AppLocalizations.of(context)!.removePhoto,
                       style: const TextStyle(color: Colors.white),

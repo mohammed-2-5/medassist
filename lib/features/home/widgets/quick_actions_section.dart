@@ -4,83 +4,74 @@ import 'package:med_assist/core/constants/app_constants.dart';
 import 'package:med_assist/features/home/widgets/quick_action_card.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 
-/// The Quick Actions grid row shown on the Home screen.
-///
-/// [onTakeDoseTap] is called when the user taps "Take Dose" so the parent
-/// can scroll the timeline into view.
+/// The Quick Actions grid shown on the Home screen.
 class QuickActionsSection extends StatelessWidget {
-  const QuickActionsSection({
-    required this.onTakeDoseTap,
-    super.key,
-  });
-
-  final VoidCallback onTakeDoseTap;
+  const QuickActionsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.quickActions,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: QuickActionCard(
-                  icon: Icons.medication,
-                  label: l10n.takeDose,
-                  color: const Color(0xFF4CAF50),
-                  onTap: onTakeDoseTap,
+              Container(
+                width: 4,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: QuickActionCard(
-                  icon: Icons.add_circle,
-                  label: l10n.addMedicine,
-                  color: const Color(0xFF2196F3),
-                  onTap: () => context.push(AppConstants.routeAddReminder),
+              const SizedBox(width: 8),
+              Text(
+                l10n.quickActions,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.2,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Row(
+          const SizedBox(height: 14),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.8,
             children: [
-              Expanded(
-                child: QuickActionCard(
-                  icon: Icons.analytics,
-                  label: l10n.viewStats,
-                  color: const Color(0xFF9C27B0),
-                  onTap: () => context.push(AppConstants.routeAnalytics),
-                ),
+              QuickActionCard(
+                icon: Icons.bar_chart_rounded,
+                label: l10n.viewStats,
+                color: const Color(0xFF9C27B0),
+                onTap: () => context.push(AppConstants.routeAnalytics),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: QuickActionCard(
-                  icon: Icons.chat,
-                  label: l10n.askAI,
-                  color: const Color(0xFFFF9800),
-                  onTap: () => context.push(AppConstants.routeChatbot),
-                ),
+              QuickActionCard(
+                icon: Icons.auto_awesome_outlined,
+                label: l10n.askAI,
+                color: const Color(0xFFFF9800),
+                onTap: () => context.push(AppConstants.routeChatbot),
+              ),
+              QuickActionCard(
+                icon: Icons.inventory_2_outlined,
+                label: l10n.stock,
+                color: const Color(0xFFFF5722),
+                onTap: () => context.push('/stock'),
+              ),
+              QuickActionCard(
+                icon: Icons.shopping_bag_outlined,
+                label: l10n.shoppingList,
+                color: const Color(0xFF009688),
+                onTap: () => context.push(AppConstants.routeShoppingList),
               ),
             ],
-          ),
-          const SizedBox(height: 12),
-          QuickActionCard(
-            icon: Icons.shopping_bag_outlined,
-            label: l10n.shoppingList,
-            color: const Color(0xFF009688),
-            onTap: () => context.push(AppConstants.routeShoppingList),
           ),
         ],
       ),

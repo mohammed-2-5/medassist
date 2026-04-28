@@ -7,91 +7,111 @@ import 'package:med_assist/app.dart';
 import 'package:med_assist/core/database/app_database.dart';
 import 'package:med_assist/core/errors/error_handler_service.dart';
 import 'package:med_assist/services/background/background_service.dart';
+import 'package:med_assist/services/health/egyptian_drug_repository.dart';
 import 'package:med_assist/services/notification/notification_service.dart';
 import 'package:med_assist/services/permissions/permissions_service.dart';
 
 void main() async {
   // Run app in error-handling zone
-  await runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  await runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    // Load environment variables
-    await dotenv.load();
+      // Load environment variables
+      await dotenv.load();
 
-    // Initialize error handler
-    debugPrint('Initializing error handler...');
-    final errorHandler = ErrorHandlerService();
-    await errorHandler.initialize();
+      // Initialize error handler
+      debugPrint('Initializing error handler...');
+      final errorHandler = ErrorHandlerService();
+      await errorHandler.initialize();
 
-    try {
-      // Initialize Crashlytics
-      //await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-
-      // Initialize notification service ONCE
-      debugPrint('Initializing notification service...');
-      final notificationService = NotificationService();
-      await notificationService.initialize();
-
-      // Request notification permissions
-      debugPrint('Requesting notification permissions...');
-      await notificationService.requestPermissions();
-
-      // Initialize background service (non-critical)
-      debugPrint('Initializing background service...');
-      WorkManagerBackgroundService? bg;
       try {
-        bg = WorkManagerBackgroundService();
-        await bg.configure();
-      } catch (e) {
-        bg = null;
-        debugPrint('⚠️ Background service init failed (non-critical): $e');
-      }
+        // Initialize Crashlytics
+        //await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
-      // Clean up old snooze history from previous days
-      debugPrint('Cleaning up old snooze history...');
-      try {
-        final database = AppDatabase();
-        await database.resetOldSnoozeHistory();
-        debugPrint('✅ Snooze history cleanup completed');
-      } catch (e) {
-        debugPrint('❌ Snooze history cleanup failed: $e');
-        // Non-critical, continue anyway
-      }
+        // Initialize notification service ONCE
+        debugPrint('Initializing notification service...');
+        final notificationService = NotificationService();
+        await notificationService.initialize();
 
-      // Request initial permissions
-      debugPrint('Requesting initial permissions...');
-      final permissionsService = PermissionsService();
-      final permissions = await permissionsService.requestInitialPermissions();
+        // Request notification permissions
+        debugPrint('Requesting notification permissions...');
+        await notificationService.requestPermissions();
 
-      debugPrint('Permissions status: $permissions');
-
-      // Start background service (if initialized)
-      if (bg != null) {
+        // Initialize background service (non-critical)
+        debugPrint('Initializing background service...');
+        WorkManagerBackgroundService? bg;
         try {
-          await bg.start();
+          bg = WorkManagerBackgroundService();
+          await bg.configure();
         } catch (e) {
-          debugPrint('⚠️ Background service start failed (non-critical): $e');
+          bg = null;
+          debugPrint('⚠️ Background service init failed (non-critical): $e');
         }
-      }
 
-      debugPrint('All services initialized successfully');
-    } catch (e, stack) {
-      errorHandler.capture(e, stackTrace: stack, reason: 'Service initialization error');
-      debugPrint('Error initializing services: $e');
-      // Continue anyway - app should still work without some services
-    }
-    runApp(
-      const ProviderScope(
-        child: MyApp(),
-      ),
-    );
-  }, (error, stack) {
-    // Catch all unhandled errors
-    ErrorHandlerService().capture(
-      error,
-      stackTrace: stack,
-      reason: 'Unhandled error in app',
-    );
-    debugPrint('Unhandled error: $error');
-  });
+        // Clean up old snooze history from previous days
+        debugPrint('Cleaning up old snooze history...');
+        try {
+          final database = AppDatabase();
+          await database.resetOldSnoozeHistory();
+          debugPrint('✅ Snooze history cleanup completed');
+        } catch (e) {
+          debugPrint('❌ Snooze history cleanup failed: $e');
+          // Non-critical, continue anyway
+        }
+
+        // Import Egyptian drug catalog (one-time, ~26k rows). Non-blocking:
+        // we kick this off in the background so it doesn't delay startup.
+        // The repository is idempotent — only runs the first launch.
+        unawaited(
+          EgyptianDrugRepository(AppDatabase()).ensureImported().then(
+                (_) => debugPrint('✅ Egyptian drug catalog ready'),
+                onError: (Object e) =>
+                    debugPrint('⚠️ Egyptian drug import failed: $e'),
+              ),
+        );
+
+        // Request initial permissions
+        debugPrint('Requesting initial permissions...');
+        final permissionsService = PermissionsService();
+        final permissions = await permissionsService
+            .requestInitialPermissions();
+
+        debugPrint('Permissions status: $permissions');
+
+        // Start background service (if initialized)
+        if (bg != null) {
+          try {
+            await bg.start();
+          } catch (e) {
+            debugPrint('⚠️ Background service start failed (non-critical): $e');
+          }
+        }
+
+        debugPrint('All services initialized successfully');
+      } catch (e, stack) {
+        errorHandler.capture(
+          e,
+          stackTrace: stack,
+          reason: 'Service initialization error',
+        );
+        debugPrint('Error initializing services: $e');
+        // Continue anyway - app should still work without some services
+      }
+      runApp(
+        const ProviderScope(
+          child: MyApp(),
+        ),
+      );
+    },
+    (error, stack) {
+      // Catch all unhandled errors
+      ErrorHandlerService().capture(
+        error,
+        stackTrace: stack,
+        reason: 'Unhandled error in app',
+      );
+      debugPrint('Unhandled error: $error');
+    },
+  );
 }

@@ -7,7 +7,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Card showing monthly adherence statistics with smooth animations
 class MonthlyStatsCard extends StatelessWidget {
-
   const MonthlyStatsCard({
     required this.stats,
     required this.month,
@@ -32,150 +31,156 @@ class MonthlyStatsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            // Header
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_month,
-                  color: colorScheme.primary,
-                  size: 24,
+          // Header
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month,
+                color: colorScheme.primary,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                month,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  month,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
 
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-            // Adherence rate with progress indicator
-            Row(
-              children: [
-                // Circular progress with animation
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0, end: adherenceRate / 100),
+          // Adherence rate with progress indicator
+          Row(
+            children: [
+              // Circular progress with animation
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0, end: adherenceRate / 100),
+                        duration: AppAnimations.slow,
+                        curve: AppAnimations.smooth,
+                        builder: (context, value, child) {
+                          return CircularProgressIndicator(
+                            value: value,
+                            strokeWidth: 8,
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              _getAdherenceColor(adherenceRate, colorScheme),
+                            ),
+                            strokeCap: StrokeCap.round,
+                          );
+                        },
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TweenAnimationBuilder<int>(
+                          tween: IntTween(begin: 0, end: adherenceRate),
                           duration: AppAnimations.slow,
                           curve: AppAnimations.smooth,
                           builder: (context, value, child) {
-                            return CircularProgressIndicator(
-                              value: value,
-                              strokeWidth: 8,
-                              backgroundColor: colorScheme.surfaceContainerHighest,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                _getAdherenceColor(adherenceRate, colorScheme),
+                            return Text(
+                              '$value%',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: _getAdherenceColor(
+                                  adherenceRate,
+                                  colorScheme,
+                                ),
                               ),
-                              strokeCap: StrokeCap.round,
                             );
                           },
                         ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TweenAnimationBuilder<int>(
-                            tween: IntTween(begin: 0, end: adherenceRate),
-                            duration: AppAnimations.slow,
-                            curve: AppAnimations.smooth,
-                            builder: (context, value, child) {
-                              return Text(
-                                '$value%',
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: _getAdherenceColor(adherenceRate, colorScheme),
-                                ),
-                              );
-                            },
+                        Text(
+                          'Rate',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
-                          Text(
-                            'Rate',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(width: 24),
+              const SizedBox(width: 24),
 
-                // Stats
+              // Stats
+              Expanded(
+                child: Column(
+                  children: [
+                    _StatRow(
+                      label: l10n.totalDoses,
+                      value: totalDoses.toString(),
+                      icon: Icons.medication,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(height: 8),
+                    _StatRow(
+                      label: l10n.taken,
+                      value: takenDoses.toString(),
+                      icon: Icons.check_circle,
+                      color: colorScheme.secondary,
+                    ),
+                    const SizedBox(height: 8),
+                    _StatRow(
+                      label: l10n.missed,
+                      value: missedDoses.toString(),
+                      icon: Icons.cancel,
+                      color: colorScheme.error,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Adherence message
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: _getAdherenceColor(
+                adherenceRate,
+                colorScheme,
+              ).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  _getAdherenceIcon(adherenceRate),
+                  color: _getAdherenceColor(adherenceRate, colorScheme),
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Column(
-                    children: [
-                      _StatRow(
-                        label: l10n.totalDoses,
-                        value: totalDoses.toString(),
-                        icon: Icons.medication,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(height: 8),
-                      _StatRow(
-                        label: l10n.taken,
-                        value: takenDoses.toString(),
-                        icon: Icons.check_circle,
-                        color: colorScheme.secondary,
-                      ),
-                      const SizedBox(height: 8),
-                      _StatRow(
-                        label: l10n.missed,
-                        value: missedDoses.toString(),
-                        icon: Icons.cancel,
-                        color: colorScheme.error,
-                      ),
-                    ],
+                  child: Text(
+                    _getAdherenceMessage(adherenceRate, l10n),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: _getAdherenceColor(adherenceRate, colorScheme),
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
             ),
-
-            const SizedBox(height: 16),
-
-            // Adherence message
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _getAdherenceColor(adherenceRate, colorScheme)
-                    .withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    _getAdherenceIcon(adherenceRate),
-                    color: _getAdherenceColor(adherenceRate, colorScheme),
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _getAdherenceMessage(adherenceRate, l10n),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: _getAdherenceColor(adherenceRate, colorScheme),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Color _getAdherenceColor(int rate, ColorScheme colorScheme) {

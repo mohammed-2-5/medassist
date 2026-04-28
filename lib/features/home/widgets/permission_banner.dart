@@ -15,7 +15,8 @@ enum PermissionBannerType {
   success, // Green background
 }
 
-class PermissionBanner extends StatelessWidget { // Optional dismiss functionality
+class PermissionBanner extends StatelessWidget {
+  // Optional dismiss functionality
 
   const PermissionBanner({
     required this.icon,
@@ -198,7 +199,6 @@ class PermissionBanner extends StatelessWidget { // Optional dismiss functionali
 
 /// Internal class to hold banner color configuration
 class _BannerColors {
-
   _BannerColors({
     required this.backgroundColor,
     required this.borderColor,

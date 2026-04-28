@@ -43,15 +43,16 @@ class _Step3StockState extends ConsumerState<Step3Stock>
       ),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.3, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 0.8, curve: Curves.easeOutCubic),
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0.3, 0),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0, 0.8, curve: Curves.easeOutCubic),
+          ),
+        );
 
     unawaited(_animationController.forward());
   }
@@ -98,8 +99,7 @@ class _Step3StockState extends ConsumerState<Step3Stock>
               // Advanced settings divider
               Row(
                 children: [
-                  Expanded(
-                      child: Divider(color: colorScheme.outlineVariant)),
+                  Expanded(child: Divider(color: colorScheme.outlineVariant)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
@@ -110,19 +110,18 @@ class _Step3StockState extends ConsumerState<Step3Stock>
                       ),
                     ),
                   ),
-                  Expanded(
-                      child: Divider(color: colorScheme.outlineVariant)),
+                  Expanded(child: Divider(color: colorScheme.outlineVariant)),
                 ],
               ),
               const SizedBox(height: 24),
 
               NotificationSoundPicker(
-                selectedSound:
-                    NotificationSound.fromPath(formData.customSoundPath) ??
-                        NotificationSound.presets.first,
+                selectedSound: NotificationSound.fromStoredPath(
+                  formData.customSoundPath,
+                ),
                 onChanged: (sound) => ref
                     .read(medicationFormProvider.notifier)
-                    .setCustomSoundPath(sound.path),
+                    .setCustomSoundPath(sound.uri),
               ),
               const SizedBox(height: 24),
 

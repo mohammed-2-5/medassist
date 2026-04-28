@@ -35,13 +35,20 @@ class _MedicationEditScreenState extends ConsumerState<MedicationEditScreen> {
 
   Future<void> _loadMedication() async {
     try {
-      setState(() { _isLoading = true; _loadError = false; });
+      setState(() {
+        _isLoading = true;
+        _loadError = false;
+      });
       await ref
           .read(medicationFormProvider.notifier)
           .loadMedication(widget.medicationId);
       if (mounted) setState(() => _isLoading = false);
     } catch (_) {
-      if (mounted) setState(() { _isLoading = false; _loadError = true; });
+      if (mounted)
+        setState(() {
+          _isLoading = false;
+          _loadError = true;
+        });
     }
   }
 
@@ -67,8 +74,10 @@ class _MedicationEditScreenState extends ConsumerState<MedicationEditScreen> {
             children: [
               Icon(Icons.error_outline, size: 64, color: colorScheme.error),
               const SizedBox(height: 16),
-              Text(l10n.failedToLoadMedication,
-                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                l10n.failedToLoadMedication,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: _loadMedication,
@@ -98,7 +107,8 @@ class _MedicationEditScreenState extends ConsumerState<MedicationEditScreen> {
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
                 style: FilledButton.styleFrom(
-                    backgroundColor: colorScheme.error),
+                  backgroundColor: colorScheme.error,
+                ),
                 child: Text(l10n.discard),
               ),
             ],

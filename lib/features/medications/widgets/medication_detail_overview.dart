@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:med_assist/core/database/app_database.dart';
+import 'package:med_assist/core/utils/dose_unit_localizer.dart';
 import 'package:med_assist/features/medications/widgets/medication_detail_drug_info_card.dart';
 import 'package:med_assist/features/medications/widgets/medication_detail_stock_card.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
@@ -14,6 +15,13 @@ class MedicationDetailOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final localeName = Localizations.localeOf(context).languageCode;
+    final localizedDoseUnit = localizeDoseUnit(l10n, medication.doseUnit);
+    final strengthValue = [medication.strength, medication.unit]
+        .whereType<String>()
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .join(' ');
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -26,15 +34,15 @@ class MedicationDetailOverview extends StatelessWidget {
             children: [
               _InfoRow(
                 label: l10n.strength,
-                value: '${medication.strength} ${medication.unit}',
+                value: strengthValue,
               ),
               _InfoRow(
                 label: l10n.perDose,
-                value: '${medication.dosePerTime} ${medication.doseUnit}',
+                value: '${medication.dosePerTime} $localizedDoseUnit',
               ),
               _InfoRow(
                 label: l10n.frequency,
-                value: '${medication.timesPerDay}x per day',
+                value: l10n.xTimesPerDay(medication.timesPerDay),
               ),
             ],
           ),
@@ -45,27 +53,28 @@ class MedicationDetailOverview extends StatelessWidget {
             children: [
               _InfoRow(
                 label: l10n.duration,
-                value: '${medication.durationDays} days',
+                value: l10n.daysCount(medication.durationDays),
               ),
               _InfoRow(
                 label: l10n.started,
-                value: DateFormat('MMM dd, yyyy').format(medication.startDate),
+                value: DateFormat.yMMMd(
+                  localeName,
+                ).format(medication.startDate),
               ),
               _InfoRow(
                 label: l10n.ends,
-                value: DateFormat('MMM dd, yyyy').format(
-                  medication.startDate
-                      .add(Duration(days: medication.durationDays)),
+                value: DateFormat.yMMMd(localeName).format(
+                  medication.startDate.add(
+                    Duration(days: medication.durationDays),
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
           MedicationDetailStockCard(medication: medication),
-          if (_hasDrugInfo) ...[
-            const SizedBox(height: 12),
-            MedicationDetailDrugInfoCard(medication: medication),
-          ],
+          const SizedBox(height: 12),
+          MedicationDetailDrugInfoCard(medication: medication),
           if (medication.notes != null && medication.notes!.isNotEmpty) ...[
             const SizedBox(height: 12),
             _InfoCard(
@@ -80,12 +89,6 @@ class MedicationDetailOverview extends StatelessWidget {
       ),
     );
   }
-
-  bool get _hasDrugInfo =>
-      medication.purpose != null ||
-      medication.activeIngredients != null ||
-      medication.sideEffects != null ||
-      medication.warnings != null;
 }
 
 class _InfoCard extends StatelessWidget {
@@ -105,10 +108,10 @@ class _InfoCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     return Container(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outlineVariant.withOpacity(0.5),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
       padding: const EdgeInsets.all(16),
@@ -121,8 +124,9 @@ class _InfoCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -156,8 +160,9 @@ class _InfoRow extends StatelessWidget {
           ),
           Text(
             value,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),

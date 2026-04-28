@@ -38,7 +38,10 @@ class SmartSnoozeDialog extends StatelessWidget {
       currentSnoozeCount: currentSnoozeCount,
     );
 
-    final remainingSnoozes = (maxSnoozes - currentSnoozeCount).clamp(0, maxSnoozes);
+    final remainingSnoozes = (maxSnoozes - currentSnoozeCount).clamp(
+      0,
+      maxSnoozes,
+    );
     final isLimitReached = remainingSnoozes == 0;
 
     return Dialog(
@@ -50,52 +53,52 @@ class SmartSnoozeDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: isLimitReached
-                        ? colorScheme.errorContainer
-                        : colorScheme.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    isLimitReached ? Icons.block : Icons.snooze,
-                    color: isLimitReached
-                        ? colorScheme.onErrorContainer
-                        : colorScheme.onPrimaryContainer,
-                    size: 28,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        medicationName,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isLimitReached
+                            ? colorScheme.errorContainer
+                            : colorScheme.primaryContainer,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        isLimitReached
-                            ? l10n.snoozeLimitReached
-                            : l10n.snoozeRemaining(remainingSnoozes),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isLimitReached
-                              ? colorScheme.error
-                              : colorScheme.onSurfaceVariant,
-                        ),
+                      child: Icon(
+                        isLimitReached ? Icons.block : Icons.snooze,
+                        color: isLimitReached
+                            ? colorScheme.onErrorContainer
+                            : colorScheme.onPrimaryContainer,
+                        size: 28,
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            )
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            medicationName,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            isLimitReached
+                                ? l10n.snoozeLimitReached
+                                : l10n.snoozeRemaining(remainingSnoozes),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: isLimitReached
+                                  ? colorScheme.error
+                                  : colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
                 .animate()
                 .fadeIn(duration: 300.ms)
                 .slideX(begin: -0.2, end: 0, curve: Curves.easeOut),
@@ -145,10 +148,7 @@ class SmartSnoozeDialog extends StatelessWidget {
                   ),
                 ),
               ],
-            )
-                .animate(delay: 300.ms)
-                .fadeIn()
-                .slideY(begin: 0.2, end: 0),
+            ).animate(delay: 300.ms).fadeIn().slideY(begin: 0.2, end: 0),
           ],
         ),
       ),
@@ -161,28 +161,28 @@ class SmartSnoozeDialog extends StatelessWidget {
     ColorScheme colorScheme,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.errorContainer.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.error.withOpacity(0.5)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.info_outline, color: colorScheme.error, size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              l10n.snoozeLimitMessage,
-              style: TextStyle(
-                color: colorScheme.onErrorContainer,
-                fontSize: 14,
-              ),
-            ),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colorScheme.errorContainer.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colorScheme.error.withOpacity(0.5)),
           ),
-        ],
-      ),
-    )
+          child: Row(
+            children: [
+              Icon(Icons.info_outline, color: colorScheme.error, size: 24),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.snoozeLimitMessage,
+                  style: TextStyle(
+                    color: colorScheme.onErrorContainer,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
         .animate()
         .fadeIn(duration: 400.ms)
         .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));

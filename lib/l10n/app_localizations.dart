@@ -134,6 +134,18 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @savingMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving medication...'**
+  String get savingMedicine;
+
+  /// No description provided for @drugInfoRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh drug information'**
+  String get drugInfoRefresh;
+
   /// No description provided for @addMedication.
   ///
   /// In en, this message translates to:
@@ -2399,7 +2411,7 @@ abstract class AppLocalizations {
   /// No description provided for @dosesTakenOf.
   ///
   /// In en, this message translates to:
-  /// **'{taken} of {total} doses taken'**
+  /// **'{taken} of {total} doses'**
   String dosesTakenOf(int taken, int total);
 
   /// No description provided for @errorLoadingStats.
@@ -2671,6 +2683,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Custom Sound'**
   String get customSound;
+
+  /// No description provided for @soundPickFromDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from device…'**
+  String get soundPickFromDevice;
+
+  /// No description provided for @soundPickFromDeviceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a ringtone from your phone'**
+  String get soundPickFromDeviceHint;
+
+  /// No description provided for @soundTapToChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change'**
+  String get soundTapToChange;
+
+  /// No description provided for @soundPickerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Default for system tone, or pick a ringtone from your device'**
+  String get soundPickerHint;
+
+  /// No description provided for @soundPreviewUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview unavailable for this sound'**
+  String get soundPreviewUnavailable;
 
   /// No description provided for @advancedSettings.
   ///
@@ -3368,6 +3410,48 @@ abstract class AppLocalizations {
   /// **'Draft saved!'**
   String get draftSaved;
 
+  /// No description provided for @duplicateMedicineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine already exists'**
+  String get duplicateMedicineTitle;
+
+  /// No description provided for @duplicateMedicineMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A medicine with the same name, strength, and unit already exists. Would you like to edit the existing one instead?'**
+  String get duplicateMedicineMessage;
+
+  /// No description provided for @editExistingMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit existing'**
+  String get editExistingMedicine;
+
+  /// No description provided for @showMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get showMore;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get showLess;
+
+  /// No description provided for @highFrequencyWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'High frequency. Double-check with your doctor.'**
+  String get highFrequencyWarning;
+
+  /// No description provided for @highDosePerTimeWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'High dose per intake. Verify this is correct.'**
+  String get highDosePerTimeWarning;
+
   /// No description provided for @noData.
   ///
   /// In en, this message translates to:
@@ -3433,6 +3517,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last 30 Days'**
   String get last30Days;
+
+  /// No description provided for @partial.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get partial;
 
   /// No description provided for @last3Months.
   ///
@@ -3787,6 +3877,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan Medication Label'**
   String get scanMedicationLabel;
+
+  /// No description provided for @scanPrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Prescription'**
+  String get scanPrescription;
+
+  /// No description provided for @scanPrescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera reads medicine name & strength automatically'**
+  String get scanPrescriptionHint;
 
   /// No description provided for @autoFillFromPhoto.
   ///
@@ -4171,6 +4273,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stock information'**
   String get stockInformation;
+
+  /// No description provided for @treatmentDaysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Treatment: {count} days remaining'**
+  String treatmentDaysRemaining(int count);
+
+  /// No description provided for @treatmentCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Treatment completed'**
+  String get treatmentCompleted;
 
   /// No description provided for @xTimesPerDay.
   ///
@@ -4562,6 +4676,72 @@ abstract class AppLocalizations {
   /// **'Could not check drug interactions'**
   String get interactionCheckFailed;
 
+  /// No description provided for @interactionWarningCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 conflict found} other{{count} conflicts found}}'**
+  String interactionWarningCount(int count);
+
+  /// No description provided for @interactionDoctorAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t change your medications without consulting your doctor first.'**
+  String get interactionDoctorAdvice;
+
+  /// No description provided for @seeYourDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'See Your Doctor'**
+  String get seeYourDoctor;
+
+  /// No description provided for @conflictBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflict between'**
+  String get conflictBetween;
+
+  /// No description provided for @and.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get and;
+
+  /// No description provided for @whatHappens.
+  ///
+  /// In en, this message translates to:
+  /// **'What can happen?'**
+  String get whatHappens;
+
+  /// No description provided for @whatToDo.
+  ///
+  /// In en, this message translates to:
+  /// **'What to do?'**
+  String get whatToDo;
+
+  /// No description provided for @drugInfoFetch.
+  ///
+  /// In en, this message translates to:
+  /// **'Get AI Drug Info'**
+  String get drugInfoFetch;
+
+  /// No description provided for @drugInfoFetching.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching drug information...'**
+  String get drugInfoFetching;
+
+  /// No description provided for @drugInfoFetchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load drug information. Tap to retry.'**
+  String get drugInfoFetchError;
+
+  /// No description provided for @drugInfoDidYouMean.
+  ///
+  /// In en, this message translates to:
+  /// **'Drug name not recognized. Did you mean one of these?'**
+  String get drugInfoDidYouMean;
+
   /// No description provided for @drugInformation.
   ///
   /// In en, this message translates to:
@@ -4609,6 +4789,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warnings'**
   String get drugWarnings;
+
+  /// No description provided for @howToTake.
+  ///
+  /// In en, this message translates to:
+  /// **'How to take'**
+  String get howToTake;
+
+  /// No description provided for @watchOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch out'**
+  String get watchOut;
+
+  /// No description provided for @foodsToAvoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Foods to avoid'**
+  String get foodsToAvoid;
+
+  /// No description provided for @drowsinessWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Drowsiness warning'**
+  String get drowsinessWarning;
+
+  /// No description provided for @mayCauseDrowsiness.
+  ///
+  /// In en, this message translates to:
+  /// **'May cause drowsiness. Avoid driving after taking it.'**
+  String get mayCauseDrowsiness;
+
+  /// No description provided for @missedDoseAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed dose'**
+  String get missedDoseAdvice;
+
+  /// No description provided for @storageInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storageInstructions;
+
+  /// No description provided for @alcoholWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Alcohol'**
+  String get alcoholWarning;
+
+  /// No description provided for @contraindications.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t take if'**
+  String get contraindications;
+
+  /// No description provided for @requiresMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring'**
+  String get requiresMonitoring;
+
+  /// No description provided for @otcOrPrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get otcOrPrescription;
+
+  /// No description provided for @severityMinor.
+  ///
+  /// In en, this message translates to:
+  /// **'Minor'**
+  String get severityMinor;
+
+  /// No description provided for @severityModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get severityModerate;
+
+  /// No description provided for @severityMajor.
+  ///
+  /// In en, this message translates to:
+  /// **'Major'**
+  String get severityMajor;
+
+  /// No description provided for @severitySevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe'**
+  String get severitySevere;
+
+  /// No description provided for @severityMinorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor for side effects'**
+  String get severityMinorDesc;
+
+  /// No description provided for @severityModerateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use with caution'**
+  String get severityModerateDesc;
+
+  /// No description provided for @severityMajorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid if possible'**
+  String get severityMajorDesc;
+
+  /// No description provided for @severitySevereDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not combine'**
+  String get severitySevereDesc;
 
   /// No description provided for @medicationSavedTitle.
   ///
@@ -4807,6 +5101,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan Ahead'**
   String get planAhead;
+
+  /// No description provided for @toBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'To Buy'**
+  String get toBuy;
+
+  /// No description provided for @inCart.
+  ///
+  /// In en, this message translates to:
+  /// **'In Cart'**
+  String get inCart;
+
+  /// No description provided for @scheduleSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleSectionTitle;
+
+  /// No description provided for @scheduleSectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how often to take this medication'**
+  String get scheduleSectionDesc;
+
+  /// No description provided for @modeDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get modeDaily;
+
+  /// No description provided for @modeWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get modeWeekly;
+
+  /// No description provided for @modeMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get modeMonthly;
+
+  /// No description provided for @modeAsNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'As Needed'**
+  String get modeAsNeeded;
+
+  /// No description provided for @everyNDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Every N days'**
+  String get everyNDays;
+
+  /// No description provided for @everyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get everyLabel;
+
+  /// No description provided for @daysUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysUnit;
+
+  /// No description provided for @weekSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'week'**
+  String get weekSingular;
+
+  /// No description provided for @weekPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'weeks'**
+  String get weekPlural;
+
+  /// No description provided for @monthSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get monthSingular;
+
+  /// No description provided for @monthPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get monthPlural;
+
+  /// No description provided for @weekdaysPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get weekdaysPreset;
+
+  /// No description provided for @weekendsPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekends'**
+  String get weekendsPreset;
+
+  /// No description provided for @allDaysPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'All days'**
+  String get allDaysPreset;
+
+  /// No description provided for @dayOfMonthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of month'**
+  String get dayOfMonthLabel;
+
+  /// No description provided for @monthlyShortMonthHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Falls on last day when month is shorter'**
+  String get monthlyShortMonthHint;
+
+  /// No description provided for @asNeededInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take only when needed. Reminders will not be scheduled.'**
+  String get asNeededInfo;
+
+  /// No description provided for @nextDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Next dose'**
+  String get nextDose;
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @laterToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Later today'**
+  String get laterToday;
+
+  /// No description provided for @allCaughtUp.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get allCaughtUp;
+
+  /// No description provided for @noMoreDosesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No more doses scheduled today'**
+  String get noMoreDosesToday;
+
+  /// No description provided for @dueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get dueNow;
+
+  /// No description provided for @dueInMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Due in {minutes} min'**
+  String dueInMinutes(int minutes);
+
+  /// No description provided for @dueInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Due in {hours}h {minutes}m'**
+  String dueInHours(int hours, int minutes);
+
+  /// No description provided for @overdueByMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue by {minutes} min'**
+  String overdueByMinutes(int minutes);
+
+  /// No description provided for @overdueByHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue by {hours}h {minutes}m'**
+  String overdueByHours(int hours, int minutes);
+
+  /// No description provided for @noNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet'**
+  String get noNotes;
+
+  /// No description provided for @dosageInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosage'**
+  String get dosageInfo;
+
+  /// No description provided for @mostMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Missed'**
+  String get mostMissed;
+
+  /// No description provided for @bestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Time'**
+  String get bestTime;
+
+  /// No description provided for @dayStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Day Streak'**
+  String get dayStreak;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get goodEvening;
+
+  /// No description provided for @goodNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Good night'**
+  String get goodNight;
+
+  /// No description provided for @todaysProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s progress'**
+  String get todaysProgress;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @stayOnTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay on track'**
+  String get stayOnTrack;
+
+  /// No description provided for @greatJobToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job today'**
+  String get greatJobToday;
+
+  /// No description provided for @letsStartDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s start the day'**
+  String get letsStartDay;
 }
 
 class _AppLocalizationsDelegate

@@ -22,32 +22,31 @@ class MedicationCardIcon extends StatelessWidget {
     );
 
     final photoPath = medication.medicinePhotoPath;
-    if (photoPath != null && File(photoPath).existsSync()) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.file(
-          File(photoPath),
-          width: 52,
-          height: 52,
-          fit: BoxFit.cover,
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: medication.isActive
-            ? colorScheme.primaryContainer
-            : colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        medicineType.label.contains(' ')
-            ? medicineType.label.split(' ')[0]
-            : medicineType.label,
-        style: const TextStyle(fontSize: 28),
-      ),
-    );
+    final child = photoPath != null && File(photoPath).existsSync()
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(
+              File(photoPath),
+              width: 52,
+              height: 52,
+              fit: BoxFit.cover,
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: medication.isActive
+                  ? colorScheme.primaryContainer
+                  : colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              medicineType.label.contains(' ')
+                  ? medicineType.label.split(' ')[0]
+                  : medicineType.label,
+              style: const TextStyle(fontSize: 28),
+            ),
+          );
+    return Hero(tag: 'med-icon-${medication.id}', child: child);
   }
 }

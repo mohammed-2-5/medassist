@@ -9,6 +9,7 @@ class AddMedicationNavigationFab extends StatelessWidget {
     required this.formData,
     required this.onBack,
     required this.onNext,
+    this.isSaving = false,
     super.key,
   });
 
@@ -16,6 +17,7 @@ class AddMedicationNavigationFab extends StatelessWidget {
   final MedicationFormData formData;
   final VoidCallback? onBack;
   final VoidCallback? onNext;
+  final bool isSaving;
 
   bool get _canProceed {
     switch (currentStep) {
@@ -35,38 +37,48 @@ class AddMedicationNavigationFab extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
+    final enabled = _canProceed && !isSaving;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           if (currentStep > 0)
             FloatingActionButton(
-              onPressed: onBack,
+              onPressed: isSaving ? null : onBack,
               heroTag: 'back',
               child: const Icon(Icons.arrow_back),
             ),
           const Spacer(),
           FloatingActionButton.extended(
-            onPressed: _canProceed ? onNext : null,
+            onPressed: enabled ? onNext : null,
             heroTag: 'next',
-            backgroundColor: _canProceed
+            backgroundColor: enabled
                 ? colorScheme.primary
                 : colorScheme.surfaceContainerHighest,
             label: Text(
               currentStep < 2 ? l10n.next : l10n.finish,
               style: TextStyle(
-                color: _canProceed
+                color: enabled
                     ? colorScheme.onPrimary
                     : colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            icon: Icon(
-              currentStep < 2 ? Icons.arrow_forward : Icons.check,
-              color: _canProceed
-                  ? colorScheme.onPrimary
-                  : colorScheme.onSurfaceVariant,
-            ),
+            icon: isSaving
+                ? SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  )
+                : Icon(
+                    currentStep < 2 ? Icons.arrow_forward : Icons.check,
+                    color: enabled
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurfaceVariant,
+                  ),
           ),
         ],
       ),

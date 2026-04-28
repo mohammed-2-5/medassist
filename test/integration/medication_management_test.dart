@@ -124,7 +124,10 @@ void main() {
       final medsWithReminders = await db.getMedicationsWithReminders();
 
       expect(medsWithReminders.length, equals(1));
-      expect(medsWithReminders.first.medication.medicineName, equals('Lisinopril'));
+      expect(
+        medsWithReminders.first.medication.medicineName,
+        equals('Lisinopril'),
+      );
       expect(medsWithReminders.first.reminderTimes.length, equals(3));
     });
 
@@ -282,7 +285,10 @@ void main() {
       var med = await db.getMedicationById(medId);
       expect(med!.medicineName, equals('Lisinopril'));
 
-      med = med.copyWith(strength: const Value('20'), updatedAt: DateTime.now());
+      med = med.copyWith(
+        strength: const Value('20'),
+        updatedAt: DateTime.now(),
+      );
       await db.updateMedication(med);
 
       med = await db.getMedicationById(medId);
@@ -298,17 +304,23 @@ void main() {
     });
 
     test('Multiple medications with different configurations', () async {
-      await db.insertMedication(createTestMedication(
-        name: 'Med 1',
-        timesPerDay: 1,
-      ));
-      await db.insertMedication(createTestMedication(
-        name: 'Med 2',
-      ));
-      await db.insertMedication(createTestMedication(
-        name: 'Med 3',
-        timesPerDay: 3,
-      ));
+      await db.insertMedication(
+        createTestMedication(
+          name: 'Med 1',
+          timesPerDay: 1,
+        ),
+      );
+      await db.insertMedication(
+        createTestMedication(
+          name: 'Med 2',
+        ),
+      );
+      await db.insertMedication(
+        createTestMedication(
+          name: 'Med 3',
+          timesPerDay: 3,
+        ),
+      );
 
       final meds = await db.getAllMedications();
       expect(meds.length, equals(3));

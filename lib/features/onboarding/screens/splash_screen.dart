@@ -33,25 +33,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       duration: const Duration(milliseconds: 1500),
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 0.6, curve: Curves.easeOut),
-      ),
-    );
+    _fadeAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0, 0.6, curve: Curves.easeOut),
+          ),
+        );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0, 0.6, curve: Curves.easeOut),
-      ),
-    );
+    _scaleAnimation =
+        Tween<double>(
+          begin: 0.5,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: const Interval(0, 0.6, curve: Curves.easeOut),
+          ),
+        );
 
     _animationController.forward();
 
@@ -155,4 +157,3 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
   }
 }
-

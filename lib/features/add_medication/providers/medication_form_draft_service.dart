@@ -54,6 +54,7 @@ class MedicationFormDraftService {
       final map = jsonDecode(json) as Map<String, dynamic>;
       final reminderTimesRaw =
           (map['reminderTimes'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final draftUnit = (map['unit'] as String?)?.trim();
       final reminderTimes = reminderTimesRaw
           .map(
             (rt) => ReminderTimeData(
@@ -72,7 +73,7 @@ class MedicationFormDraftService {
             : null,
         medicineName: map['medicineName'] as String?,
         strength: map['strength'] as String?,
-        unit: map['unit'] as String?,
+        unit: (draftUnit == null || draftUnit.isEmpty) ? 'mg' : draftUnit,
         notes: map['notes'] as String?,
         timesPerDay: map['timesPerDay'] as int? ?? 1,
         dosePerTime: (map['dosePerTime'] as num?)?.toDouble() ?? 1.0,
@@ -84,12 +85,10 @@ class MedicationFormDraftService {
         reminderTimes: reminderTimes,
         repetitionPattern:
             RepetitionPattern.values[map['repetitionPattern'] as int? ?? 0],
-        specificDaysOfWeek:
-            (map['specificDaysOfWeek'] as List?)?.cast<int>(),
+        specificDaysOfWeek: (map['specificDaysOfWeek'] as List?)?.cast<int>(),
         stockQuantity: map['stockQuantity'] as int? ?? 0,
         remindBeforeRunOut: map['remindBeforeRunOut'] as bool? ?? true,
-        reminderDaysBeforeRunOut:
-            map['reminderDaysBeforeRunOut'] as int? ?? 3,
+        reminderDaysBeforeRunOut: map['reminderDaysBeforeRunOut'] as int? ?? 3,
         expiryDate: map['expiryDate'] != null
             ? DateTime.parse(map['expiryDate'] as String)
             : null,

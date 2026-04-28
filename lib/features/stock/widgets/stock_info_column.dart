@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 /// A labelled info column used inside StockCard (e.g. Current Stock, Days Remaining).
 class StockInfoColumn extends StatelessWidget {
   const StockInfoColumn({
-    required this.label, required this.value, required this.icon, super.key,
+    required this.label,
+    required this.value,
+    required this.icon,
+    super.key,
   });
 
   final String label;

@@ -65,9 +65,9 @@ class RecurringRemindersSection extends ConsumerWidget {
             ],
           ),
           if (formData.enableRecurringReminders ?? false) ...[
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             const Divider(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.reminderIntervalTitle,
               style: theme.textTheme.titleSmall?.copyWith(
@@ -97,8 +97,9 @@ class RecurringRemindersSection extends ConsumerWidget {
                     color: isSelected
                         ? colorScheme.onPrimaryContainer
                         : colorScheme.onSurfaceVariant,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 );
               }).toList(),

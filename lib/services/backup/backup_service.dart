@@ -36,8 +36,9 @@ class BackupService {
           : plaintext;
 
       final directory = await getApplicationDocumentsDirectory();
-      final timestamp =
-          DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
+      final timestamp = DateFormat(
+        'yyyy-MM-dd_HH-mm-ss',
+      ).format(DateTime.now());
       final suffix = isEncrypted ? '_enc' : '';
       final filePath =
           '${directory.path}/medassist_backup_$timestamp$suffix.json';
@@ -193,14 +194,18 @@ class BackupService {
       'timestamp': DateTime.now().toIso8601String(),
       'appVersion': '1.0.0',
       'data': {
-        'medications':
-            medications.map(BackupSerializer.medicationToJson).toList(),
-        'doseHistory':
-            doseHistory.map(BackupSerializer.doseHistoryToJson).toList(),
-        'snoozeHistory':
-            snoozeHistory.map(BackupSerializer.snoozeHistoryToJson).toList(),
-        'stockHistory':
-            stockHistory.map(BackupSerializer.stockHistoryToJson).toList(),
+        'medications': medications
+            .map(BackupSerializer.medicationToJson)
+            .toList(),
+        'doseHistory': doseHistory
+            .map(BackupSerializer.doseHistoryToJson)
+            .toList(),
+        'snoozeHistory': snoozeHistory
+            .map(BackupSerializer.snoozeHistoryToJson)
+            .toList(),
+        'stockHistory': stockHistory
+            .map(BackupSerializer.stockHistoryToJson)
+            .toList(),
       },
       'statistics': {
         'medicationCount': medications.length,

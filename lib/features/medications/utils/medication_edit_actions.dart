@@ -25,8 +25,9 @@ class MedicationEditActions {
     );
 
     try {
-      final success =
-          await ref.read(medicationFormProvider.notifier).saveMedication();
+      final success = await ref
+          .read(medicationFormProvider.notifier)
+          .saveMedication();
       if (!context.mounted) return;
       context.pop(); // close loading
 

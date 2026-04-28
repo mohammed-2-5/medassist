@@ -48,13 +48,27 @@ double getStockProgressValue(double daysRemaining) {
 
 String formatExpiryDate(DateTime date) {
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   return '${months[date.month - 1]} ${date.day}, ${date.year}';
 }
 
-String getExpiryStatusText(bool isExpired, int? daysUntilExpiry, BuildContext context) {
+String getExpiryStatusText(
+  bool isExpired,
+  int? daysUntilExpiry,
+  BuildContext context,
+) {
   final l10n = AppLocalizations.of(context)!;
   if (isExpired) return l10n.expired;
   final days = daysUntilExpiry;

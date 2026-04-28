@@ -164,7 +164,9 @@ Future<void> _updateMissedDoses(AppDatabase db) async {
       }
     }
 
-    debugPrint('Missed doses check completed: $missedCount doses marked as missed');
+    debugPrint(
+      'Missed doses check completed: $missedCount doses marked as missed',
+    );
   } catch (e) {
     debugPrint('Error updating missed doses: $e');
   }
@@ -234,12 +236,12 @@ Future<void> _reschedulePatternReminders(
       if (mwr.medication.repetitionPattern == 'asNeeded') continue;
 
       // Check if medication has expired
-      final endDate = mwr.medication.startDate
-          .add(Duration(days: mwr.medication.durationDays));
+      final endDate = mwr.medication.startDate.add(
+        Duration(days: mwr.medication.durationDays),
+      );
       if (today.isAfter(endDate) || !mwr.medication.isActive) {
         // Cancel notifications for expired or paused medications
-        await notificationService
-            .cancelMedicationReminders(mwr.medication.id);
+        await notificationService.cancelMedicationReminders(mwr.medication.id);
         continue;
       }
 
@@ -254,7 +256,6 @@ Future<void> _reschedulePatternReminders(
     debugPrint('Error rescheduling reminders: $e');
   }
 }
-
 
 /// Calculate daily adherence statistics
 Future<void> _calculateDailyAdherence(AppDatabase db) async {

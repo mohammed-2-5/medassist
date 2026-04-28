@@ -3,7 +3,6 @@ import 'package:med_assist/features/home/models/dose_event.dart';
 
 /// Dose card header with medication info and time badge
 class DoseCardHeader extends StatelessWidget {
-
   const DoseCardHeader({
     required this.dose,
     required this.iconColor,

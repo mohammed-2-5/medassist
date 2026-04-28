@@ -8,7 +8,8 @@ void main() {
 
   setUp(() {
     multiAI = MultiAIService();
-    multiAI.resetStats(); // Reset stats before each test to avoid cross-test contamination
+    multiAI
+        .resetStats(); // Reset stats before each test to avoid cross-test contamination
   });
 
   tearDown(() {
@@ -62,7 +63,10 @@ void main() {
 
       // Should get a valid response from Groq (primary)
       expect(response, isNotEmpty);
-      expect(multiAI.lastUsedApi, anyOf(equals('Groq'), equals('Gemini'), equals('HuggingFace')));
+      expect(
+        multiAI.lastUsedApi,
+        anyOf(equals('Groq'), equals('Gemini'), equals('HuggingFace')),
+      );
     });
 
     test('API response is helpful and informative', () async {
@@ -77,7 +81,9 @@ void main() {
     test('API handles side effects question appropriately', () async {
       multiAI.initialize();
 
-      final response = await multiAI.sendMessage('What are common medication side effects?');
+      final response = await multiAI.sendMessage(
+        'What are common medication side effects?',
+      );
 
       // Should get a response (may or may not contain exact keywords)
       expect(response, isNotEmpty);
@@ -87,7 +93,9 @@ void main() {
     test('API handles missed dose question appropriately', () async {
       multiAI.initialize();
 
-      final response = await multiAI.sendMessage('What if I forgot to take my medication?');
+      final response = await multiAI.sendMessage(
+        'What if I forgot to take my medication?',
+      );
 
       // Should get a response
       expect(response, isNotEmpty);
@@ -97,7 +105,9 @@ void main() {
     test('API handles interaction question appropriately', () async {
       multiAI.initialize();
 
-      final response = await multiAI.sendMessage('Tell me about drug interactions');
+      final response = await multiAI.sendMessage(
+        'Tell me about drug interactions',
+      );
 
       // Should get a response
       expect(response, isNotEmpty);
@@ -199,7 +209,12 @@ Best streak: 45 days
       expect(multiAI.lastUsedApi, isNotNull);
       expect(
         multiAI.lastUsedApi,
-        anyOf(equals('Groq'), equals('Gemini'), equals('HuggingFace'), equals('Offline')),
+        anyOf(
+          equals('Groq'),
+          equals('Gemini'),
+          equals('HuggingFace'),
+          equals('Offline'),
+        ),
       );
     });
 

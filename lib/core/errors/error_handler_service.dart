@@ -11,7 +11,7 @@ class ErrorHandlerService {
   ErrorHandlerService._internal();
   static final ErrorHandlerService _instance = ErrorHandlerService._internal();
 
-//  late final FirebaseCrashlytics _crashlytics;
+  //  late final FirebaseCrashlytics _crashlytics;
   bool _initialized = false;
 
   /// Initialize error handler with Flutter error callbacks

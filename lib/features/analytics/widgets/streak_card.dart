@@ -5,7 +5,6 @@ import 'package:med_assist/l10n/app_localizations.dart';
 
 /// Card widget displaying the current adherence streak with animations
 class StreakCard extends StatefulWidget {
-
   const StreakCard({
     required this.streak,
     super.key,
@@ -56,7 +55,7 @@ class _StreakCardState extends State<StreakCard>
             child: GradientContainer(
               padding: const EdgeInsets.all(16),
               borderRadius: BorderRadius.circular(50),
-              elevation: 4,
+              elevation: 3,
               colors: [
                 colorScheme.secondary,
                 colorScheme.tertiary,
@@ -69,7 +68,7 @@ class _StreakCardState extends State<StreakCard>
             ),
           ),
 
-          const SizedBox(width: 20),
+          const SizedBox(width: 16),
 
           // Streak info
           Expanded(
@@ -137,8 +136,10 @@ class _StreakCardState extends State<StreakCard>
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: _getMilestoneColor(widget.streak, colorScheme)
-                      .withValues(alpha: 0.2),
+                  color: _getMilestoneColor(
+                    widget.streak,
+                    colorScheme,
+                  ).withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

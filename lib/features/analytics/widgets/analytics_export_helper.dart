@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:med_assist/features/analytics/providers/analytics_provider.dart';
-import 'package:med_assist/features/analytics/screens/analytics_dashboard_screen.dart' show AnalyticsDashboardScreen;
+import 'package:med_assist/features/analytics/screens/analytics_dashboard_screen.dart'
+    show AnalyticsDashboardScreen;
 import 'package:med_assist/features/analytics/services/analytics_export_service.dart';
 import 'package:med_assist/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -45,10 +46,10 @@ abstract final class AnalyticsExportHelper {
       final provider = selectedPeriod == 0
           ? todayAdherenceProvider
           : selectedPeriod == 1
-              ? weekAdherenceProvider
-              : selectedPeriod == 2
-                  ? monthAdherenceProvider
-                  : yearAdherenceProvider;
+          ? weekAdherenceProvider
+          : selectedPeriod == 2
+          ? monthAdherenceProvider
+          : yearAdherenceProvider;
 
       final stats = await ref.read(provider.future);
       final medications = await ref.read(medicationInsightsProvider.future);
@@ -106,7 +107,9 @@ abstract final class AnalyticsExportHelper {
       final now = DateTime.now();
       final thirtyDaysAgo = now.subtract(const Duration(days: 30));
 
-      final csvData = await ref.read(analyticsProvider).exportAdherenceCSV(
+      final csvData = await ref
+          .read(analyticsProvider)
+          .exportAdherenceCSV(
             thirtyDaysAgo,
             now,
           );

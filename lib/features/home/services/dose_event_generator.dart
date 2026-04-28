@@ -22,16 +22,18 @@ class DoseEventGenerator {
         final rt = medWithReminders.reminderTimes[i];
         final timeOfDay = TimeOfDay(hour: rt.hour, minute: rt.minute);
 
-        doseEvents.add(DoseEvent(
-          id: _doseId(med.id, today, i),
-          medicationId: med.id.toString(),
-          medicationName: med.medicineName,
-          dosage: _formatDosage(med),
-          time: _formatTime(timeOfDay),
-          status: _determineDoseStatus(timeOfDay, now),
-          instructions: med.notes,
-          stockRemaining: med.stockQuantity,
-        ));
+        doseEvents.add(
+          DoseEvent(
+            id: _doseId(med.id, today, i),
+            medicationId: med.id.toString(),
+            medicationName: med.medicineName,
+            dosage: _formatDosage(med),
+            time: _formatTime(timeOfDay),
+            status: _determineDoseStatus(timeOfDay, now),
+            instructions: med.notes,
+            stockRemaining: med.stockQuantity,
+          ),
+        );
       }
     }
 
@@ -99,7 +101,8 @@ class DoseEventGenerator {
 
   /// Consistent dose ID across all generators: `medId_yyyyMMdd_reminderIndex`.
   static String _doseId(int medId, DateTime date, int reminderIndex) {
-    final d = '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
+    final d =
+        '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
     return '${medId}_${d}_$reminderIndex';
   }
 
@@ -123,6 +126,10 @@ class DoseEventGenerator {
       specificDaysOfWeek: med.specificDaysOfWeek,
       startDate: med.startDate,
       date: date,
+      intervalDays: med.intervalDays,
+      intervalWeeks: med.intervalWeeks,
+      intervalMonths: med.intervalMonths,
+      dayOfMonth: med.dayOfMonth,
     );
   }
 
@@ -141,16 +148,18 @@ class DoseEventGenerator {
         final rt = medWithReminders.reminderTimes[i];
         final timeOfDay = TimeOfDay(hour: rt.hour, minute: rt.minute);
 
-        doseEvents.add(DoseEvent(
-          id: _doseId(med.id, date, i),
-          medicationId: med.id.toString(),
-          medicationName: med.medicineName,
-          dosage: _formatDosage(med),
-          time: _formatTime(timeOfDay),
-          status: DoseStatus.pending,
-          instructions: med.notes,
-          stockRemaining: med.stockQuantity,
-        ));
+        doseEvents.add(
+          DoseEvent(
+            id: _doseId(med.id, date, i),
+            medicationId: med.id.toString(),
+            medicationName: med.medicineName,
+            dosage: _formatDosage(med),
+            time: _formatTime(timeOfDay),
+            status: DoseStatus.pending,
+            instructions: med.notes,
+            stockRemaining: med.stockQuantity,
+          ),
+        );
       }
     }
 
@@ -159,10 +168,12 @@ class DoseEventGenerator {
 
   String _formatDosage(Medication med) {
     final amount = med.dosePerTime;
-    final amountStr =
-        amount == amount.toInt() ? amount.toInt().toString() : amount.toString();
-    final unitStr =
-        amount > 1 && !med.doseUnit.endsWith('s') ? '${med.doseUnit}s' : med.doseUnit;
+    final amountStr = amount == amount.toInt()
+        ? amount.toInt().toString()
+        : amount.toString();
+    final unitStr = amount > 1 && !med.doseUnit.endsWith('s')
+        ? '${med.doseUnit}s'
+        : med.doseUnit;
     return '$amountStr $unitStr';
   }
 

@@ -57,8 +57,9 @@ class SchedulePreviewCard extends StatelessWidget {
             _SummaryRow(
               icon: Icons.schedule,
               label: AppLocalizations.of(context)!.frequency,
-              value: AppLocalizations.of(context)!
-                  .xTimesPerDay(formData.timesPerDay),
+              value: AppLocalizations.of(
+                context,
+              )!.xTimesPerDay(formData.timesPerDay),
             ),
             const SizedBox(height: 8),
             _SummaryRow(
@@ -87,8 +88,18 @@ class SchedulePreviewCard extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

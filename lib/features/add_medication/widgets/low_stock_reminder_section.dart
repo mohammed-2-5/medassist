@@ -68,8 +68,7 @@ class LowStockReminderSection extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: [1, 3, 5, 7, 10, 14].map((days) {
-                final isSelected =
-                    formData.reminderDaysBeforeRunOut == days;
+                final isSelected = formData.reminderDaysBeforeRunOut == days;
                 return FilterChip(
                   label: Text('$days day${days != 1 ? 's' : ''}'),
                   selected: isSelected,

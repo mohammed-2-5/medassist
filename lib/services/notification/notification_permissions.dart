@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:permission_handler/permission_handler.dart' as permission_handler;
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 
 /// Handles notification and alarm permission requests/checks.
 class NotificationPermissions {
@@ -8,28 +9,33 @@ class NotificationPermissions {
 
   /// Request notification and exact alarm permissions.
   static Future<bool> requestPermissions(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final android = notifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final android = notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
-      final notificationGranted =
-          await android?.requestNotificationsPermission();
+      final notificationGranted = await android
+          ?.requestNotificationsPermission();
       debugPrint('📱 Notification permission: $notificationGranted');
 
-      final exactAlarmGranted =
-          await android?.requestExactAlarmsPermission();
+      final exactAlarmGranted = await android?.requestExactAlarmsPermission();
       debugPrint('📱 Exact alarms permission: $exactAlarmGranted');
 
       if (exactAlarmGranted == false) {
         debugPrint(
-            '⚠️ Exact alarms permission denied or needs to be granted in settings');
+          '⚠️ Exact alarms permission denied or needs to be granted in settings',
+        );
       }
 
       return (exactAlarmGranted ?? false) && (notificationGranted ?? false);
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final ios = notifications.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
+      final ios = notifications
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
 
       final granted = await ios?.requestPermissions(
         alert: true,
@@ -46,10 +52,13 @@ class NotificationPermissions {
 
   /// Request exact alarms permission specifically.
   static Future<bool> requestExactAlarms(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final android = notifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final android = notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       debugPrint('📱 Requesting exact alarms permission...');
       final granted = await android?.requestExactAlarmsPermission();
@@ -62,10 +71,13 @@ class NotificationPermissions {
 
   /// Check if notifications are enabled.
   static Future<bool> areNotificationsEnabled(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final android = notifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final android = notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       return await android?.areNotificationsEnabled() ?? false;
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return true;
@@ -75,10 +87,13 @@ class NotificationPermissions {
 
   /// Check if exact alarms can be scheduled (Android 12+).
   static Future<bool> canScheduleExactAlarms(
-      FlutterLocalNotificationsPlugin notifications) async {
+    FlutterLocalNotificationsPlugin notifications,
+  ) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final android = notifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final android = notifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       final canSchedule =
           await android?.canScheduleExactNotifications() ?? false;

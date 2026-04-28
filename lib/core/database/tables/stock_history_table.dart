@@ -15,11 +15,10 @@ class StockHistory extends Table {
 
   // Optional details
   TextColumn get notes => text().nullable()();
-  DateTimeColumn get changeDate =>
-      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get changeDate => dateTime().withDefault(currentDateAndTime)();
 
   @override
   List<String> get customConstraints => [
-        'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
-      ];
+    'FOREIGN KEY (medication_id) REFERENCES medications(id) ON DELETE CASCADE',
+  ];
 }
